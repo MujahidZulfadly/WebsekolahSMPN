@@ -1,0 +1,20 @@
+<!-- Unified Footer SMPN 1 Rantepao -->
+<footer class="bg-slate-900 text-slate-400 py-10 text-center text-sm border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <p class="font-extrabold text-white text-base tracking-wide"><%= profil.nama_sekolah || 'UPT SMP NEGERI 1 RANTEPAO' %></p>
+        <p class="text-xs text-slate-400 max-w-xl mx-auto leading-relaxed">
+            <%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao, Kabupaten Toraja Utara, Sulawesi Selatan' %> <br class="hidden sm:inline">
+            Telp: <%= profil.telepon || '-' %> | Email: <%= profil.email_sekolah || '-' %>
+        </p>
+        <div class="pt-4 mt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+            <p>&copy; <%= new Date().getFullYear() %> <%= profil.nama_sekolah %> • Toraja Utara</p>
+            <p class="flex items-center gap-3">
+                <a href="/ppdb" class="hover:text-amber-400 transition">PPDB 2026</a>
+                <span>•</span>
+                <a href="/galeri" class="hover:text-amber-400 transition">Galeri Foto</a>
+                <span>•</span>
+                <a href="/admin" class="hover:text-amber-400 underline transition text-amber-500 font-semibold">Panel Admin ⚙</a>
+            </p>
+        </div>
+    </div>
+</footer>
