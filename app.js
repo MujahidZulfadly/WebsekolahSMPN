@@ -272,14 +272,55 @@ app.get('/galeri', async (req, res) => {
     }
 });
 
-// Halaman Informasi PPDB Online (/ppdb)
+// Halaman Informasi & Cek Status PPDB Online (/ppdb)
 app.get('/ppdb', async (req, res) => {
     try {
         const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
         const profil = profilRows[0] || {};
-        res.render('ppdb', { profil });
+
+        let hasilCek = null;
+        const keyword = req.query.q ? req.query.q.trim() : null;
+
+        if (keyword) {
+            const [rows] = await db.query(`
+                SELECT * FROM pendaftar_ppdb 
+                WHERE no_pendaftaran = ? OR nisn = ?
+            `, [keyword, keyword]);
+
+            hasilCek = {
+                keyword,
+                found: rows.length > 0,
+                pendaftar: rows[0] || null
+            };
+        }
+
+        res.render('ppdb', { profil, hasilCek });
     } catch (error) {
         res.status(500).send('Kesalahan server PPDB: ' + error.message);
+    }
+});
+
+// API Endpoint untuk Cek Status PPDB (Instant tanpa reload)
+app.get('/api/ppdb/cek', async (req, res) => {
+    try {
+        const q = req.query.q ? req.query.q.trim() : '';
+        if (!q) {
+            return res.status(400).json({ success: false, message: 'Nomor Pendaftaran atau NISN tidak boleh kosong' });
+        }
+
+        const [rows] = await db.query(`
+            SELECT no_pendaftaran, nama_siswa, nisn, jenis_kelamin, asal_sekolah, jalur_pendaftaran, nama_ortu, status_seleksi, catatan, tanggal_daftar 
+            FROM pendaftar_ppdb 
+            WHERE no_pendaftaran = ? OR nisn = ?
+        `, [q, q]);
+
+        if (rows.length === 0) {
+            return res.json({ success: false, message: 'Nomor Pendaftaran atau NISN tidak ditemukan dalam basis data kami.' });
+        }
+
+        res.json({ success: true, data: rows[0] });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Kesalahan server: ' + error.message });
     }
 });
 

@@ -52,8 +52,11 @@
                     Mari bergabung bersama keluarga besar UPT SMPN 1 Rantepao. Sekolah rujukan berprestasi dengan fasilitas modern, pengajar berdedikasi, dan pelestarian nilai luhur budaya Toraja.
                 </p>
                 <div class="pt-2 flex flex-wrap gap-3">
+                    <a href="#cek-status" class="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                        <span>🔍 Cek Status Seleksi PPDB</span>
+                    </a>
                     <a href="#formulir-ppdb" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-blue-950 font-extrabold text-xs sm:text-sm rounded-xl transition shadow-lg flex items-center gap-2">
-                        <span>📝 Formulir Konsultasi / Pra-Daftar</span>
+                        <span>📝 Formulir Pendaftaran</span>
                     </a>
                     <a href="#jalur-ppdb" class="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm rounded-xl transition border border-white/20">
                         Lihat 4 Jalur & Kuota →
@@ -107,6 +110,208 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16 flex-1 w-full">
+
+        <!-- ============================================== -->
+        <!-- SECTION: CEK STATUS PENDAFTARAN & HASIL SELEKSI PPDB -->
+        <!-- ============================================== -->
+        <section id="cek-status" class="scroll-mt-24">
+            <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-2xl border border-blue-800/40 relative overflow-hidden">
+                <!-- Background ambient lights -->
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="max-w-3xl mx-auto relative z-10 space-y-6">
+                    <div class="text-center space-y-2">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Portal Informasi Seleksi Mandiri
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white">Cek Status Pendaftaran & Hasil PPDB</h2>
+                        <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+                            Ketik <strong>Nomor Pendaftaran</strong> (contoh: <em>PPDB-2026-3137</em>) atau <strong>NISN 10 Digit</strong> untuk melihat hasil verifikasi berkas dan penetapan kelulusan calon siswa.
+                        </p>
+                    </div>
+
+                    <!-- Search Input Box Form -->
+                    <form id="form-cek-status" onsubmit="handleCekStatusSubmit(event)" class="space-y-3">
+                        <div class="flex flex-col sm:flex-row gap-2.5 bg-white/10 p-2 sm:p-2.5 rounded-2xl border border-white/20 backdrop-blur-md">
+                            <div class="relative flex-1">
+                                <input type="text" 
+                                       id="input-cek-keyword" 
+                                       name="q" 
+                                       required 
+                                       value="<%= (typeof hasilCek !== 'undefined' && hasilCek && hasilCek.keyword) ? hasilCek.keyword : '' %>"
+                                       placeholder="Ketik Nomor Pendaftaran (PPDB-2026-XXXX) atau NISN..." 
+                                       class="w-full pl-11 pr-4 py-3.5 bg-white text-slate-900 text-xs sm:text-sm font-semibold rounded-xl focus:outline-amber-500 shadow-inner">
+                                <span class="absolute left-3.5 top-3.5 text-base text-slate-400">🔍</span>
+                            </div>
+                            <button type="submit" 
+                                    id="btn-cek-submit" 
+                                    class="px-7 py-3.5 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs sm:text-sm rounded-xl transition shadow-lg hover:shadow-amber-500/30 flex items-center justify-center gap-2 flex-shrink-0">
+                                <span id="btn-cek-text">Periksa Status</span>
+                                <span id="btn-cek-spinner" class="hidden animate-spin">🔄</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Quick Sample Chips -->
+                    <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400 pt-1">
+                        <span>Pencarian Cepat Contoh:</span>
+                        <button type="button" onclick="quickFillCheck('PPDB-2026-001')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition font-mono border border-white/10">
+                            PPDB-2026-001
+                        </button>
+                        <button type="button" onclick="quickFillCheck('PPDB-2026-002')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition font-mono border border-white/10">
+                            PPDB-2026-002
+                        </button>
+                        <button type="button" onclick="quickFillCheck('0123456789')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition font-mono border border-white/10">
+                            NISN: 0123456789
+                        </button>
+                    </div>
+
+                    <!-- RESULT CONTAINER (Dynamic & Server Rendered) -->
+                    <div id="hasil-cek-container" class="<%= (typeof hasilCek !== 'undefined' && hasilCek) ? '' : 'hidden' %> mt-6">
+                        <% if (typeof hasilCek !== 'undefined' && hasilCek) { %>
+                            <% if (hasilCek.found && hasilCek.pendaftar) { %>
+                                <% const p = hasilCek.pendaftar; %>
+                                <div class="bg-white rounded-3xl p-6 sm:p-8 text-slate-800 shadow-2xl border border-slate-200 space-y-6">
+                                    
+                                    <!-- Official Header Stamp -->
+                                    <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-12 h-12 rounded-2xl bg-blue-900 text-amber-400 flex items-center justify-center font-black text-xl shadow flex-shrink-0">
+                                                S1
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Lembar Bukti Status PPDB 2026/2027</p>
+                                                <h3 class="text-base sm:text-lg font-black text-blue-950 leading-tight"><%= profil.nama_sekolah || 'SMP NEGERI 1 RANTEPAO' %></h3>
+                                                <p class="text-[11px] text-slate-400">Toraja Utara, Sulawesi Selatan</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-left sm:text-right">
+                                            <span class="font-mono font-bold text-sm bg-slate-100 text-slate-800 px-3 py-1 rounded-lg border border-slate-200 block sm:inline-block">
+                                                <%= p.no_pendaftaran %>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status Banner -->
+                                    <% if (p.status_seleksi === 'Diterima') { %>
+                                        <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/20 space-y-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-2xl">🎉</span>
+                                                <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">HASIL AKHIR SELEKSI</span>
+                                            </div>
+                                            <h4 class="text-lg sm:text-xl font-black">SELAMAT! Calon Peserta Didik Dinyatakan DITERIMA</h4>
+                                            <p class="text-xs text-emerald-100">
+                                                Calon siswa telah memenuhi kriteria seleksi pada <strong>Jalur <%= p.jalur_pendaftaran %></strong>. Silakan melakukan lapor diri / verifikasi daftar ulang di loket sekolah.
+                                            </p>
+                                        </div>
+                                    <% } else if (p.status_seleksi === 'Berkas Terverifikasi') { %>
+                                        <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/20 space-y-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-2xl">✓</span>
+                                                <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">STATUS ADMINISTRASI</span>
+                                            </div>
+                                            <h4 class="text-lg sm:text-xl font-black">BERKAS FISIK TERVERIFIKASI & VALID</h4>
+                                            <p class="text-xs text-blue-100">
+                                                Dokumen fisik calon siswa telah dinyatakan lengkap oleh panitia. Data saat ini dalam tahap pemeringkatan kuota akhir.
+                                            </p>
+                                        </div>
+                                    <% } else if (p.status_seleksi === 'Tidak Diterima') { %>
+                                        <div class="p-5 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 text-white shadow-lg shadow-rose-500/20 space-y-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-2xl">✕</span>
+                                                <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">HASIL SELEKSI</span>
+                                            </div>
+                                            <h4 class="text-lg sm:text-xl font-black">MOHON MAAF, BELUM MEMENUHI KUOTA SELEKSI</h4>
+                                            <p class="text-xs text-rose-100">
+                                                Peringkat nilai atau radius zonasi telah memenuhi batas kuota penerimaan jalur ini. Tetap semangat dalam meraih prestasi.
+                                            </p>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="p-5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/20 space-y-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-2xl">⏳</span>
+                                                <span class="text-xs font-black uppercase tracking-wider bg-black/10 px-2.5 py-0.5 rounded-full">STATUS PENDAFTARAN</span>
+                                            </div>
+                                            <h4 class="text-lg sm:text-xl font-black">PENDAFTARAN MASUK - MENUNGGU VERIFIKASI LOKET</h4>
+                                            <p class="text-xs text-slate-900 font-medium">
+                                                Data calon siswa telah tersimpan di sistem. Silakan bawa berkas fisik (fotokopi KK, Akta Kelahiran, dan SKL/Rapor) ke loket PPDB sekolah untuk verifikasi fisik.
+                                            </p>
+                                        </div>
+                                    <% } %>
+
+                                    <!-- Biodata Pendaftar -->
+                                    <div class="grid sm:grid-cols-2 gap-4 text-xs bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                                        <div>
+                                            <span class="text-slate-400 block text-[11px]">Nama Calon Siswa:</span>
+                                            <span class="font-bold text-slate-900 text-sm"><%= p.nama_siswa %></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-400 block text-[11px]">NISN / Jenis Kelamin:</span>
+                                            <span class="font-semibold text-slate-800">
+                                                <span class="font-mono"><%= p.nisn || '-' %></span> (<%= p.jenis_kelamin %>)
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-400 block text-[11px]">Asal Sekolah SD / MI:</span>
+                                            <span class="font-semibold text-slate-800"><%= p.asal_sekolah %></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-400 block text-[11px]">Pilihan Jalur Masuk:</span>
+                                            <span class="font-bold text-blue-800">Jalur <%= p.jalur_pendaftaran %></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-400 block text-[11px]">Nama Orang Tua / Wali:</span>
+                                            <span class="font-semibold text-slate-800"><%= p.nama_ortu %></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-400 block text-[11px]">Waktu Pendaftaran:</span>
+                                            <span class="font-semibold text-slate-700">📅 <%= new Date(p.tanggal_daftar).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Catatan Panitia Verifikasi -->
+                                    <div class="p-4 rounded-xl bg-blue-50/60 border border-blue-200/80 text-xs text-slate-700 space-y-1">
+                                        <p class="font-bold text-blue-950 flex items-center gap-1.5">
+                                            <span>📌 Catatan Resmi Panitia PPDB:</span>
+                                        </p>
+                                        <p class="leading-relaxed">
+                                            <%= p.catatan ? p.catatan : 'Berkas pendaftaran sedang dalam peninjauan oleh tim panitia PPDB UPT SMPN 1 Rantepao.' %>
+                                        </p>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
+                                        <button type="button" onclick="window.print()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                                            <span>🖨️ Cetak Bukti Status</span>
+                                        </button>
+                                        <a href="https://wa.me/6281234567890?text=Halo%20Panitia%20PPDB%20SMPN%201%20Rantepao,%20saya%20ingin%20konfirmasi%20status%20pendaftaran%20nomor%20<%= p.no_pendaftaran %>" 
+                                           target="_blank" 
+                                           class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                                            <span>💬 Hubungi Panitia (WA)</span>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            <% } else { %>
+                                <div class="bg-red-950/80 border-2 border-red-500 text-red-200 rounded-3xl p-6 sm:p-8 text-center space-y-3 shadow-xl">
+                                    <div class="text-3xl">🔍❌</div>
+                                    <h4 class="text-lg font-bold text-white">Data Pendaftaran Tidak Ditemukan</h4>
+                                    <p class="text-xs sm:text-sm text-red-200 max-w-md mx-auto">
+                                        Tidak ditemukan calon siswa dengan Nomor Pendaftaran atau NISN <strong>"<%= hasilCek.keyword %>"</strong>.
+                                    </p>
+                                    <p class="text-[11px] text-slate-400">
+                                        Silakan periksa kembali ketikan Anda atau daftarkan putra/putri Anda melalui formulir di bawah.
+                                    </p>
+                                </div>
+                            <% } %>
+                        <% } %>
+                    </div>
+
+                </div>
+            </div>
+        </section>
 
         <!-- Section 1: 4 Jalur Pendaftaran PPDB -->
         <section id="jalur-ppdb" class="scroll-mt-24">
@@ -382,10 +587,13 @@
                                     <p class="text-[11px] uppercase tracking-wider text-amber-400 font-bold">Nomor Pendaftaran Resmi Anda:</p>
                                     <p id="nomor-registrasi-display" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider mt-0.5">PPDB-2026-XXXX</p>
                                 </div>
-                                <div class="text-left sm:text-right">
+                                <div class="text-left sm:text-right flex flex-col sm:items-end gap-2">
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/40">
                                         Status: Menunggu Verifikasi Berkas
                                     </span>
+                                    <button type="button" onclick="checkRegisteredNow()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl transition shadow">
+                                        <span>🔍 Cek Status Resmi Saya →</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -562,9 +770,11 @@
     <!-- Unified Footer Component -->
     <%- include('partials/footer') %>
 
-    <!-- Script to check URL params for success alert -->
+    <!-- Script to check URL params for success alert and AJAX PPDB Status Checker -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
+        
+        // Handle New Registration Alert
         if (urlParams.get('daftar_sukses') === '1') {
             const alertBox = document.getElementById('ppdb-sukses-alert');
             const noReg = urlParams.get('no_reg');
@@ -575,6 +785,215 @@
             if (alertBox) {
                 alertBox.classList.remove('hidden');
                 alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Handle URL search parameter ?q=... on initial load
+        const queryParam = urlParams.get('q');
+        if (queryParam) {
+            const inputEl = document.getElementById('input-cek-keyword');
+            if (inputEl) inputEl.value = queryParam;
+            // If server didn't pre-render or if user navigated
+            const container = document.getElementById('hasil-cek-container');
+            if (container && container.classList.contains('hidden')) {
+                checkStatusAjax(queryParam);
+            }
+        }
+
+        // AJAX Status Checker
+        async function checkStatusAjax(keyword) {
+            const container = document.getElementById('hasil-cek-container');
+            const btnText = document.getElementById('btn-cek-text');
+            const btnSpinner = document.getElementById('btn-cek-spinner');
+            const submitBtn = document.getElementById('btn-cek-submit');
+
+            if (!keyword || !keyword.trim()) return;
+
+            btnText.textContent = 'Memeriksa...';
+            btnSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/ppdb/cek?q=' + encodeURIComponent(keyword.trim()));
+                const data = await res.json();
+
+                container.classList.remove('hidden');
+
+                if (data.success && data.data) {
+                    const p = data.data;
+                    const dateFormatted = new Date(p.tanggal_daftar).toLocaleDateString('id-ID', {
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                    });
+
+                    let statusBanner = '';
+                    if (p.status_seleksi === 'Diterima') {
+                        statusBanner = `
+                            <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/20 space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">🎉</span>
+                                    <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">HASIL AKHIR SELEKSI</span>
+                                </div>
+                                <h4 class="text-lg sm:text-xl font-black">SELAMAT! Calon Peserta Didik Dinyatakan DITERIMA</h4>
+                                <p class="text-xs text-emerald-100">
+                                    Calon siswa telah memenuhi kriteria seleksi pada <strong>Jalur ${p.jalur_pendaftaran}</strong>. Silakan melakukan lapor diri / verifikasi daftar ulang di loket sekolah.
+                                </p>
+                            </div>
+                        `;
+                    } else if (p.status_seleksi === 'Berkas Terverifikasi') {
+                        statusBanner = `
+                            <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/20 space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">✓</span>
+                                    <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">STATUS ADMINISTRASI</span>
+                                </div>
+                                <h4 class="text-lg sm:text-xl font-black">BERKAS FISIK TERVERIFIKASI & VALID</h4>
+                                <p class="text-xs text-blue-100">
+                                    Dokumen fisik calon siswa telah dinyatakan lengkap oleh panitia. Data saat ini dalam tahap pemeringkatan kuota akhir.
+                                </p>
+                            </div>
+                        `;
+                    } else if (p.status_seleksi === 'Tidak Diterima') {
+                        statusBanner = `
+                            <div class="p-5 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 text-white shadow-lg shadow-rose-500/20 space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">✕</span>
+                                    <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">HASIL SELEKSI</span>
+                                </div>
+                                <h4 class="text-lg sm:text-xl font-black">MOHON MAAF, BELUM MEMENUHI KUOTA SELEKSI</h4>
+                                <p class="text-xs text-rose-100">
+                                    Peringkat nilai atau radius zonasi telah memenuhi batas kuota penerimaan jalur ini. Tetap semangat dalam meraih prestasi.
+                                </p>
+                            </div>
+                        `;
+                    } else {
+                        statusBanner = `
+                            <div class="p-5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/20 space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">⏳</span>
+                                    <span class="text-xs font-black uppercase tracking-wider bg-black/10 px-2.5 py-0.5 rounded-full">STATUS PENDAFTARAN</span>
+                                </div>
+                                <h4 class="text-lg sm:text-xl font-black">PENDAFTARAN MASUK - MENUNGGU VERIFIKASI LOKET</h4>
+                                <p class="text-xs text-slate-900 font-medium">
+                                    Data calon siswa telah tersimpan di sistem. Silakan bawa berkas fisik (fotokopi KK, Akta Kelahiran, dan SKL/Rapor) ke loket PPDB sekolah untuk verifikasi fisik.
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML = `
+                        <div class="bg-white rounded-3xl p-6 sm:p-8 text-slate-800 shadow-2xl border border-slate-200 space-y-6">
+                            <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-blue-900 text-amber-400 flex items-center justify-center font-black text-xl shadow flex-shrink-0">
+                                        S1
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Lembar Bukti Status PPDB 2026/2027</p>
+                                        <h3 class="text-base sm:text-lg font-black text-blue-950 leading-tight"><%= profil.nama_sekolah || 'SMP NEGERI 1 RANTEPAO' %></h3>
+                                        <p class="text-[11px] text-slate-400">Toraja Utara, Sulawesi Selatan</p>
+                                    </div>
+                                </div>
+                                <div class="text-left sm:text-right">
+                                    <span class="font-mono font-bold text-sm bg-slate-100 text-slate-800 px-3 py-1 rounded-lg border border-slate-200 block sm:inline-block">
+                                        ${p.no_pendaftaran}
+                                    </span>
+                                </div>
+                            </div>
+
+                            ${statusBanner}
+
+                            <div class="grid sm:grid-cols-2 gap-4 text-xs bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                                <div>
+                                    <span class="text-slate-400 block text-[11px]">Nama Calon Siswa:</span>
+                                    <span class="font-bold text-slate-900 text-sm">${p.nama_siswa}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[11px]">NISN / Jenis Kelamin:</span>
+                                    <span class="font-semibold text-slate-800 font-mono">
+                                        ${p.nisn || '-'} (${p.jenis_kelamin})
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[11px]">Asal Sekolah SD / MI:</span>
+                                    <span class="font-semibold text-slate-800">${p.asal_sekolah}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[11px]">Pilihan Jalur Masuk:</span>
+                                    <span class="font-bold text-blue-800">Jalur ${p.jalur_pendaftaran}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[11px]">Nama Orang Tua / Wali:</span>
+                                    <span class="font-semibold text-slate-800">${p.nama_ortu}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[11px]">Waktu Pendaftaran:</span>
+                                    <span class="font-semibold text-slate-700">📅 ${dateFormatted}</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-blue-50/60 border border-blue-200/80 text-xs text-slate-700 space-y-1">
+                                <p class="font-bold text-blue-950 flex items-center gap-1.5">
+                                    <span>📌 Catatan Resmi Panitia PPDB:</span>
+                                </p>
+                                <p class="leading-relaxed">
+                                    ${p.catatan ? p.catatan : 'Berkas pendaftaran sedang dalam peninjauan oleh tim panitia PPDB UPT SMPN 1 Rantepao.'}
+                                </p>
+                            </div>
+
+                            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
+                                <button type="button" onclick="window.print()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                                    <span>🖨️ Cetak Bukti Status</span>
+                                </button>
+                                <a href="https://wa.me/6281234567890?text=Halo%20Panitia%20PPDB%20SMPN%201%20Rantepao,%20saya%20ingin%20konfirmasi%20status%20pendaftaran%20nomor%20${encodeURIComponent(p.no_pendaftaran)}" 
+                                   target="_blank" 
+                                   class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                                    <span>💬 Hubungi Panitia (WA)</span>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="bg-red-950/80 border-2 border-red-500 text-red-200 rounded-3xl p-6 sm:p-8 text-center space-y-3 shadow-xl">
+                            <div class="text-3xl">🔍❌</div>
+                            <h4 class="text-lg font-bold text-white">Data Pendaftaran Tidak Ditemukan</h4>
+                            <p class="text-xs sm:text-sm text-red-200 max-w-md mx-auto">
+                                Tidak ditemukan calon siswa dengan Nomor Pendaftaran atau NISN <strong>"${keyword}"</strong>.
+                            </p>
+                            <p class="text-[11px] text-slate-400">
+                                Silakan periksa kembali nomor yang Anda masukkan atau hubungi sekretariat panitia loket PPDB sekolah.
+                            </p>
+                        </div>
+                    `;
+                }
+
+                container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (e) {
+                console.error(e);
+            } finally {
+                btnText.textContent = 'Periksa Status';
+                btnSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        }
+
+        function handleCekStatusSubmit(e) {
+            e.preventDefault();
+            const val = document.getElementById('input-cek-keyword').value;
+            checkStatusAjax(val);
+        }
+
+        function quickFillCheck(val) {
+            document.getElementById('input-cek-keyword').value = val;
+            checkStatusAjax(val);
+        }
+
+        function checkRegisteredNow() {
+            const regDisplay = document.getElementById('nomor-registrasi-display');
+            if (regDisplay) {
+                const code = regDisplay.textContent.trim();
+                quickFillCheck(code);
+                document.getElementById('cek-status').scrollIntoView({ behavior: 'smooth' });
             }
         }
     </script>
