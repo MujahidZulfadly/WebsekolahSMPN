@@ -1450,7 +1450,21 @@
                                                             data-alamat="<%= item.alamat_domisili %>"
                                                             data-catatan="<%= item.catatan || '-' %>"
                                                             data-status="<%= item.status_seleksi %>"
-                                                            data-tanggal="<%= new Date(item.tanggal_daftar).toLocaleString('id-ID') %>">
+                                                            data-tanggal="<%= new Date(item.tanggal_daftar).toLocaleString('id-ID') %>"
+                                                            data-email="<%= item.email || '-' %>"
+                                                            data-nowa="<%= item.no_wa || item.no_hp || '-' %>"
+                                                            data-tempatlahir="<%= item.tempat_lahir || '-' %>"
+                                                            data-tanggallahir="<%= item.tanggal_lahir ? new Date(item.tanggal_lahir).toLocaleDateString('id-ID') : '-' %>"
+                                                            data-agama="<%= item.agama || '-' %>"
+                                                            data-npsn="<%= item.npsn_asal_sekolah || '-' %>"
+                                                            data-ayah="<%= item.nama_ayah || '-' %>"
+                                                            data-ibu="<%= item.nama_ibu || '-' %>"
+                                                            data-pekerjaan="<%= item.pekerjaan_ortu || '-' %>"
+                                                            data-penghasilan="<%= item.penghasilan_ortu || '-' %>"
+                                                            data-foto="<%= item.berkas_foto || '' %>"
+                                                            data-kk="<%= item.berkas_kk || '' %>"
+                                                            data-akta="<%= item.berkas_akta || '' %>"
+                                                            data-ijazah="<%= item.berkas_ijazah || '' %>">
                                                         <i class="fa-solid fa-eye text-xs"></i>
                                                     </button>
 
@@ -2258,22 +2272,27 @@
     <!-- 9. MODAL DETAIL LENGKAP PENDAFTAR PPDB -->
     <!-- ============================================== -->
     <div id="modal-detail-ppdb" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 overflow-y-auto max-h-[92vh]">
+            <!-- Header Modal -->
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                 <div class="flex items-center gap-2">
-                    <span id="detail-ppdb-no" class="px-3 py-1 rounded-lg bg-blue-900 text-white font-mono font-bold text-xs">PPDB-2026-XXXX</span>
+                    <span id="detail-ppdb-no" class="px-3 py-1 rounded-xl bg-blue-900 text-white font-mono font-bold text-xs shadow-sm">PPDB-2026-XXXX</span>
                     <span id="detail-ppdb-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">Status</span>
                 </div>
-                <button type="button" onclick="closeModal('modal-detail-ppdb')" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button type="button" onclick="closeModal('modal-detail-ppdb')" class="text-slate-400 hover:text-slate-600 transition p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
             <div class="mt-5 space-y-5 text-xs">
-                <!-- Identitas Siswa -->
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <span class="text-[10px] font-extrabold text-blue-900 uppercase tracking-wider">Identitas Calon Peserta Didik</span>
-                    <div class="grid sm:grid-cols-2 gap-3 pt-1">
+                
+                <!-- 1. Identitas Calon Siswa -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                    <span class="text-[10px] font-black text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>1. Identitas Lengkap Calon Siswa</span>
+                    </span>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
                         <div>
                             <span class="text-slate-400 block text-[11px]">Nama Lengkap Siswa:</span>
                             <span id="detail-ppdb-nama" class="font-bold text-slate-900 text-sm"></span>
@@ -2285,47 +2304,145 @@
                             </span>
                         </div>
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Asal Sekolah SD:</span>
-                            <span id="detail-ppdb-sekolah" class="font-semibold text-slate-800"></span>
+                            <span class="text-slate-400 block text-[11px]">Tempat, Tanggal Lahir:</span>
+                            <span id="detail-ppdb-ttl" class="font-semibold text-slate-800"></span>
                         </div>
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Jalur Pendaftaran:</span>
-                            <span id="detail-ppdb-jalur" class="font-bold text-blue-700"></span>
+                            <span class="text-slate-400 block text-[11px]">Agama:</span>
+                            <span id="detail-ppdb-agama" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Email Calon Siswa:</span>
+                            <span id="detail-ppdb-email" class="font-medium text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">WhatsApp Siswa:</span>
+                            <span id="detail-ppdb-nowa" class="font-mono font-medium text-slate-800"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Data Orang Tua & Kontak -->
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <span class="text-[10px] font-extrabold text-blue-900 uppercase tracking-wider">Data Orang Tua / Kontak & Domisili</span>
-                    <div class="grid sm:grid-cols-2 gap-3 pt-1">
+                <!-- 2. Asal Sekolah & Jalur Seleksi -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                    <span class="text-[10px] font-black text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-school"></i>
+                        <span>2. Asal Sekolah & Jalur Pendaftaran</span>
+                    </span>
+                    <div class="grid sm:grid-cols-3 gap-3 pt-1">
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Nama Orang Tua / Wali:</span>
+                            <span class="text-slate-400 block text-[11px]">Asal Sekolah SD / MI:</span>
+                            <span id="detail-ppdb-sekolah" class="font-bold text-slate-900"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">NPSN SD Asal:</span>
+                            <span id="detail-ppdb-npsn" class="font-mono font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Jalur Pendaftaran:</span>
+                            <span id="detail-ppdb-jalur" class="font-black text-blue-700"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Data Orang Tua / Wali & Domisili -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                    <span class="text-[10px] font-black text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-people-roof"></i>
+                        <span>3. Data Orang Tua / Wali & Domisili</span>
+                    </span>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Nama Ayah:</span>
+                            <span id="detail-ppdb-ayah" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Nama Ibu:</span>
+                            <span id="detail-ppdb-ibu" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Nama Wali / Kontak Utama:</span>
                             <span id="detail-ppdb-ortu" class="font-bold text-slate-900"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Pekerjaan Orang Tua:</span>
+                            <span id="detail-ppdb-pekerjaan" class="font-medium text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">Penghasilan Orang Tua:</span>
+                            <span id="detail-ppdb-penghasilan" class="font-medium text-slate-800"></span>
                         </div>
                         <div>
                             <span class="text-slate-400 block text-[11px]">Nomor HP / WhatsApp:</span>
                             <div class="flex items-center gap-2 mt-0.5">
                                 <span id="detail-ppdb-hp" class="font-semibold text-slate-800 font-mono"></span>
-                                <a id="detail-ppdb-wa-link" href="#" target="_blank" class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-[10px] transition">
-                                    Chat WA →
+                                <a id="detail-ppdb-wa-link" href="#" target="_blank" class="px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-[10px] transition inline-flex items-center gap-1">
+                                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                    <span>Chat WA</span>
                                 </a>
                             </div>
                         </div>
-                        <div class="sm:col-span-2">
-                            <span class="text-slate-400 block text-[11px]">Alamat Tempat Tinggal (Domisili):</span>
+                        <div class="sm:col-span-2 lg:col-span-3">
+                            <span class="text-slate-400 block text-[11px]">Alamat Domisili Sesuai KK:</span>
                             <span id="detail-ppdb-alamat" class="font-medium text-slate-800"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Catatan Panitia & Tanggal -->
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <span class="text-[10px] font-extrabold text-blue-900 uppercase tracking-wider">Catatan Panitia & Rekam Waktu</span>
+                <!-- 4. Berkas Persyaratan Yang Diunggah -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                    <span class="text-[10px] font-black text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>4. Berkas Persyaratan Calon Siswa (Download / Preview)</span>
+                    </span>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <!-- Pas Foto -->
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center flex flex-col justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Pas Foto 3x4</span>
+                            <div id="detail-ppdb-foto-preview" class="w-16 h-20 bg-slate-100 rounded-lg border flex items-center justify-center overflow-hidden my-1">
+                                <i class="fa-solid fa-image text-slate-300 text-xl"></i>
+                            </div>
+                            <div id="detail-ppdb-foto-link-container" class="mt-2 w-full"></div>
+                        </div>
+
+                        <!-- Kartu Keluarga -->
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center flex flex-col justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Kartu Keluarga (KK)</span>
+                            <div class="w-16 h-20 bg-slate-50 rounded-lg border flex items-center justify-center my-1 text-red-500">
+                                <i class="fa-solid fa-file-pdf text-3xl"></i>
+                            </div>
+                            <div id="detail-ppdb-kk-link-container" class="mt-2 w-full"></div>
+                        </div>
+
+                        <!-- Akta Kelahiran -->
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center flex flex-col justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Akta Kelahiran</span>
+                            <div class="w-16 h-20 bg-slate-50 rounded-lg border flex items-center justify-center my-1 text-red-500">
+                                <i class="fa-solid fa-id-card text-3xl"></i>
+                            </div>
+                            <div id="detail-ppdb-akta-link-container" class="mt-2 w-full"></div>
+                        </div>
+
+                        <!-- Ijazah / SKL -->
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-center flex flex-col justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Ijazah / SKL SD</span>
+                            <div class="w-16 h-20 bg-slate-50 rounded-lg border flex items-center justify-center my-1 text-amber-500">
+                                <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                            </div>
+                            <div id="detail-ppdb-ijazah-link-container" class="mt-2 w-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Catatan Panitia & Rekam Waktu -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                    <span class="text-[10px] font-black text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        <span>5. Catatan & Waktu Pendaftaran</span>
+                    </span>
                     <div class="space-y-2 pt-1">
                         <div>
-                            <span class="text-slate-400 block text-[11px]">Catatan / Keterangan Berkas:</span>
-                            <p id="detail-ppdb-catatan" class="p-2.5 rounded-lg bg-white border border-slate-200 text-slate-700 whitespace-pre-wrap leading-relaxed mt-1"></p>
+                            <span class="text-slate-400 block text-[11px]">Catatan Calon Siswa / Panitia:</span>
+                            <p id="detail-ppdb-catatan" class="p-3 rounded-xl bg-white border border-slate-200 text-slate-700 whitespace-pre-wrap leading-relaxed mt-1"></p>
                         </div>
                         <div>
                             <span class="text-slate-400 block text-[11px]">Waktu Terdaftar:</span>
@@ -2335,8 +2452,13 @@
                 </div>
             </div>
 
-            <div class="flex justify-end pt-5 mt-4 border-t border-slate-100">
-                <button type="button" onclick="closeModal('modal-detail-ppdb')" class="px-5 py-2 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white rounded-lg">
+            <!-- Footer Controls -->
+            <div class="flex items-center justify-between pt-5 mt-4 border-t border-slate-100">
+                <button type="button" id="btn-quick-status-from-detail" class="px-4 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span>Ubah Status Seleksi</span>
+                </button>
+                <button type="button" onclick="closeModal('modal-detail-ppdb')" class="px-5 py-2 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition">
                     Tutup Detail
                 </button>
             </div>
@@ -2639,6 +2761,53 @@
                 document.getElementById('detail-ppdb-catatan').textContent = (detailPPDBBtn.dataset.catatan && detailPPDBBtn.dataset.catatan !== '-') ? detailPPDBBtn.dataset.catatan : 'Tidak ada catatan khusus';
                 document.getElementById('detail-ppdb-tanggal').textContent = detailPPDBBtn.dataset.tanggal;
 
+                // Field Tambahan Baru
+                document.getElementById('detail-ppdb-ttl').textContent = (detailPPDBBtn.dataset.tempatlahir || '-') + ', ' + (detailPPDBBtn.dataset.tanggallahir || '-');
+                document.getElementById('detail-ppdb-agama').textContent = detailPPDBBtn.dataset.agama || '-';
+                document.getElementById('detail-ppdb-email').textContent = detailPPDBBtn.dataset.email || '-';
+                document.getElementById('detail-ppdb-nowa').textContent = detailPPDBBtn.dataset.nowa || '-';
+                document.getElementById('detail-ppdb-npsn').textContent = detailPPDBBtn.dataset.npsn || '-';
+                document.getElementById('detail-ppdb-ayah').textContent = detailPPDBBtn.dataset.ayah || '-';
+                document.getElementById('detail-ppdb-ibu').textContent = detailPPDBBtn.dataset.ibu || '-';
+                document.getElementById('detail-ppdb-pekerjaan').textContent = detailPPDBBtn.dataset.pekerjaan || '-';
+                document.getElementById('detail-ppdb-penghasilan').textContent = detailPPDBBtn.dataset.penghasilan || '-';
+
+                // Berkas Upload Rendering
+                const foto = detailPPDBBtn.dataset.foto;
+                const fotoPreview = document.getElementById('detail-ppdb-foto-preview');
+                const fotoContainer = document.getElementById('detail-ppdb-foto-link-container');
+                if (foto && foto.trim() !== '') {
+                    fotoPreview.innerHTML = `<img src="/uploads/ppdb/${foto}" class="w-full h-full object-cover">`;
+                    fotoContainer.innerHTML = `<a href="/uploads/ppdb/${foto}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-900 rounded-lg font-bold text-[10px] hover:bg-blue-100 border border-blue-200 block text-center">Buka Foto ↗</a>`;
+                } else {
+                    fotoPreview.innerHTML = `<i class="fa-solid fa-image text-slate-300 text-xl"></i>`;
+                    fotoContainer.innerHTML = `<span class="text-[10px] text-slate-400 font-semibold block text-center">Belum Ada</span>`;
+                }
+
+                const kk = detailPPDBBtn.dataset.kk;
+                const kkContainer = document.getElementById('detail-ppdb-kk-link-container');
+                if (kk && kk.trim() !== '') {
+                    kkContainer.innerHTML = `<a href="/uploads/ppdb/${kk}" target="_blank" class="px-2 py-1 bg-red-50 text-red-700 rounded-lg font-bold text-[10px] hover:bg-red-100 border border-red-200 block text-center">Unduh KK ↗</a>`;
+                } else {
+                    kkContainer.innerHTML = `<span class="text-[10px] text-slate-400 font-semibold block text-center">Belum Ada</span>`;
+                }
+
+                const akta = detailPPDBBtn.dataset.akta;
+                const aktaContainer = document.getElementById('detail-ppdb-akta-link-container');
+                if (akta && akta.trim() !== '') {
+                    aktaContainer.innerHTML = `<a href="/uploads/ppdb/${akta}" target="_blank" class="px-2 py-1 bg-red-50 text-red-700 rounded-lg font-bold text-[10px] hover:bg-red-100 border border-red-200 block text-center">Unduh Akta ↗</a>`;
+                } else {
+                    aktaContainer.innerHTML = `<span class="text-[10px] text-slate-400 font-semibold block text-center">Belum Ada</span>`;
+                }
+
+                const ijazah = detailPPDBBtn.dataset.ijazah;
+                const ijazahContainer = document.getElementById('detail-ppdb-ijazah-link-container');
+                if (ijazah && ijazah.trim() !== '') {
+                    ijazahContainer.innerHTML = `<a href="/uploads/ppdb/${ijazah}" target="_blank" class="px-2 py-1 bg-amber-50 text-amber-800 rounded-lg font-bold text-[10px] hover:bg-amber-100 border border-amber-200 block text-center">Unduh SKL ↗</a>`;
+                } else {
+                    ijazahContainer.innerHTML = `<span class="text-[10px] text-slate-400 font-semibold block text-center">Belum Ada</span>`;
+                }
+
                 const cleanHp = (detailPPDBBtn.dataset.hp || '').replace(/[^0-9]/g, '');
                 const waLink = cleanHp.startsWith('0') ? '62' + cleanHp.substring(1) : cleanHp;
                 const waHref = `https://wa.me/${waLink}?text=Halo%20Bpk/Ibu%20${encodeURIComponent(detailPPDBBtn.dataset.ortu)},%20terkait%20pendaftaran%20PPDB%20SMPN%201%20Rantepao%20ananda%20${encodeURIComponent(detailPPDBBtn.dataset.nama)}`;
@@ -2650,6 +2819,18 @@
                     (detailPPDBBtn.dataset.status === 'Diterima' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                     (detailPPDBBtn.dataset.status === 'Berkas Terverifikasi' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                     (detailPPDBBtn.dataset.status === 'Tidak Diterima' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200')));
+
+                // Bind Quick Status Button inside detail modal
+                const quickStatusBtn = document.getElementById('btn-quick-status-from-detail');
+                quickStatusBtn.onclick = function() {
+                    closeModal('modal-detail-ppdb');
+                    document.getElementById('form-status-ppdb').action = '/admin/ppdb/status/' + detailPPDBBtn.dataset.id;
+                    document.getElementById('status-ppdb-nama').textContent = detailPPDBBtn.dataset.nama;
+                    document.getElementById('status-ppdb-no').textContent = 'No. Pendaftaran: ' + detailPPDBBtn.dataset.no;
+                    document.getElementById('status-ppdb-select').value = detailPPDBBtn.dataset.status;
+                    document.getElementById('status-ppdb-catatan').value = (detailPPDBBtn.dataset.catatan && detailPPDBBtn.dataset.catatan !== '-') ? detailPPDBBtn.dataset.catatan : '';
+                    openModal('modal-status-ppdb');
+                };
 
                 openModal('modal-detail-ppdb');
                 return;

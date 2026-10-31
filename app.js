@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 // Setup Multer File Upload
-['public/uploads/berita', 'public/uploads/guru', 'public/uploads/profil', 'public/uploads/eskul', 'public/uploads/galeri', 'public/uploads/komite'].forEach(dir => {
+['public/uploads/berita', 'public/uploads/guru', 'public/uploads/profil', 'public/uploads/eskul', 'public/uploads/galeri', 'public/uploads/komite', 'public/uploads/ppdb'].forEach(dir => {
     const fullPath = path.join(__dirname, dir);
     if (!fs.existsSync(fullPath)) {
         fs.mkdirSync(fullPath, { recursive: true });
@@ -70,12 +70,47 @@ const upload = multer({
     }
 });
 
+// Setup Multer Khusus Dokumen & Berkas PPDB (JPG, PNG, WEBP, PDF)
+const ppdbStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, 'public/uploads/ppdb'));
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+});
+
+const ppdbUpload = multer({
+    storage: ppdbStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // Maksimal 5MB per berkas
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = /jpeg|jpg|png|webp|pdf/;
+        const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
+        const isPdf = file.mimetype === 'application/pdf' || ext === 'pdf';
+        const isImage = /jpeg|jpg|png|webp/.test(file.mimetype) || /jpeg|jpg|png|webp/.test(ext);
+        if (isPdf || isImage) {
+            return cb(null, true);
+        }
+        cb(new Error('Format berkas harus berupa dokumen PDF atau gambar (JPG, PNG, WEBP)'));
+    }
+});
+
 // Middleware Proteksi Halaman Admin
 function isAuthenticated(req, res, next) {
     if (req.session && req.session.user) {
         return next();
     }
     res.redirect('/login?status=error&msg=' + encodeURIComponent('Silakan login terlebih dahulu untuk mengakses panel admin.'));
+}
+
+// Middleware Proteksi Halaman Calon Siswa (PPDB)
+function isPpdbAuthenticated(req, res, next) {
+    if (req.session && req.session.ppdbUser) {
+        return next();
+    }
+    res.redirect('/ppdb/login?status=error&msg=' + encodeURIComponent('Silakan login terlebih dahulu untuk mengakses dashboard pendaftar.'));
 }
 
 // ==========================================
@@ -458,6 +493,296 @@ app.post('/ppdb/daftar', async (req, res) => {
         res.redirect(`/ppdb?daftar_sukses=1&no_reg=${encodeURIComponent(noPendaftaran)}#formulir-ppdb`);
     } catch (error) {
         res.status(500).send('Gagal mengirim pendaftaran PPDB: ' + error.message);
+    }
+});
+
+// ==========================================
+// PORTAL MANDIRI PPDB (CALON SISWA)
+// ==========================================
+
+// 1. Tampilkan Halaman Registrasi Akun Calon Siswa (/ppdb/register)
+app.get('/ppdb/register', async (req, res) => {
+    try {
+        if (req.session && req.session.ppdbUser) {
+            return res.redirect('/ppdb/dashboard');
+        }
+        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const profil = profilRows[0] || {};
+        const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
+        const alert = req.query.msg ? { status: req.query.status || 'info', message: req.query.msg } : null;
+
+        res.render('ppdb/register', { profil, pengumuman, alert });
+    } catch (error) {
+        res.status(500).send('Kesalahan server: ' + error.message);
+    }
+});
+
+// 2. Proses Registrasi Akun Baru Calon Siswa
+app.post('/ppdb/register', async (req, res) => {
+    try {
+        const { nama_siswa, email, no_wa, password, confirm_password } = req.body;
+
+        if (!nama_siswa || !email || !password) {
+            return res.redirect('/ppdb/register?status=error&msg=' + encodeURIComponent('Nama lengkap, email, dan kata sandi wajib diisi!'));
+        }
+
+        if (confirm_password && password !== confirm_password) {
+            return res.redirect('/ppdb/register?status=error&msg=' + encodeURIComponent('Konfirmasi kata sandi tidak cocok!'));
+        }
+
+        if (password.length < 6) {
+            return res.redirect('/ppdb/register?status=error&msg=' + encodeURIComponent('Kata sandi minimal 6 karakter!'));
+        }
+
+        // Cek duplikasi email
+        const [exist] = await db.query('SELECT id_pendaftar FROM pendaftar_ppdb WHERE email = ?', [email.trim().toLowerCase()]);
+        if (exist.length > 0) {
+            return res.redirect('/ppdb/register?status=error&msg=' + encodeURIComponent('Alamat email sudah terdaftar! Silakan gunakan email lain atau langsung login.'));
+        }
+
+        // Hash kata sandi untuk keamanan
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Generate Nomor Pendaftaran unik
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        const noPendaftaran = `PPDB-2026-${randomNum}`;
+
+        const [insertRes] = await db.query(`
+            INSERT INTO pendaftar_ppdb 
+            (no_pendaftaran, nama_siswa, email, no_wa, no_hp, password, status_seleksi, is_submitted, tanggal_daftar) 
+            VALUES (?, ?, ?, ?, ?, ?, 'Menunggu Verifikasi', 0, NOW())
+        `, [
+            noPendaftaran,
+            nama_siswa.trim(),
+            email.trim().toLowerCase(),
+            no_wa ? no_wa.trim() : null,
+            no_wa ? no_wa.trim() : null,
+            hashedPassword
+        ]);
+
+        // Simpan sesi autentikasi calon siswa
+        req.session.ppdbUser = {
+            id: insertRes.insertId,
+            no_pendaftaran: noPendaftaran,
+            nama: nama_siswa.trim(),
+            email: email.trim().toLowerCase()
+        };
+
+        res.redirect('/ppdb/dashboard?status=success&msg=' + encodeURIComponent('Selamat datang! Akun calon siswa berhasil dibuat. Silakan lengkapi formulir pendaftaran.'));
+    } catch (error) {
+        console.error('Error register PPDB:', error);
+        res.redirect('/ppdb/register?status=error&msg=' + encodeURIComponent('Gagal mendaftarkan akun: ' + error.message));
+    }
+});
+
+// 3. Tampilkan Halaman Login Calon Siswa (/ppdb/login)
+app.get('/ppdb/login', async (req, res) => {
+    try {
+        if (req.session && req.session.ppdbUser) {
+            return res.redirect('/ppdb/dashboard');
+        }
+        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const profil = profilRows[0] || {};
+        const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
+        const alert = req.query.msg ? { status: req.query.status || 'info', message: req.query.msg } : null;
+
+        res.render('ppdb/login', { profil, pengumuman, alert });
+    } catch (error) {
+        res.status(500).send('Kesalahan server: ' + error.message);
+    }
+});
+
+// 4. Proses Login Calon Siswa
+app.post('/ppdb/login', async (req, res) => {
+    try {
+        const { identifier, password } = req.body;
+
+        if (!identifier || !password) {
+            return res.redirect('/ppdb/login?status=error&msg=' + encodeURIComponent('Email / Nomor Pendaftaran dan kata sandi wajib diisi!'));
+        }
+
+        const idClean = identifier.trim();
+        const [rows] = await db.query(`
+            SELECT * FROM pendaftar_ppdb 
+            WHERE email = ? OR no_pendaftaran = ? 
+            LIMIT 1
+        `, [idClean.toLowerCase(), idClean.toUpperCase()]);
+
+        if (rows.length === 0) {
+            return res.redirect('/ppdb/login?status=error&msg=' + encodeURIComponent('Akun tidak ditemukan! Periksa kembali email atau nomor registrasi Anda.'));
+        }
+
+        const candidate = rows[0];
+
+        // Validasi password (mendukung hash bcrypt dan teks biasa untuk testing)
+        let isMatch = false;
+        if (candidate.password) {
+            if (candidate.password.startsWith('$2')) {
+                isMatch = await bcrypt.compare(password, candidate.password);
+            } else {
+                isMatch = (candidate.password === password);
+            }
+        }
+
+        if (!isMatch) {
+            return res.redirect('/ppdb/login?status=error&msg=' + encodeURIComponent('Kata sandi yang Anda masukkan tidak sesuai!'));
+        }
+
+        req.session.ppdbUser = {
+            id: candidate.id_pendaftar,
+            no_pendaftaran: candidate.no_pendaftaran,
+            nama: candidate.nama_siswa,
+            email: candidate.email
+        };
+
+        res.redirect('/ppdb/dashboard?status=success&msg=' + encodeURIComponent('Berhasil masuk ke Dashboard Calon Siswa!'));
+    } catch (error) {
+        console.error('Error login PPDB:', error);
+        res.redirect('/ppdb/login?status=error&msg=' + encodeURIComponent('Gagal masuk: ' + error.message));
+    }
+});
+
+// 5. Logout Calon Siswa
+app.get('/ppdb/logout', (req, res) => {
+    if (req.session) {
+        delete req.session.ppdbUser;
+    }
+    res.redirect('/ppdb/login?status=info&msg=' + encodeURIComponent('Anda telah berhasil keluar dari akun calon siswa.'));
+});
+
+// 6. Dashboard Calon Siswa (/ppdb/dashboard)
+app.get('/ppdb/dashboard', isPpdbAuthenticated, async (req, res) => {
+    try {
+        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const profil = profilRows[0] || {};
+        const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
+
+        const [rows] = await db.query('SELECT * FROM pendaftar_ppdb WHERE id_pendaftar = ?', [req.session.ppdbUser.id]);
+        if (rows.length === 0) {
+            delete req.session.ppdbUser;
+            return res.redirect('/ppdb/login?status=error&msg=' + encodeURIComponent('Data pendaftaran tidak ditemukan.'));
+        }
+
+        const alert = req.query.msg ? { status: req.query.status || 'info', message: req.query.msg } : null;
+
+        res.render('ppdb/dashboard', {
+            profil,
+            pengumuman,
+            pendaftar: rows[0],
+            alert,
+            user: req.session.ppdbUser
+        });
+    } catch (error) {
+        res.status(500).send('Kesalahan server dashboard PPDB: ' + error.message);
+    }
+});
+
+// 7. Update Isian Formulir & Upload Berkas Persyaratan (/ppdb/update)
+app.post('/ppdb/update', isPpdbAuthenticated, ppdbUpload.fields([
+    { name: 'berkas_foto', maxCount: 1 },
+    { name: 'berkas_kk', maxCount: 1 },
+    { name: 'berkas_akta', maxCount: 1 },
+    { name: 'berkas_ijazah', maxCount: 1 }
+]), async (req, res) => {
+    try {
+        const studentId = req.session.ppdbUser.id;
+        const {
+            nama_siswa,
+            nisn,
+            jenis_kelamin,
+            tempat_lahir,
+            tanggal_lahir,
+            agama,
+            email,
+            no_wa,
+            asal_sekolah,
+            npsn_asal_sekolah,
+            jalur_pendaftaran,
+            alamat_domisili,
+            nama_ayah,
+            nama_ibu,
+            nama_ortu,
+            no_hp,
+            pekerjaan_ortu,
+            penghasilan_ortu,
+            catatan
+        } = req.body;
+
+        const [currRows] = await db.query('SELECT * FROM pendaftar_ppdb WHERE id_pendaftar = ?', [studentId]);
+        if (currRows.length === 0) {
+            delete req.session.ppdbUser;
+            return res.redirect('/ppdb/login');
+        }
+        const curr = currRows[0];
+
+        const berkas_foto = (req.files && req.files.berkas_foto && req.files.berkas_foto[0]) ? req.files.berkas_foto[0].filename : curr.berkas_foto;
+        const berkas_kk = (req.files && req.files.berkas_kk && req.files.berkas_kk[0]) ? req.files.berkas_kk[0].filename : curr.berkas_kk;
+        const berkas_akta = (req.files && req.files.berkas_akta && req.files.berkas_akta[0]) ? req.files.berkas_akta[0].filename : curr.berkas_akta;
+        const berkas_ijazah = (req.files && req.files.berkas_ijazah && req.files.berkas_ijazah[0]) ? req.files.berkas_ijazah[0].filename : curr.berkas_ijazah;
+
+        const tglLahir = (tanggal_lahir && tanggal_lahir.trim()) ? tanggal_lahir.trim() : null;
+
+        await db.query(`
+            UPDATE pendaftar_ppdb SET
+                nama_siswa = ?,
+                nisn = ?,
+                jenis_kelamin = ?,
+                tempat_lahir = ?,
+                tanggal_lahir = ?,
+                agama = ?,
+                email = ?,
+                no_wa = ?,
+                asal_sekolah = ?,
+                npsn_asal_sekolah = ?,
+                jalur_pendaftaran = ?,
+                alamat_domisili = ?,
+                nama_ayah = ?,
+                nama_ibu = ?,
+                nama_ortu = ?,
+                no_hp = ?,
+                pekerjaan_ortu = ?,
+                penghasilan_ortu = ?,
+                catatan = ?,
+                berkas_foto = ?,
+                berkas_kk = ?,
+                berkas_akta = ?,
+                berkas_ijazah = ?,
+                is_submitted = 1
+            WHERE id_pendaftar = ?
+        `, [
+            nama_siswa ? nama_siswa.trim() : curr.nama_siswa,
+            nisn ? nisn.trim() : null,
+            jenis_kelamin || curr.jenis_kelamin || 'Laki-laki',
+            tempat_lahir ? tempat_lahir.trim() : null,
+            tglLahir,
+            agama || null,
+            email ? email.trim() : curr.email,
+            no_wa ? no_wa.trim() : curr.no_wa,
+            asal_sekolah ? asal_sekolah.trim() : '-',
+            npsn_asal_sekolah ? npsn_asal_sekolah.trim() : null,
+            jalur_pendaftaran || curr.jalur_pendaftaran || 'Zonasi',
+            alamat_domisili ? alamat_domisili.trim() : '-',
+            nama_ayah ? nama_ayah.trim() : null,
+            nama_ibu ? nama_ibu.trim() : null,
+            nama_ortu ? nama_ortu.trim() : (nama_ayah || curr.nama_ortu || '-'),
+            no_hp ? no_hp.trim() : (no_wa || curr.no_hp || '-'),
+            pekerjaan_ortu || null,
+            penghasilan_ortu || null,
+            catatan ? catatan.trim() : null,
+            berkas_foto,
+            berkas_kk,
+            berkas_akta,
+            berkas_ijazah,
+            studentId
+        ]);
+
+        if (nama_siswa) req.session.ppdbUser.nama = nama_siswa.trim();
+        if (email) req.session.ppdbUser.email = email.trim();
+
+        res.redirect('/ppdb/dashboard?status=success&msg=' + encodeURIComponent('Data formulir pendaftaran dan berkas persyaratan berhasil disimpan!'));
+    } catch (error) {
+        console.error('Error update PPDB:', error);
+        res.redirect('/ppdb/dashboard?status=error&msg=' + encodeURIComponent('Gagal menyimpan formulir: ' + error.message));
     }
 });
 
@@ -942,6 +1267,24 @@ app.post('/admin/galeri/hapus/:id', isAuthenticated, async (req, res) => {
 // ==========================================
 // CRUD PENERIMAAN PESERTA DIDIK BARU (PPDB)
 // ==========================================
+
+// Navigasi Langsung Menu Admin PPDB (/admin/ppdb)
+app.get('/admin/ppdb', isAuthenticated, (req, res) => {
+    res.redirect('/admin?tab=ppdb');
+});
+
+// API Detail Pendaftar PPDB untuk Admin Modal (/admin/ppdb/detail/:id)
+app.get('/admin/ppdb/detail/:id', isAuthenticated, async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM pendaftar_ppdb WHERE id_pendaftar = ?', [req.params.id]);
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Data pendaftar PPDB tidak ditemukan.' });
+        }
+        res.json({ success: true, data: rows[0] });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Kesalahan server: ' + error.message });
+    }
+});
 
 // 1. Tambah Calon Siswa Baru Manual (Oleh Panitia di Loket Sekolah)
 app.post('/admin/ppdb/tambah', isAuthenticated, async (req, res) => {

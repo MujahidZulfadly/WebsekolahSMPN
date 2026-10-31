@@ -16,103 +16,74 @@
             subtitle: 'Pendaftaran dan seleksi online calon siswa UPT SMPN 1 Rantepao — Membentuk insan berkarakter, berprestasi, dan berakar kuat pada nilai budaya Toraja'
             , breadcrumbs: [ { label: 'Beranda' , url: '/' }, { label: 'PPDB 2026' } ], waveFill: 'text-slate-50' }) %>
 
-            <!-- Action & Highlight Info Bar -->
+            <!-- Action & Highlight Info Bar: Sekretariat Pelayanan PPDB -->
             <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 relative z-20 w-full">
-                <div class="grid lg:grid-cols-12 gap-6 items-stretch">
-
-                    <!-- Quick Actions Card (7 Cols) -->
-                    <div data-aos="fade-up"
-                        class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/80 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                                <span class="text-xs font-black uppercase tracking-wider text-blue-950">Pendaftaran
-                                    Terbuka Resmi</span>
+                <div data-aos="fade-up"
+                    class="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-blue-800/60">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0 border border-amber-400/30 shadow-inner">
+                                <i class="fa-solid fa-building-columns"></i>
                             </div>
-                            <h2 class="text-xl sm:text-2xl font-black text-blue-950 leading-tight">
-                                Siap Menjadi Bagian dari <%= profil.nama_sekolah || 'UPT SMPN 1 Rantepao' %>?
-                            </h2>
-                            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                                Layanan pendaftaran peserta didik baru diselenggarakan secara transparan, akuntabel, dan
-                                bebas biaya pungutan (Rp 0,-).
-                            </p>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] text-amber-400 font-extrabold uppercase tracking-wider">Sekretariat Pelayanan Resmi</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Loket Buka
+                                    </span>
+                                </div>
+                                <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">Pusat Layanan PPDB Online & Offline</h3>
+                            </div>
                         </div>
 
-                        <div class="pt-6 flex flex-wrap gap-3">
-                            <a href="#cek-status"
-                                class="px-5 py-3 bg-blue-950 hover:bg-blue-900 text-amber-400 font-extrabold text-xs sm:text-sm rounded-2xl transition-all shadow-md shadow-blue-950/20 hover:scale-105 active:scale-95 flex items-center gap-2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <span>Cek Status Kelulusan</span>
-                            </a>
-                            <a href="#formulir-ppdb"
-                                class="px-5 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-blue-950 font-black text-xs sm:text-sm rounded-2xl transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-2">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                                <span>Formulir Online</span>
-                            </a>
-                            <a href="#jalur-ppdb"
-                                class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm rounded-2xl transition hover:scale-105 flex items-center gap-1.5">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <a href="#jalur-ppdb" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition border border-white/10 flex items-center gap-1.5">
                                 <span>4 Jalur & Kuota</span>
-                                <span>→</span>
+                                <span>↓</span>
                             </a>
+                            <a href="#cek-status" class="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition border border-amber-400/30 flex items-center gap-1.5">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                <span>Cek Kelulusan</span>
+                            </a>
+                            <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-xs">
+                                <span class="text-slate-300 text-[11px]">Biaya:</span>
+                                <span class="font-black text-emerald-400 text-xs">GRATIS (Rp 0,-)</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Quick Service Desk Highlights (5 Cols) -->
-                    <div data-aos="fade-up" data-aos-delay="100"
-                        class="lg:col-span-5 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl border border-blue-800/60 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                                <div>
-                                    <span
-                                        class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Sekretariat
-                                        Pelayanan</span>
-                                    <h3 class="text-sm sm:text-base font-black text-white mt-0.5">PPDB Online & Offline
-                                    </h3>
-                                </div>
-                                <span
-                                    class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-black inline-flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Buka
-                                </span>
+                    <!-- 3 Info Items Grid -->
+                    <div class="grid sm:grid-cols-3 gap-6 pt-6 text-xs text-slate-300">
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-amber-400 shrink-0">
+                                <i class="fa-solid fa-location-dot text-sm"></i>
                             </div>
-
-                            <div class="space-y-2.5 text-xs text-slate-300 mt-4">
-                                <div class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-building-columns text-amber-400 text-sm mt-0.5 shrink-0"></i>
-                                    <div>
-                                        <strong class="text-white">Lokasi Loket:</strong>
-                                        <p class="text-[11px] text-slate-300">
-                                            <%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao' %>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-clock text-amber-400 text-sm mt-0.5 shrink-0"></i>
-                                    <div>
-                                        <strong class="text-white">Waktu Layanan:</strong>
-                                        <p class="text-[11px] text-slate-300">Senin – Sabtu, 08.00 – 14.00 WITA</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-phone text-amber-400 text-sm mt-0.5 shrink-0"></i>
-                                    <div>
-                                        <strong class="text-white">Hotline / WhatsApp:</strong>
-                                        <p class="text-[11px] text-amber-300 font-mono font-bold">
-                                            <%= profil.telepon || '(0423) 21123' %> / 0812-3456-7890
-                                        </p>
-                                    </div>
-                                </div>
+                            <div>
+                                <strong class="text-white text-xs block">Lokasi Loket:</strong>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed"><%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao, Kab. Toraja Utara' %></p>
                             </div>
                         </div>
 
-                        <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-                            <span class="text-slate-300 font-medium">Biaya Pendaftaran:</span>
-                            <span
-                                class="font-black text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px]">
-                                GRATIS (Rp 0,-)
-                            </span>
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-amber-400 shrink-0">
+                                <i class="fa-solid fa-clock text-sm"></i>
+                            </div>
+                            <div>
+                                <strong class="text-white text-xs block">Waktu Layanan:</strong>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">Senin – Sabtu, 08.00 – 14.00 WITA</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-amber-400 shrink-0">
+                                <i class="fa-solid fa-phone text-sm"></i>
+                            </div>
+                            <div>
+                                <strong class="text-white text-xs block">Hotline & WhatsApp:</strong>
+                                <p class="text-[11px] text-amber-300 font-mono font-bold mt-0.5"><%= profil.telepon || '(0423) 21123' %> / 0812-3456-7890</p>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </section>
 
@@ -726,176 +697,33 @@
                     </div>
                 </section>
 
-                <!-- Section 4: Formulir Pra-Pendaftaran & Tanya Panitia -->
-                <section id="formulir-ppdb" data-aos="fade-up"
-                    class="bg-gradient-to-br from-blue-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
-                    <div class="max-w-3xl mx-auto">
-
-                        <div class="text-center mb-8">
-                            <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Layanan Informasi &
-                                Konsultasi</span>
-                            <h2 class="text-3xl font-extrabold text-white mt-1">Formulir Konsultasi & Pra-Daftar PPDB
-                            </h2>
-                            <p class="text-xs sm:text-sm text-slate-300 mt-2">
-                                Punya pertanyaan seputar zonasi atau ingin mencatatkan minat pendaftaran putra-putri
-                                Anda? Silakan isi formulir di bawah ini. Panitia PPDB akan segera menghubungi Anda.
-                            </p>
+                <!-- Section 4: Portal Pendaftaran Mandiri Calon Siswa -->
+                <section data-aos="fade-up"
+                    class="bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden border border-blue-800/80">
+                    <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="max-w-3xl mx-auto text-center space-y-6 relative z-10">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Portal Pendaftaran Mandiri Resmi</span>
                         </div>
-
-                        <!-- Alert Sukses Terkirim -->
-                        <div id="ppdb-sukses-alert"
-                            class="hidden mb-6 p-6 bg-emerald-950/80 border-2 border-emerald-400 text-emerald-100 rounded-3xl shadow-2xl backdrop-blur-md">
-                            <div class="flex items-start gap-4">
-                                <div
-                                    class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-extrabold text-2xl flex-shrink-0 shadow-lg shadow-emerald-500/30">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-                                <div class="space-y-2 flex-1">
-                                    <span
-                                        class="inline-block px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 text-[11px] font-extrabold uppercase tracking-wider">
-                                        Registrasi Berhasil Disimpan
-                                    </span>
-                                    <h3 class="text-xl sm:text-2xl font-black text-white">Formulir Pendaftaran PPDB
-                                        Diterima!</h3>
-                                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
-                                        Terima kasih telah mendaftarkan putra/putri Anda di <strong>
-                                            <%= profil.nama_sekolah %>
-                                        </strong>. Data Anda telah masuk ke basis data panitia PPDB kami.
-                                    </p>
-
-                                    <!-- Nomor Pendaftaran Box -->
-                                    <div
-                                        class="p-4 bg-slate-900/90 rounded-2xl border border-amber-400/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-3">
-                                        <div>
-                                            <p class="text-[11px] uppercase tracking-wider text-amber-400 font-bold">
-                                                Nomor Pendaftaran Resmi Anda:</p>
-                                            <p id="nomor-registrasi-display"
-                                                class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider mt-0.5">
-                                                PPDB-2026-XXXX</p>
-                                        </div>
-                                        <div class="text-left sm:text-right flex flex-col sm:items-end gap-2">
-                                            <span
-                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/40">
-                                                Status: Menunggu Verifikasi Berkas
-                                            </span>
-                                            <button type="button" onclick="checkRegisteredNow()"
-                                                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl transition shadow">
-                                                <i class="fa-solid fa-magnifying-glass"></i>
-                                                <span>Cek Status Resmi Saya →</span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <p class="text-xs text-slate-300 pt-2 flex items-start gap-1.5">
-                                        <i class="fa-solid fa-thumbtack text-amber-400 mt-0.5"></i>
-                                        <span><strong>Langkah Selanjutnya:</strong> Catat atau screenshot nomor
-                                            pendaftaran di atas. Silakan kunjungi sekretariat loket PPDB SMPN 1 Rantepao
-                                            pada jam layanan untuk menyerahkan berkas fisik (fotokopi KK, Akta
-                                            Kelahiran, dan SKL/Rapor) kepada panitia verifikasi.</span>
-                                    </p>
-                                </div>
-                            </div>
+                        <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                            Siap Menjadi Siswa Baru di <%= profil.nama_sekolah || 'UPT SMPN 1 Rantepao' %>?
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                            Seluruh proses pendaftaran dilakukan secara mandiri melalui Akun Calon Siswa. Silakan buat akun baru untuk mengisi formulir lengkap data diri, asal sekolah, data orang tua/wali, serta mengunggah berkas persyaratan (Pas Foto, KK, Akta Kelahiran, dan Ijazah/SKL).
+                        </p>
+                        <div class="pt-2 flex flex-wrap items-center justify-center gap-4">
+                            <a href="/ppdb/register"
+                                class="px-7 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-blue-950 font-black text-sm rounded-2xl transition shadow-lg shadow-amber-500/25 hover:scale-105 active:scale-95 flex items-center gap-2.5">
+                                <i class="fa-solid fa-user-plus text-base"></i>
+                                <span>Daftar Akun Calon Siswa Baru</span>
+                            </a>
+                            <a href="/ppdb/login"
+                                class="px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-sm rounded-2xl border border-white/20 transition hover:scale-105 active:scale-95 flex items-center gap-2.5 backdrop-blur-sm">
+                                <i class="fa-solid fa-right-to-bracket text-amber-400"></i>
+                                <span>Masuk ke Dashboard Calon Siswa</span>
+                            </a>
                         </div>
-
-                        <form action="/ppdb/daftar" method="POST"
-                            class="space-y-5 bg-white/10 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/20">
-                            <div class="grid sm:grid-cols-12 gap-4">
-                                <div class="sm:col-span-8">
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Nama
-                                        Lengkap Calon Siswa *</label>
-                                    <input type="text" name="nama_calon_siswa" required
-                                        placeholder="Contoh: Daniel Todingallo"
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                </div>
-                                <div class="sm:col-span-4">
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">NISN
-                                        Siswa (10 Digit)</label>
-                                    <input type="text" name="nisn" maxlength="15" placeholder="Contoh: 0112345678"
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                </div>
-                            </div>
-
-                            <div class="grid sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Jenis
-                                        Kelamin *</label>
-                                    <select name="jenis_kelamin" required
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Asal
-                                        Sekolah SD / MI *</label>
-                                    <input type="text" name="asal_sekolah" required placeholder="Contoh: SDN 1 Rantepao"
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                </div>
-                            </div>
-
-                            <div class="grid sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Nama
-                                        Orang Tua / Wali Siswa *</label>
-                                    <input type="text" name="nama_orang_tua" required
-                                        placeholder="Contoh: Marthen Todingallo"
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">No.
-                                        WhatsApp / HP Aktif Ortu *</label>
-                                    <input type="text" name="no_wa" required placeholder="Contoh: 081245678901"
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                </div>
-                            </div>
-
-                            <div class="grid sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Pilihan
-                                        Jalur Pendaftaran *</label>
-                                    <select name="jalur_pilihan" required
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                        <option value="Zonasi">Jalur Zonasi (Domisili Terdekat KK)</option>
-                                        <option value="Prestasi">Jalur Prestasi (Nilai Rapor / Kejuaraan)</option>
-                                        <option value="Afirmasi">Jalur Afirmasi (KIP / PKH / Disabilitas)</option>
-                                        <option value="Perpindahan Tugas">Jalur Perpindahan Tugas Orang Tua</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Alamat
-                                        Tempat Tinggal / Domisili *</label>
-                                    <input type="text" name="alamat_domisili" required
-                                        placeholder="Contoh: Kel. Malango', Kec. Rantepao"
-                                        class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Pertanyaan
-                                    / Keterangan Khusus (Opsional)</label>
-                                <textarea name="pertanyaan" rows="3"
-                                    placeholder="Tuliskan jika ada prestasi yang dimiliki, nomor KIP, atau pertanyaan seputar berkas..."
-                                    class="w-full text-xs text-slate-900 border border-slate-300 rounded-xl px-4 py-3 focus:outline-amber-500 bg-white"></textarea>
-                            </div>
-
-                            <button type="submit"
-                                class="w-full py-4 bg-amber-500 hover:bg-amber-400 text-blue-950 font-extrabold text-sm rounded-xl transition shadow-xl hover:shadow-amber-500/20 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-paper-plane"></i>
-                                <span>Kirim Pendaftaran PPDB Sekarang</span>
-                            </button>
-                            <p class="text-[11px] text-slate-300 text-center">Data calon siswa akan langsung
-                                terverifikasi oleh Panitia PPDB <%= profil.nama_sekolah %>.</p>
-                        </form>
-
                     </div>
                 </section>
 

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <%- include('../partials/head', { title: 'Login Calon Siswa - PPDB Online SMPN 1 RANTEPAO' }) %>
+</head>
+
+<body class="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 min-h-screen flex items-center justify-center p-4 font-sans text-slate-800 relative overflow-hidden selection:bg-amber-400 selection:text-blue-950">
+
+    <!-- Decorative Glows -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-md w-full relative z-10 my-8">
+
+        <!-- Back to Website Link -->
+        <div class="mb-6 text-center">
+            <a href="/ppdb" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-amber-400 transition bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+                <i class="fa-solid fa-arrow-left text-[11px]"></i>
+                <span>Kembali ke Informasi PPDB</span>
+            </a>
+        </div>
+
+        <!-- Login Card Box -->
+        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 sm:p-10 relative overflow-hidden">
+            
+            <!-- School Brand Header -->
+            <div class="text-center mb-7">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-blue-950 font-black flex items-center justify-center text-2xl mx-auto shadow-lg shadow-amber-500/25 mb-4 border border-white/40">
+                    S1
+                </div>
+                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-900 border border-blue-200 text-[10px] font-extrabold uppercase tracking-wider">
+                    Portal Mandiri Pendaftar
+                </span>
+                <h1 class="text-2xl font-black text-blue-950 tracking-tight mt-2">Login Calon Siswa</h1>
+                <p class="text-xs text-slate-500 mt-1 font-medium">
+                    UPT SMPN 1 Rantepao • Tahun Ajaran 2026/2027
+                </p>
+            </div>
+
+            <!-- Alert Feedback -->
+            <% if (typeof alert !== 'undefined' && alert) { %>
+                <div class="mb-6 p-4 rounded-2xl text-xs font-semibold flex items-start gap-3 border <%= alert.status === 'error' ? 'bg-red-50 border-red-200 text-red-700' : (alert.status === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-blue-50 border-blue-200 text-blue-800') %>">
+                    <span class="text-sm shrink-0 mt-0.5">
+                        <i class="fa-solid <%= alert.status === 'error' ? 'fa-triangle-exclamation text-red-600' : (alert.status === 'success' ? 'fa-circle-check text-emerald-600' : 'fa-circle-info text-blue-600') %>"></i>
+                    </span>
+                    <div>
+                        <strong class="font-bold block mb-0.5"><%= alert.status === 'error' ? 'Peringatan' : (alert.status === 'success' ? 'Berhasil' : 'Informasi') %></strong>
+                        <span><%= alert.message %></span>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Form Login -->
+            <form action="/ppdb/login" method="POST" class="space-y-4">
+                
+                <!-- Identifier (Email atau No. Pendaftaran) -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                        Email atau No. Registrasi <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-id-card text-sm"></i>
+                        </div>
+                        <input type="text" name="identifier" required autofocus placeholder="nama@email.com atau PPDB-2026-XXXX"
+                            class="w-full text-xs sm:text-sm pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition font-medium">
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                        Kata Sandi <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-lock text-sm"></i>
+                        </div>
+                        <input type="password" id="login-password" name="password" required placeholder="Masukkan kata sandi akun"
+                            class="w-full text-xs sm:text-sm pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition">
+                        <button type="button" onclick="togglePass('login-password', 'eye-login-pass')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                            <i id="eye-login-pass" class="fa-solid fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full py-3.5 px-4 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-lg shadow-blue-900/25 flex items-center justify-center gap-2 group hover:scale-[1.01] active:scale-[0.99] mt-2">
+                    <i class="fa-solid fa-right-to-bracket text-amber-400 group-hover:translate-x-1 transition-transform"></i>
+                    <span>Masuk ke Dashboard Calon Siswa</span>
+                </button>
+            </form>
+
+            <!-- Switch to Register Link -->
+            <div class="mt-7 pt-5 border-t border-slate-100 text-center space-y-2.5">
+                <p class="text-xs text-slate-500">
+                    Belum memiliki akun calon siswa?
+                    <a href="/ppdb/register" class="font-bold text-amber-600 hover:text-amber-700 hover:underline transition">
+                        Daftar Akun Baru →
+                    </a>
+                </p>
+                <div>
+                    <a href="/ppdb#cek-status" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-blue-900 transition font-medium">
+                        <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                        <span>Cek Status Kelulusan Cepat</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Copyright -->
+        <p class="text-center text-xs text-slate-400 mt-6">
+            &copy; <%= new Date().getFullYear() %> UPT SMPN 1 Rantepao • Panitia PPDB Online
+        </p>
+
+    </div>
+
+    <script>
+        function togglePass(inputId, iconId) {
+            const el = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (el.type === 'password') {
+                el.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                el.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>
