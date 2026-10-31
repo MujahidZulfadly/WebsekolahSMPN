@@ -1,0 +1,72 @@
+<%
+    const bannerBadge = (typeof badge !== 'undefined' && badge) ? badge : '';
+    const bannerTitle = (typeof title !== 'undefined' && title) ? title : '';
+    const bannerSubtitle = (typeof subtitle !== 'undefined' && subtitle) ? subtitle : '';
+    const bannerBreadcrumbs = (typeof breadcrumbs !== 'undefined' && Array.isArray(breadcrumbs)) ? breadcrumbs : [];
+    const waveColor = (typeof waveFill !== 'undefined' && waveFill) ? waveFill : 'text-slate-50';
+%>
+
+<!-- ============================================================== -->
+<!-- SUB-HERO BANNER UNTUK HALAMAN DALAM -->
+<!-- ============================================================== -->
+<section class="relative bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white pt-14 pb-24 sm:pt-16 sm:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden select-none">
+    <!-- Ambient Background Glow Circles -->
+    <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-blue-600/20 blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-24 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10 text-center">
+        
+        <!-- Breadcrumbs Navigation -->
+        <% if (bannerBreadcrumbs && bannerBreadcrumbs.length > 0) { %>
+            <nav class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-slate-300 mb-5" data-aos="fade-down" data-aos-duration="600">
+                <% bannerBreadcrumbs.forEach((crumb, idx) => { %>
+                    <% if (crumb.url) { %>
+                        <a href="<%= crumb.url %>" class="hover:text-amber-400 transition-colors font-medium">
+                            <%= crumb.label %>
+                        </a>
+                    <% } else { %>
+                        <span class="text-amber-400 font-bold truncate max-w-xs sm:max-w-md">
+                            <%= crumb.label %>
+                        </span>
+                    <% } %>
+                    <% if (idx < bannerBreadcrumbs.length - 1) { %>
+                        <span class="text-slate-500 text-[10px]">/</span>
+                    <% } %>
+                <% }) %>
+            </nav>
+        <% } %>
+
+        <!-- Optional Badge -->
+        <% if (bannerBadge) { %>
+            <div data-aos="fade-up" data-aos-duration="700">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-black uppercase tracking-wider backdrop-blur-md mb-4 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span><%= bannerBadge %></span>
+                </span>
+            </div>
+        <% } %>
+
+        <!-- Big Page Title with Gold Gradient -->
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight" data-aos="fade-up" data-aos-duration="800">
+            <span class="bg-gradient-to-r from-white via-slate-100 to-amber-200 bg-clip-text text-transparent">
+                <%= bannerTitle %>
+            </span>
+        </h1>
+
+        <!-- Subtitle Description -->
+        <% if (bannerSubtitle) { %>
+            <p class="mt-4 text-slate-300 text-xs sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-normal" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+                <%= bannerSubtitle %>
+            </p>
+        <% } %>
+
+    </div>
+
+    <!-- Wave SVG Divider di Bagian Bawah -->
+    <div class="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
+        <svg class="relative block w-full h-8 sm:h-12 <%= waveColor %>" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</section>
+

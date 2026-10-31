@@ -1,166 +1,179 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= itemBerita.judul %> - <%= profil.nama_sekolah %></title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <%- include('partials/head', { title: itemBerita.judul + ' - ' + (profil.nama_sekolah || 'SMPN 1 RANTEPAO') }) %>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-blue-950">
 
     <!-- Unified Navbar Component -->
     <%- include('partials/navbar', { activePage: 'berita' }) %>
 
-    <!-- Breadcrumb & Header Bar -->
-    <div class="bg-slate-100 border-b border-slate-200 py-3.5 px-4">
-        <div class="max-w-7xl mx-auto flex items-center text-xs text-slate-500 gap-2 overflow-x-auto">
-            <a href="/" class="hover:text-blue-900 font-medium">Beranda</a>
-            <span>/</span>
-            <a href="/#berita" class="hover:text-blue-900 font-medium">Berita & Kegiatan</a>
-            <span>/</span>
-            <span class="text-slate-800 font-semibold truncate max-w-xs sm:max-w-md"><%= itemBerita.judul %></span>
-        </div>
-    </div>
+    <!-- Sub-Hero Banner -->
+    <%- include('partials/subhero', {
+        badge: itemBerita.nama_kategori || 'Warta Sekolah',
+        title: itemBerita.judul,
+        subtitle: 'Dipublikasikan pada ' + new Date(itemBerita.tanggal_publish).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        breadcrumbs: [
+            { label: 'Beranda', url: '/' },
+            { label: 'Berita', url: '/#berita' },
+            { label: 'Detail Berita' }
+        ],
+        waveFill: 'text-slate-50'
+    }) %>
 
-    <!-- Main Content Grid -->
-    <main class="max-w-7xl mx-auto px-4 py-10 grid lg:grid-cols-3 gap-10 flex-1">
+    <!-- Main Content Layout -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 grid lg:grid-cols-12 gap-10 flex-1">
         
-        <!-- Article Column -->
-        <article class="lg:col-span-2 bg-white p-6 sm:p-10 rounded-3xl border border-slate-200/80 shadow-sm">
-            
-            <!-- Category & Metadata Header -->
-            <div class="flex flex-wrap items-center gap-2.5 mb-4">
-                <span class="bg-blue-100 text-blue-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                    <%= itemBerita.nama_kategori %>
-                </span>
-                <span class="text-xs text-slate-400 flex items-center gap-1">
-                    📅 <%= new Date(itemBerita.tanggal_publish).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
-                </span>
-                <span class="text-xs text-slate-400 flex items-center gap-1">
-                    👁️ <%= itemBerita.views || 0 %> kali dibaca
-                </span>
-            </div>
-
-            <!-- Title -->
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-950 leading-tight mb-6">
-                <%= itemBerita.judul %>
-            </h1>
-
-            <!-- Author Tag -->
-            <div class="flex items-center gap-3 pb-6 mb-6 border-b border-slate-100">
-                <div class="w-10 h-10 rounded-full bg-blue-900 text-amber-400 font-bold flex items-center justify-center text-sm shadow">
-                    AD
+        <!-- Article Column (8 Cols) -->
+        <article data-aos="fade-up" class="lg:col-span-8 bg-white p-6 sm:p-10 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div>
+                <!-- Metadata Badges -->
+                <div class="flex flex-wrap items-center gap-2.5 mb-4">
+                    <span class="bg-amber-100 text-amber-800 border border-amber-200 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                        <%= itemBerita.nama_kategori || 'Warta Sekolah' %>
+                    </span>
+                    <span class="text-xs text-slate-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                        <span><%= new Date(itemBerita.tanggal_publish).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                    </span>
+                    <span class="text-xs text-slate-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-eye text-slate-400"></i>
+                        <span><%= itemBerita.views || 0 %> kali dibaca</span>
+                    </span>
                 </div>
-                <div>
-                    <p class="text-xs font-bold text-slate-800">Ditulis oleh: <%= itemBerita.penulis_nama || 'Humas SMPN 1 Rantepao' %></p>
-                    <p class="text-[11px] text-slate-400">Tim Publikasi & Dokumentasi Sekolah</p>
-                </div>
-            </div>
 
-            <!-- Featured Image / Banner -->
-            <% if (itemBerita.gambar && itemBerita.gambar !== 'default.jpg' && itemBerita.gambar !== '') { %>
-                <div class="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-                    <img src="/uploads/berita/<%= itemBerita.gambar %>" alt="<%= itemBerita.judul %>" class="w-full max-h-[420px] object-cover">
-                </div>
-            <% } else { %>
-                <div class="mb-8 rounded-2xl p-8 bg-gradient-to-r from-blue-900 to-indigo-950 text-white flex items-center justify-between border border-blue-900 shadow-sm">
-                    <div>
-                        <span class="text-amber-400 text-xs font-bold uppercase tracking-wider">Warta Sekolah</span>
-                        <h3 class="text-lg font-bold mt-1"><%= profil.nama_sekolah %></h3>
-                        <p class="text-xs text-slate-300 mt-1">Mewujudkan generasi cerdas, berkarakter, dan berdaya saing.</p>
+                <!-- Big News Title -->
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-blue-950 leading-tight mb-6 tracking-tight">
+                    <%= itemBerita.judul %>
+                </h1>
+
+                <!-- Author & Editor Info -->
+                <div class="flex items-center gap-3.5 pb-6 mb-8 border-b border-slate-100">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-950 to-blue-800 text-amber-400 font-black flex items-center justify-center text-sm shadow">
+                        S1
                     </div>
-                    <div class="text-4xl opacity-40">📰</div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Ditulis oleh: <%= itemBerita.penulis_nama || 'Humas SMPN 1 Rantepao' %></p>
+                        <p class="text-[11px] text-slate-400">Tim Publikasi & Dokumentasi UPT SMPN 1 Rantepao</p>
+                    </div>
                 </div>
-            <% } %>
 
-            <!-- Article Body -->
-            <div class="text-slate-700 leading-relaxed text-sm sm:text-base space-y-4 whitespace-pre-line font-normal">
-                <%= itemBerita.isi_berita %>
+                <!-- Featured Image -->
+                <% if (itemBerita.gambar && itemBerita.gambar !== 'default.jpg' && itemBerita.gambar !== '') { %>
+                    <div class="mb-8 rounded-3xl overflow-hidden border border-slate-200/80 shadow-md">
+                        <img src="/uploads/berita/<%= itemBerita.gambar %>" alt="<%= itemBerita.judul %>" class="w-full max-h-[460px] object-cover">
+                    </div>
+                <% } else { %>
+                    <div class="mb-8 rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white flex items-center justify-between border border-blue-900 shadow-md">
+                        <div>
+                            <span class="text-amber-400 text-xs font-black uppercase tracking-wider">Warta Resmi Sekolah</span>
+                            <h3 class="text-xl sm:text-2xl font-black mt-1"><%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %></h3>
+                            <p class="text-xs text-slate-300 mt-1 max-w-md">Membangun generasi unggul yang cerdas, berintegritas, dan berakhlak mulia.</p>
+                        </div>
+                        <div class="text-5xl opacity-40 text-amber-400"><i class="fa-solid fa-newspaper"></i></div>
+                    </div>
+                <% } %>
+
+                <!-- Article Content Body -->
+                <div class="text-slate-700 leading-relaxed text-sm sm:text-base space-y-4 whitespace-pre-line font-normal">
+                    <%= itemBerita.isi_berita %>
+                </div>
             </div>
 
-            <!-- Share Buttons Section -->
-            <div class="mt-10 pt-6 border-t border-slate-100">
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Bagikan Berita Ini:</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" onclick="shareToWA()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition shadow-sm">
-                        <span>💬 WhatsApp</span>
+            <!-- Share & Navigation Section -->
+            <div class="mt-12 pt-6 border-t border-slate-100">
+                <p class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">Bagikan Informasi Ini:</p>
+                <div class="flex flex-wrap gap-2.5 items-center">
+                    <button type="button" onclick="shareToWA()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition shadow-sm hover:scale-105 active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>WhatsApp</span>
                     </button>
-                    <button type="button" onclick="copyArticleLink()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition">
-                        <span id="copy-btn-text">📋 Salin Tautan</span>
+                    <button type="button" onclick="copyArticleLink()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-2 transition hover:scale-105 active:scale-95">
+                        <span id="copy-btn-text" class="flex items-center gap-1.5"><i class="fa-solid fa-copy"></i><span>Salin Tautan</span></span>
                     </button>
-                    <a href="/#berita" class="ml-auto px-4 py-2 border border-blue-900 text-blue-900 hover:bg-blue-50 text-xs font-bold rounded-xl transition">
-                        ← Kembali ke Daftar Berita
+                    <a href="/#berita" class="ml-auto px-5 py-2.5 bg-blue-950 hover:bg-blue-900 text-amber-400 text-xs font-bold rounded-xl transition shadow flex items-center gap-1.5 hover:scale-105">
+                        <span>← Kembali ke Beranda</span>
                     </a>
                 </div>
             </div>
 
         </article>
 
-        <!-- Sidebar Column -->
-        <aside class="space-y-8">
+        <!-- Sidebar Column (4 Cols) -->
+        <aside class="lg:col-span-4 space-y-8">
             
-            <!-- Berita Lainnya -->
-            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
-                <h3 class="font-bold text-base text-blue-950 pb-3 border-b border-slate-100 flex items-center gap-2">
-                    <span>📰</span> Berita Terbaru Lainnya
+            <!-- Berita Terbaru Lainnya -->
+            <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-sm">
+                <h3 class="font-black text-base text-blue-950 pb-3 border-b border-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-newspaper text-amber-500"></i>
+                    <span>Berita Terbaru Lainnya</span>
                 </h3>
                 <div class="divide-y divide-slate-100 mt-2">
-                    <% if (beritaLainnya.length === 0) { %>
+                    <% if (!beritaLainnya || beritaLainnya.length === 0) { %>
                         <p class="text-xs text-slate-400 py-4">Belum ada berita lainnya.</p>
+                    <% } else { %>
+                        <% beritaLainnya.forEach(other => { %>
+                            <div class="py-3.5 group">
+                                <span class="text-[10px] font-black text-amber-600 uppercase tracking-wider"><%= other.nama_kategori %></span>
+                                <a href="/berita/<%= other.slug %>" class="block font-bold text-xs sm:text-sm text-slate-800 group-hover:text-blue-900 transition mt-1 line-clamp-2 leading-snug">
+                                    <%= other.judul %>
+                                </a>
+                                <span class="text-[10px] text-slate-400 mt-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                                    <span><%= new Date(other.tanggal_publish).toLocaleDateString('id-ID') %></span>
+                                </span>
+                            </div>
+                        <% }) %>
                     <% } %>
-                    <% beritaLainnya.forEach(other => { %>
-                        <div class="py-3.5 group">
-                            <span class="text-[10px] font-bold text-amber-600 uppercase"><%= other.nama_kategori %></span>
-                            <a href="/berita/<%= other.slug %>" class="block font-bold text-xs text-slate-800 group-hover:text-blue-600 transition mt-1 line-clamp-2">
-                                <%= other.judul %>
-                            </a>
-                            <span class="text-[10px] text-slate-400 mt-1 block">
-                                📅 <%= new Date(other.tanggal_publish).toLocaleDateString('id-ID') %>
-                            </span>
-                        </div>
-                    <% }) %>
                 </div>
             </div>
 
-            <!-- Pengumuman Singkat -->
-            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
-                <h3 class="font-bold text-base text-blue-950 pb-3 border-b border-slate-100 flex items-center gap-2">
-                    <span>📢</span> Pengumuman Terkini
+            <!-- Pengumuman Terkini -->
+            <div class="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-sm">
+                <h3 class="font-black text-base text-blue-950 pb-3 border-b border-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn text-amber-500"></i>
+                    <span>Pengumuman Terkini</span>
                 </h3>
                 <div class="space-y-3 mt-3">
-                    <% pengumumanList.forEach(p => { %>
-                        <div class="p-3 bg-amber-50/50 rounded-xl border border-amber-200/60">
-                            <span class="text-[10px] text-amber-800 font-semibold">📌 <%= new Date(p.tanggal_terbit).toLocaleDateString('id-ID') %></span>
-                            <h4 class="font-bold text-xs text-slate-800 mt-1"><%= p.judul_pengumuman %></h4>
-                            <p class="text-[11px] text-slate-600 mt-1 line-clamp-2"><%= p.isi_pengumuman %></p>
-                        </div>
-                    <% }) %>
+                    <% if (!pengumumanList || pengumumanList.length === 0) { %>
+                        <p class="text-xs text-slate-400 py-2">Tidak ada pengumuman terbaru.</p>
+                    <% } else { %>
+                        <% pengumumanList.forEach(p => { %>
+                            <div class="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200/60">
+                                <span class="text-[10px] text-amber-800 font-bold flex items-center gap-1.5">
+                                    <i class="fa-solid fa-thumbtack text-amber-600"></i>
+                                    <span><%= new Date(p.tanggal_terbit).toLocaleDateString('id-ID') %></span>
+                                </span>
+                                <h4 class="font-bold text-xs text-slate-900 mt-1"><%= p.judul_pengumuman %></h4>
+                                <p class="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-relaxed"><%= p.isi_pengumuman %></p>
+                            </div>
+                        <% }) %>
+                    <% } %>
                 </div>
             </div>
 
-            <!-- Info Kontak Cepat -->
-            <div class="bg-gradient-to-br from-blue-950 to-slate-900 text-white p-6 rounded-3xl shadow-md">
-                <h4 class="font-bold text-sm text-amber-400 mb-2"><%= profil.nama_sekolah %></h4>
-                <p class="text-xs text-slate-300 leading-relaxed"><%= profil.alamat %></p>
-                <div class="mt-4 pt-4 border-t border-white/10 text-xs text-slate-300 space-y-1">
-                    <p>📞 Telp: <%= profil.telepon %></p>
-                    <p>✉️ Email: <%= profil.email_sekolah %></p>
+            <!-- Kartu PPDB Cepat -->
+            <div class="bg-gradient-to-br from-amber-500 to-yellow-400 text-blue-950 p-6 rounded-3xl shadow-lg border border-amber-300">
+                <span class="px-2.5 py-0.5 rounded-full bg-blue-950 text-white font-black text-[10px] tracking-wider uppercase mb-2 inline-block">
+                    PPDB 2026/2027
+                </span>
+                <h4 class="font-black text-base leading-snug">Penerimaan Siswa Baru</h4>
+                <p class="text-xs text-blue-950/80 mt-1 leading-relaxed">
+                    Pendaftaran dan pengecekan hasil seleksi calon siswa SMPN 1 Rantepao sudah dapat diakses online.
+                </p>
+                <a href="/ppdb" class="mt-4 inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-950 hover:bg-blue-900 text-amber-400 font-bold text-xs rounded-xl shadow transition">
+                    <span>Cek Alur PPDB Online</span>
+                    <span>→</span>
+                </a>
+            </div>
+
+            <!-- Info Kontak Singkat -->
+            <div class="bg-gradient-to-br from-blue-950 to-slate-900 text-white p-6 rounded-3xl shadow-md border border-white/10">
+                <h4 class="font-black text-sm text-amber-400 mb-2"><%= profil.nama_sekolah || 'SMPN 1 Rantepao' %></h4>
+                <p class="text-xs text-slate-300 leading-relaxed"><%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao' %></p>
+                <div class="mt-4 pt-4 border-t border-white/10 text-xs text-slate-300 space-y-1.5 font-medium">
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-phone text-amber-400"></i><span>Telp: <%= profil.telepon || '(0423) 21123' %></span></p>
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-envelope text-amber-400"></i><span>Email: <%= profil.email_sekolah || 'info@smpn1rantepao.sch.id' %></span></p>
                 </div>
             </div>
 
@@ -181,8 +194,10 @@
         function copyArticleLink() {
             navigator.clipboard.writeText(window.location.href).then(() => {
                 const btn = document.getElementById('copy-btn-text');
-                btn.textContent = '✓ Tautan Disalin!';
-                setTimeout(() => { btn.textContent = '📋 Salin Tautan'; }, 2000);
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i><span>Tautan Disalin!</span>';
+                setTimeout(() => { 
+                    btn.innerHTML = '<i class="fa-solid fa-copy"></i><span>Salin Tautan</span>'; 
+                }, 2000);
             });
         }
     </script>

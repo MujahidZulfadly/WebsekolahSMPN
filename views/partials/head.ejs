@@ -1,0 +1,88 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= (typeof title !== 'undefined' && title) ? title : ((typeof profil !== 'undefined' && profil.nama_sekolah) ? (profil.nama_sekolah + ' - Kabupaten Toraja Utara') : 'UPT SMPN 1 Rantepao - Toraja Utara') %></title>
+
+<!-- Google Fonts: Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- AOS (Animate On Scroll) CSS CDN -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<!-- Font Awesome 6 Icons CDN (Aset Ikon Vektor Resmi) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Swiper Carousel CSS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Poppins', 'sans-serif'],
+                },
+                colors: {
+                    brand: {
+                        50: '#eff6ff',
+                        100: '#dbeafe',
+                        800: '#1e40af',
+                        900: '#1e3a8a',
+                        950: '#0b132b',
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    /* Preloader Animation */
+    @keyframes loadingProgress {
+        0% { width: 0%; }
+        45% { width: 68%; }
+        100% { width: 100%; }
+    }
+    .animate-progress-bar {
+        animation: loadingProgress 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    /* Glassmorphism Styles */
+    .glass-navbar {
+        background: rgba(11, 19, 43, 0.90);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+    }
+    .glass-hero-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .glass-card-light {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0b132b;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #2563eb;
+        border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #f59e0b;
+    }
+</style>
+

@@ -1,116 +1,230 @@
-<% const currentActive = (typeof activePage !== 'undefined' && activePage) ? activePage : ''; %>
-<!-- Unified Header & Navbar SMPN 1 Rantepao -->
-<header class="bg-blue-950 text-white sticky top-0 z-50 shadow-md border-b-4 border-amber-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
-            
-            <!-- School Brand / Logo -->
-            <a href="/" class="flex items-center space-x-3 group flex-shrink-0">
-                <div class="w-11 h-11 bg-amber-500 rounded-full flex items-center justify-center font-bold text-blue-950 text-xl group-hover:scale-105 transition-transform shadow flex-shrink-0">
-                    S1
-                </div>
-                <div>
-                    <h1 class="font-bold text-base sm:text-lg leading-tight tracking-tight text-white group-hover:text-amber-400 transition">
-                        <%= profil.nama_sekolah || 'SMPN 1 RANTEPAO' %>
-                    </h1>
-                    <p class="text-[11px] sm:text-xs text-amber-400">
-                        Kabupaten Toraja Utara • Akreditasi <%= profil.akreditasi || 'A' %>
-                    </p>
-                </div>
-            </a>
+<% const currentActive=(typeof activePage !=='undefined' && activePage) ? activePage : '' ; const listPengumuman=(typeof
+    pengumuman !=='undefined' && Array.isArray(pengumuman)) ? pengumuman : ((typeof pengumumanList !=='undefined' &&
+    Array.isArray(pengumumanList)) ? pengumumanList : []); const profilData=(typeof profil !=='undefined' && profil) ?
+    profil : {}; %>
 
-            <!-- Desktop Navigation Links -->
-            <nav class="hidden lg:flex items-center space-x-6 text-sm font-medium">
-                <a href="/" class="<%= currentActive === 'beranda' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Beranda
-                </a>
-                <a href="/#profil" class="<%= currentActive === 'profil' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Profil
-                </a>
-                <a href="/#berita" class="<%= currentActive === 'berita' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Berita
-                </a>
-                <a href="/#guru" class="<%= currentActive === 'guru' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Direktori Guru
-                </a>
-                <a href="/#eskul" class="<%= currentActive === 'eskul' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Ekstrakurikuler
-                </a>
-                <a href="/galeri" class="<%= currentActive === 'galeri' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Galeri Foto
-                </a>
-                <a href="/ppdb" class="transition flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold <%= currentActive === 'ppdb' ? 'bg-amber-500 text-blue-950 shadow' : 'bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 border border-amber-500/30' %>">
-                    <span>PPDB 2026</span>
-                    <span class="w-2 h-2 rounded-full <%= currentActive === 'ppdb' ? 'bg-blue-950' : 'bg-emerald-400 animate-pulse' %>"></span>
-                </a>
-                <a href="/#kontak" class="<%= currentActive === 'kontak' ? 'text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5' : 'text-slate-200 hover:text-amber-400 transition' %>">
-                    Kontak
-                </a>
-                <a href="/admin" class="bg-amber-500 hover:bg-amber-400 text-blue-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm flex items-center gap-1.5">
-                    <span>Panel Admin</span>
-                    <span>⚙</span>
-                </a>
-            </nav>
+    <!-- ============================================================== -->
+    <!-- TOP BAR & RUNNING TEXT (MARQUEE) -->
+    <!-- ============================================================== -->
+    <div
+        class="bg-gradient-to-r from-blue-950 via-blue-900 to-blue-950 text-white text-xs border-b border-blue-800/60 relative z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3">
 
-            <!-- Mobile Hamburger Button -->
-            <div class="lg:hidden flex items-center gap-2">
-                <a href="/ppdb" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-500 text-blue-950 flex items-center gap-1">
-                    <span>PPDB</span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-950"></span>
-                </a>
-                <button type="button" id="mobile-nav-toggle" class="p-2 rounded-lg bg-blue-900 text-white hover:bg-blue-800 transition focus:outline-none" aria-label="Buka Menu">
-                    <svg class="w-6 h-6" id="mobile-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <!-- Badge Pengumuman -->
+            <div class="flex items-center gap-2 shrink-0">
+                <span
+                    class="px-2.5 py-1 rounded-full bg-amber-500 text-blue-950 font-black text-[10px] tracking-wider uppercase flex items-center gap-1.5 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-blue-950 animate-ping"></span>
+                    <span>Warta Resmi</span>
+                </span>
+            </div>
+
+            <!-- Running Text (Marquee) from table pengumuman -->
+            <div class="flex-1 overflow-hidden">
+                <marquee onmouseover="this.stop();" onmouseout="this.start();" scrollamount="6"
+                    class="text-xs font-medium text-slate-200">
+                    <% if (listPengumuman && listPengumuman.length> 0) { %>
+                        <% listPengumuman.forEach((p)=> { %>
+                            <span class="inline-flex items-center gap-1.5 mr-10">
+                                <span class="text-amber-400 font-bold"><i class="fa-solid fa-bullhorn mr-1"></i>[<%= new
+                                        Date(p.tanggal_terbit).toLocaleDateString('id-ID') %>]</span>
+                                <strong class="text-white">
+                                    <%= p.judul_pengumuman %>:
+                                </strong>
+                                <span class="text-slate-300">
+                                    <%= p.isi_pengumuman.length> 110 ? p.isi_pengumuman.substring(0, 110) + '...' :
+                                        p.isi_pengumuman %>
+                                </span>
+                                <span class="text-amber-400/50 ml-4">•</span>
+                            </span>
+                            <% }) %>
+                                <% } else { %>
+                                    <span class="text-slate-300">Selamat datang di Portal Resmi <%=
+                                            profilData.nama_sekolah || 'UPT SMPN 1 Rantepao' %> — Melayani dengan
+                                            integritas, prestasi, dan keluhuran budaya Toraja.</span>
+                                    <% } %>
+                </marquee>
+            </div>
+
+            <!-- Quick Info Hotline -->
+            <div class="hidden md:flex items-center gap-4 text-[11px] text-slate-300 shrink-0 font-medium">
+                <span class="flex items-center gap-1.5 text-amber-300">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                        </path>
                     </svg>
-                </button>
-            </div>
-
-        </div>
-
-        <!-- Mobile Dropdown Navigation -->
-        <div id="mobile-nav-menu" class="hidden lg:hidden py-4 border-t border-blue-900/80 space-y-2">
-            <a href="/" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'beranda' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Beranda
-            </a>
-            <a href="/#profil" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'profil' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Profil & Visi Misi
-            </a>
-            <a href="/#berita" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'berita' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Berita & Pengumuman
-            </a>
-            <a href="/#guru" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'guru' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Direktori Guru
-            </a>
-            <a href="/#eskul" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'eskul' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Ekstrakurikuler
-            </a>
-            <a href="/galeri" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'galeri' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Galeri Foto
-            </a>
-            <a href="/ppdb" class="block px-3 py-2 rounded-lg text-xs font-bold <%= currentActive === 'ppdb' ? 'bg-amber-500 text-blue-950' : 'bg-amber-500/20 text-amber-400' %>">
-                PPDB 2026 (Penerimaan Siswa Baru)
-            </a>
-            <a href="/#kontak" class="block px-3 py-2 rounded-lg text-xs font-semibold <%= currentActive === 'kontak' ? 'bg-blue-900 text-amber-400' : 'text-slate-200 hover:bg-blue-900/50' %>">
-                Hubungi Kami (Kontak)
-            </a>
-            <div class="pt-2">
-                <a href="/admin" class="w-full text-center block px-4 py-2.5 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-blue-950 transition shadow-sm">
-                    Panel Admin ⚙
+                    <span>
+                        <%= profilData.telepon || '(0423) 21123' %>
+                    </span>
+                </span>
+                <span class="text-slate-600">|</span>
+                <a href="/ppdb"
+                    class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition">
+                    <span>PPDB 2026</span>
+                    <span>→</span>
                 </a>
             </div>
+
         </div>
-
     </div>
-</header>
 
-<script>
-    (function() {
-        const toggleBtn = document.getElementById('mobile-nav-toggle');
-        const menu = document.getElementById('mobile-nav-menu');
-        if (toggleBtn && menu) {
-            toggleBtn.addEventListener('click', function() {
-                menu.classList.toggle('hidden');
-            });
-        }
-    })();
-</script>
+    <!-- ============================================================== -->
+    <!-- STICKY GLASSMORPHISM NAVBAR -->
+    <!-- ============================================================== -->
+    <header class="sticky top-0 z-50 glass-navbar border-b border-white/10 shadow-xl transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+
+                <!-- School Brand / Logo -->
+                <a href="/" class="flex items-center space-x-3.5 group flex-shrink-0">
+                    <div
+                        class="w-12 h-12 bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 rounded-2xl flex items-center justify-center font-black text-blue-950 text-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-amber-500/20 flex-shrink-0 border border-white/30">
+                        S1
+                    </div>
+                    <div>
+                        <h1
+                            class="font-black text-base sm:text-lg leading-tight tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                            <%= profilData.nama_sekolah || 'SMPN 1 RANTEPAO' %>
+                        </h1>
+                        <p class="text-[11px] sm:text-xs text-amber-400 font-medium">
+                            Kab. Toraja Utara • Akreditasi <%= profilData.akreditasi || 'A' %>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links with animated hover indicators -->
+                <nav class="hidden lg:flex items-center space-x-5 text-xs font-semibold">
+                    <a href="/"
+                        class="<%= currentActive === 'beranda' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Beranda
+                        <% if (currentActive !=='beranda' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/#sambutan"
+                        class="text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group">
+                        Sambutan
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                    </a>
+
+                    <a href="/#profil"
+                        class="<%= currentActive === 'profil' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Visi & Misi
+                        <% if (currentActive !=='profil' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/#berita"
+                        class="<%= currentActive === 'berita' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Berita
+                        <% if (currentActive !=='berita' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/#guru"
+                        class="<%= currentActive === 'guru' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Dewan Guru
+                        <% if (currentActive !=='guru' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/#komite"
+                        class="<%= currentActive === 'komite' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Komite
+                        <% if (currentActive !=='komite' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/#eskul"
+                        class="<%= currentActive === 'eskul' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Ekstrakurikuler
+                        <% if (currentActive !=='eskul' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/#galeri"
+                        class="<%= currentActive === 'galeri' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Galeri
+                        <% if (currentActive !=='galeri' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <!-- PPDB Button with Pulsing Badge -->
+                    <a href="/ppdb"
+                        class="px-3.5 py-1.5 rounded-xl <%= currentActive === 'ppdb' ? 'bg-amber-500 text-blue-950 font-black shadow-md' : 'bg-amber-500/15 text-amber-300 hover:bg-amber-500 hover:text-blue-950 border border-amber-400/30' %> transition-all font-bold flex items-center gap-1.5 shadow-sm">
+                        <span>PPDB 2026</span>
+                        <span
+                            class="w-2 h-2 rounded-full <%= currentActive === 'ppdb' ? 'bg-blue-950' : 'bg-emerald-400 animate-pulse' %>"></span>
+                    </a>
+
+                    <a href="/#kontak"
+                        class="<%= currentActive === 'kontak' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Kontak
+                        <% if (currentActive !=='kontak' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+                </nav>
+
+                <!-- Mobile Navigation Trigger -->
+                <div class="lg:hidden flex items-center gap-2.5">
+                    <a href="/ppdb"
+                        class="px-2.5 py-1.5 rounded-lg text-xs font-bold <%= currentActive === 'ppdb' ? 'bg-amber-400 text-blue-950' : 'bg-amber-500 text-blue-950' %> flex items-center gap-1 shadow">
+                        <span>PPDB</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-950"></span>
+                    </a>
+                    <button type="button" id="mobile-toggle-btn"
+                        class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition focus:outline-none border border-white/20"
+                        aria-label="Buka Menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Mobile Dropdown Pane -->
+            <div id="mobile-menu-pane" class="hidden lg:hidden py-4 border-t border-white/10 space-y-2 pb-6">
+                <a href="/"
+                    class="block px-3 py-2 rounded-xl text-xs font-bold <%= currentActive === 'beranda' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Beranda</a>
+                <a href="/#sambutan"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-white/10">Sambutan
+                    Kepala Sekolah</a>
+                <a href="/#profil"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'profil' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Visi
+                    & Misi</a>
+                <a href="/#berita"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'berita' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Berita
+                    & Pengumuman</a>
+                <a href="/#guru"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'guru' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Dewan
+                    Guru</a>
+                <a href="/#komite"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'komite' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Komite
+                    Sekolah</a>
+                <a href="/#eskul"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'eskul' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Ekstrakurikuler</a>
+                <a href="/#galeri"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'galeri' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Galeri</a>
+                <a href="/ppdb"
+                    class="block px-3 py-2.5 rounded-xl text-xs font-bold <%= currentActive === 'ppdb' ? 'bg-amber-400 text-blue-950' : 'bg-amber-500 text-blue-950' %> flex items-center justify-between">
+                    <span>PPDB 2026 Online</span>
+                    <span>→</span>
+                </a>
+                <a href="/#kontak"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'kontak' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Hubungi
+                    Kami</a>
+            </div>
+        </div>
+    </header>

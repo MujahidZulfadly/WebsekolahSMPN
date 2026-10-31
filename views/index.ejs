@@ -2,459 +2,1514 @@
 <html lang="id" class="scroll-smooth">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= profil.nama_sekolah %> - Toraja Utara
-    </title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <%- include('partials/head', { title: (profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' ) + ' - Kabupaten Toraja Utara'
+        }) %>
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body
+    class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-blue-950">
 
-    <!-- Unified Navbar Component -->
+    <!-- ============================================================== -->
+    <!-- 1. SPLASH SCREEN (PRELOADER) -->
+    <!-- ============================================================== -->
+    <div id="preloader"
+        class="fixed inset-0 z-[9999] bg-blue-950 flex flex-col items-center justify-center transition-opacity duration-700 ease-out select-none">
+        <div class="relative flex flex-col items-center px-4">
+            <!-- Pulsing ambient glow -->
+            <div class="absolute -inset-6 rounded-full bg-amber-400/20 blur-2xl animate-pulse"></div>
+
+            <!-- School Logo Monogram with Rotating/Pulsing Animation -->
+            <div
+                class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-blue-950 flex items-center justify-center font-black text-3xl sm:text-4xl shadow-2xl shadow-amber-500/40 border-4 border-white/20 transform hover:scale-105 transition-transform">
+                <span class="animate-pulse tracking-tight">S1</span>
+                <!-- Ping outer ring -->
+                <div class="absolute inset-0 rounded-3xl border-2 border-amber-300/50 animate-ping opacity-40"></div>
+            </div>
+
+            <!-- School Title & Subtitle -->
+            <h2 class="text-xl sm:text-2xl font-black text-white mt-6 tracking-wide text-center">
+                <%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %>
+            </h2>
+            <p class="text-xs sm:text-sm text-amber-400 font-medium mt-1 tracking-wider text-center">
+                Kabupaten Toraja Utara • Akreditasi <%= profil.akreditasi || 'A' %>
+            </p>
+
+            <!-- Loading Bar with Amber-400 -->
+            <div
+                class="w-56 sm:w-72 h-1.5 bg-blue-900/80 rounded-full overflow-hidden mt-6 border border-blue-800/80 p-0.5">
+                <div
+                    class="h-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 rounded-full animate-progress-bar">
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-400 mt-3 font-mono tracking-widest uppercase">
+                Memuat Informasi Sekolah...
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- 2 & 3. UNIFIED TOP BAR & NAVBAR (PARTIAL) -->
+    <!-- ============================================================== -->
     <%- include('partials/navbar', { activePage: 'beranda' }) %>
 
-        <!-- Hero Banner -->
-        <section id="beranda" class="bg-gradient-to-r from-blue-900 via-blue-950 to-slate-900 text-white py-20 px-4">
-            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-                <div>
-                    <span
-                        class="bg-amber-500 text-blue-950 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                        NPSN: <%= profil.npsn %>
-                    </span>
-                    <h2 class="text-4xl md:text-5xl font-extrabold mt-4 leading-tight">
-                        Selamat Datang di Portal Resmi <span class="text-amber-400">
-                            <%= profil.nama_sekolah %>
-                        </span>
-                    </h2>
-                    <p class="mt-4 text-slate-300 leading-relaxed">
-                        <%= profil.sejarah %>
-                    </p>
-                    <div class="mt-8 flex space-x-4">
-                        <a href="#profil"
-                            class="bg-amber-500 hover:bg-amber-400 text-blue-950 font-bold px-6 py-3 rounded-lg transition shadow">
-                            Kenali Sekolah Kami
-                        </a>
-                        <a href="#berita"
-                            class="border border-white/40 hover:bg-white/10 px-6 py-3 rounded-lg transition">
-                            Berita Terbaru
-                        </a>
+        <!-- ============================================================== -->
+        <!-- 4. HERO SECTION INTERAKTIF (CAROUSEL & SAMBUTAN) -->
+        <!-- ============================================================== -->
+        <!-- ========================================== -->
+        <!-- HERO IMAGE SLIDER (GAYA MAN 1 KOLAKA)      -->
+        <!-- ========================================== -->
+        <section id="beranda" class="relative w-full h-[580px] md:h-[650px] overflow-hidden select-none">
+
+            <!-- Wadah Gambar Background Slider -->
+            <div id="hero-slides" class="relative w-full h-full">
+
+                <!-- SLIDE 1 -->
+                <div class="hero-slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-100 z-10">
+                    <!-- Ganti src gambar di bawah dengan foto asli sekolahmu nanti, misal: /images/gedung-smpn1.jpg -->
+                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80"
+                        alt="Suasana Sekolah"
+                        class="w-full h-full object-cover object-center scale-105 transition-transform duration-[5000ms]">
+                    <!-- Overlay Gelap -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-900/50 to-slate-950/30">
                     </div>
                 </div>
-                <div class="bg-white/10 p-6 rounded-2xl border border-white/20 backdrop-blur-sm">
-                    <h3 class="text-amber-400 font-bold text-lg mb-2">Sambutan Kepala Sekolah</h3>
-                    <p class="text-sm italic text-slate-200 leading-relaxed">"<%= profil.sambutan_kepsek %>"</p>
-                    <div class="mt-4 pt-4 border-t border-white/20">
-                        <p class="font-bold text-white">
-                            <%= profil.nama_kepsek %>
-                        </p>
-                        <p class="text-xs text-slate-300">NIP. <%= profil.nip_kepsek %>
-                        </p>
+
+                <!-- SLIDE 2 -->
+                <div class="hero-slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80"
+                        alt="Kegiatan Belajar"
+                        class="w-full h-full object-cover object-center scale-105 transition-transform duration-[5000ms]">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-900/50 to-slate-950/30">
+                    </div>
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="hero-slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1920&q=80"
+                        alt="Prestasi Siswa"
+                        class="w-full h-full object-cover object-center scale-105 transition-transform duration-[5000ms]">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-900/50 to-slate-950/30">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Kotak Glassmorphism di Sebelah Kiri -->
+            <div class="absolute inset-0 z-20 max-w-7xl mx-auto px-6 md:px-12 flex items-center">
+                <div
+                    class="bg-slate-900/55 backdrop-blur-md border border-white/20 p-8 md:p-11 rounded-3xl max-w-xl text-white shadow-2xl transition-all duration-500">
+                    <h2 id="slide-title" class="text-3xl md:text-4xl font-extrabold text-amber-400 tracking-wide">
+                        Pendidikan Berkualitas
+                    </h2>
+                    <p id="slide-desc" class="mt-4 text-sm md:text-base text-slate-100 leading-relaxed font-normal">
+                        Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. <%=
+                            profil.nama_sekolah %> berkomitmen mewujudkan sekolah yang Edukatif, Dinamis, dan Unggul di
+                            Toraja Utara.
+                    </p>
+                    <div class="mt-7">
+                        <a href="#profil"
+                            class="inline-flex items-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm px-7 py-3.5 rounded-full shadow-lg transition transform hover:-translate-y-0.5">
+                            Lihat Selengkapnya <span class="ml-2 text-lg leading-none">→</span>
+                        </a>
                     </div>
                 </div>
             </div>
+
+            <!-- Tombol Panah Kiri (<) dan Kanan (>) -->
+            <button onclick="prevSlide()"
+                class="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 p-3 rounded-full backdrop-blur-sm transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button onclick="nextSlide()"
+                class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-30 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 p-3 rounded-full backdrop-blur-sm transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <!-- Lekukan Gelombang Putih di Bagian Bawah (Wave Divider) -->
+            <div class="absolute bottom-0 left-0 w-full z-20 overflow-hidden leading-none">
+                <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="w-full h-14 md:h-24 preserve-3d">
+                    <path d="M0,64 C320,140 560,-20 880,64 C1160,136 1320,80 1440,32 L1440,120 L0,120 Z"
+                        class="fill-slate-50"></path>
+                </svg>
+            </div>
+
         </section>
 
-        <!-- Banner Pengumuman PPDB 2026/2027 -->
-        <div
-            class="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-blue-950 py-3 px-4 shadow-sm border-b border-amber-600/30">
-            <div
-                class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm font-semibold text-center sm:text-left">
-                <div class="flex items-center gap-2.5">
-                    <span
-                        class="px-2.5 py-0.5 rounded-full bg-blue-950 text-white font-bold text-[10px] uppercase tracking-wider">
-                        PPDB 2026/2027
-                    </span>
-                    <span>Penerimaan Peserta Didik Baru Segera Dibuka. Kenali 4 Jalur Resmi, Kuota, dan Persyaratan
-                        Berkas.</span>
+        <!-- Script Penggerak Slider Otomatis -->
+        <script>
+            const slides = document.querySelectorAll('.hero-slide');
+            const slideTitle = document.getElementById('slide-title');
+            const slideDesc = document.getElementById('slide-desc');
+
+            const slideContents = [
+                {
+                    title: "Pendidikan Berkualitas",
+                    desc: "Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. UPT SMPN 1 Rantepao berkomitmen mewujudkan generasi yang Edukatif, Dinamis, dan Optimis."
+                },
+                {
+                    title: "Unggul dalam Prestasi",
+                    desc: "Mengembangkan potensi akademik dan non-akademik siswa melalui pembimbingan intensif, fasilitas memadai, serta semangat kompetisi yang sehat di tingkat Kabupaten hingga Nasional."
+                },
+                {
+                    title: "Berbudaya & Berkarakter",
+                    desc: "Menanamkan nilai-nilai kedisiplinan, budi pekerti luhur, dan kearifan lokal budaya Toraja dalam lingkungan belajar yang aman, nyaman, dan menyenangkan."
+                }
+            ];
+
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('opacity-100', i === index);
+                    slide.classList.toggle('z-10', i === index);
+                    slide.classList.toggle('opacity-0', i !== index);
+                    slide.classList.toggle('z-0', i !== index);
+                });
+                slideTitle.textContent = slideContents[index].title;
+                slideDesc.textContent = slideContents[index].desc;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // Geser gambar otomatis setiap 5 detik
+            setInterval(nextSlide, 5000);
+        </script>
+
+        <!-- ============================================================== -->
+        <!-- 5. ANIMATED COUNTER STATISTIK (FLOATING CARDS) -->
+        <!-- ============================================================== -->
+        <section class="relative z-20 -mt-12 lg:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+
+                <!-- Stat 1: Siswa Aktif -->
+                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
+                    data-aos="zoom-in" data-aos-delay="100">
+                    <div class="flex items-center justify-between mb-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-900 group-hover:bg-blue-900 group-hover:text-amber-400 transition-colors flex items-center justify-center text-xl shadow-sm">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-black uppercase tracking-wider text-blue-900/60 bg-blue-50 px-2.5 py-1 rounded-full">
+                            Aktif
+                        </span>
+                    </div>
+                    <div
+                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
+                        <span class="counter-number" data-target="850">0</span>
+                        <span class="text-amber-500 font-extrabold">+</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        Siswa-Siswi Aktif
+                    </p>
                 </div>
-                <a href="/ppdb"
-                    class="px-4 py-1.5 rounded-lg bg-blue-950 hover:bg-blue-900 text-amber-400 font-bold text-xs transition shadow-sm whitespace-nowrap flex items-center gap-1">
-                    <span>Pelajari Alur & Syarat PPDB</span>
-                    <span>→</span>
-                </a>
+
+                <!-- Stat 2: Guru & Staf -->
+                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
+                    data-aos="zoom-in" data-aos-delay="200">
+                    <div class="flex items-center justify-between mb-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 group-hover:bg-amber-500 group-hover:text-blue-950 transition-colors flex items-center justify-center text-xl shadow-sm">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">
+                            Profesional
+                        </span>
+                    </div>
+                    <div
+                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
+                        <span class="counter-number"
+                            data-target="<%= (guru && guru.length > 0) ? guru.length : 42 %>">0</span>
+                        <span class="text-blue-900 font-extrabold">+</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        Guru & Tenaga Staf
+                    </p>
+                </div>
+
+                <!-- Stat 3: Rombongan Belajar -->
+                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
+                    data-aos="zoom-in" data-aos-delay="300">
+                    <div class="flex items-center justify-between mb-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors flex items-center justify-center text-xl shadow-sm">
+                            <i class="fa-solid fa-school"></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                            Kelas VII - IX
+                        </span>
+                    </div>
+                    <div
+                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
+                        <span class="counter-number" data-target="24">0</span>
+                        <span class="text-emerald-500 font-extrabold">Rombel</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        Ruang Kelas Belajar
+                    </p>
+                </div>
+
+                <!-- Stat 4: Ekstrakurikuler -->
+                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
+                    data-aos="zoom-in" data-aos-delay="400">
+                    <div class="flex items-center justify-between mb-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors flex items-center justify-center text-xl shadow-sm">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-black uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">
+                            Prestasi
+                        </span>
+                    </div>
+                    <div
+                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
+                        <span class="counter-number"
+                            data-target="<%= (eskul && eskul.length > 0) ? eskul.length : 12 %>">0</span>
+                        <span class="text-purple-500 font-extrabold">Cabang</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        Ekstrakurikuler Aktif
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PPDB 2026 CALLOUT RIBBON -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12" data-aos="fade-up">
+            <div
+                class="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-blue-950 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-amber-300">
+                <div class="flex items-center gap-4 text-center md:text-left flex-1">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-blue-950 text-amber-400 flex items-center justify-center text-2xl font-black shrink-0 shadow">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <span
+                            class="inline-block px-3 py-0.5 rounded-full bg-blue-950 text-white font-black text-[10px] tracking-wider uppercase mb-1">
+                            PPDB ONLINE T.A 2026/2027
+                        </span>
+                        <h3 class="text-lg sm:text-xl font-black leading-snug">
+                            Penerimaan Peserta Didik Baru Resmi Dibuka!
+                        </h3>
+                        <p class="text-xs sm:text-sm text-blue-950/80 font-medium mt-0.5">
+                            Tersedia 4 Jalur Seleksi: Zonasi, Afirmasi, Prestasi, dan Perpindahan Tugas Orang Tua. Cek
+                            kuota
+                            dan daftarkan putra-putri Anda.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <a href="/ppdb"
+                        class="px-6 py-3.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-amber-400 font-black text-xs sm:text-sm transition-all shadow-lg hover:scale-105 flex items-center gap-2">
+                        <span>Daftar dan Cek Status PPDB</span>
+                        <span>→</span>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Visi & Misi -->
-        <section id="profil" class="py-16 max-w-7xl mx-auto px-4">
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-blue-900">
-                    <h3 class="text-xl font-bold text-blue-950 mb-3">Visi Sekolah</h3>
-                    <p class="text-slate-600 leading-relaxed font-medium">"<%= profil.visi %>"</p>
-                </div>
-                <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-amber-500">
-                    <h3 class="text-xl font-bold text-blue-950 mb-3">Misi Sekolah</h3>
-                    <p class="text-slate-600 whitespace-pre-line leading-relaxed">
-                        <%= profil.misi %>
-                    </p>
-                </div>
+        <!-- ============================================================== -->
+        <!-- SAMBUTAN KEPALA SEKOLAH (BERADA TEPAT DI ATAS VISI & MISI) -->
+        <!-- ============================================================== -->
+        <section id="sambutan" class="py-20 bg-white border-y border-slate-200/80 relative overflow-hidden">
+            <!-- Subtle background ambient glows -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-amber-400/10 blur-3xl pointer-events-none">
             </div>
-        </section>
+            <div
+                class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-blue-600/10 blur-3xl pointer-events-none">
+            </div>
 
-        <!-- Berita & Pengumuman -->
-        <section id="berita" class="py-16 bg-slate-100 px-4">
-            <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-10">
-                <!-- Kolom Berita -->
-                <div class="lg:col-span-2">
-                    <h2 class="text-2xl font-bold text-blue-950 mb-6">Berita & Kegiatan Terbaru</h2>
-                    <div class="grid sm:grid-cols-2 gap-6">
-                        <% berita.forEach(item=> { %>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                <div class="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+
+                    <!-- Foto / Profil Kepala Sekolah (4 Cols) -->
+                    <div class="lg:col-span-4" data-aos="fade-right">
+                        <div class="relative mx-auto max-w-sm">
+                            <!-- Glow outline ring -->
                             <div
-                                class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200 flex flex-col justify-between hover:shadow-md transition">
-                                <div class="p-6">
-                                    <span class="text-xs font-bold text-amber-600 uppercase">
-                                        <%= item.nama_kategori %>
-                                    </span>
-                                    <h3
-                                        class="font-bold text-lg text-slate-800 mt-2 line-clamp-2 hover:text-blue-700 transition">
-                                        <a href="/berita/<%= item.slug %>">
-                                            <%= item.judul %>
-                                        </a>
-                                    </h3>
-                                    <p class="text-sm text-slate-600 mt-3 line-clamp-3">
-                                        <%= item.isi_berita %>
-                                    </p>
-                                </div>
+                                class="absolute -inset-3 rounded-3xl bg-gradient-to-tr from-blue-950 via-blue-900 to-amber-500 opacity-20 blur-xl transform -rotate-2">
+                            </div>
+
+                            <div
+                                class="relative bg-gradient-to-br from-blue-950 to-slate-900 rounded-3xl p-7 sm:p-8 text-center text-white border-2 border-amber-400/30 shadow-2xl overflow-hidden group">
+
+                                <!-- Ambient corner glow -->
                                 <div
-                                    class="px-6 py-3 bg-slate-50 border-t text-xs text-slate-500 flex justify-between items-center">
-                                    <span>📅 <%= new Date(item.tanggal_publish).toLocaleDateString('id-ID') %></span>
-                                    <a href="/berita/<%= item.slug %>"
-                                        class="text-blue-700 hover:text-blue-900 font-semibold transition hover:underline">
-                                        Baca Selengkapnya →
-                                    </a>
+                                    class="absolute top-0 right-0 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl pointer-events-none">
+                                </div>
+
+                                <!-- Avatar Kepala Sekolah -->
+                                <div
+                                    class="w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-blue-950 font-black text-4xl sm:text-5xl flex items-center justify-center shadow-xl border-4 border-white/20 mb-5 transform group-hover:scale-105 group-hover:rotate-2 transition-all duration-500">
+                                    <%= profil.nama_kepsek ? profil.nama_kepsek.charAt(0) : 'K' %>
+                                </div>
+
+                                <span
+                                    class="inline-block px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-extrabold text-[11px] uppercase tracking-wider mb-2">
+                                    Pimpinan Sekolah
+                                </span>
+
+                                <h3 class="font-black text-lg sm:text-xl text-white tracking-tight leading-snug">
+                                    <%= profil.nama_kepsek || 'Kepala Sekolah' %>
+                                </h3>
+
+                                <p class="text-xs text-amber-400 font-bold mt-1">
+                                    Kepala UPT SMPN 1 Rantepao
+                                </p>
+
+                                <p class="text-[11px] text-slate-300 mt-1 font-mono">
+                                    NIP. <%= profil.nip_kepsek || '-' %>
+                                </p>
+
+                                <div
+                                    class="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-2 text-xs text-slate-300">
+                                    <i class="fa-solid fa-building-columns text-amber-400"></i>
+                                    <span>Kabupaten Toraja Utara</span>
                                 </div>
                             </div>
-                            <% }) %>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Kolom Pengumuman -->
-                <div>
-                    <h2 class="text-2xl font-bold text-blue-950 mb-6">Pengumuman Resmi</h2>
-                    <div class="space-y-4">
-                        <% pengumuman.forEach(info=> { %>
-                            <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-red-600">
-                                <span class="text-xs text-slate-400">📌 <%= new
-                                        Date(info.tanggal_terbit).toLocaleDateString('id-ID') %></span>
-                                <h4 class="font-bold text-slate-800 mt-1">
-                                    <%= info.judul_pengumuman %>
-                                </h4>
-                                <p class="text-sm text-slate-600 mt-2">
-                                    <%= info.isi_pengumuman %>
+                    <!-- Teks Sambutan Lengkap (8 Cols) -->
+                    <div class="lg:col-span-8" data-aos="fade-left">
+                        <div class="space-y-4">
+                            <span
+                                class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200 inline-block">
+                                Sambutan Resmi Pimpinan
+                            </span>
+
+                            <h2
+                                class="text-2xl sm:text-3xl md:text-4xl font-black text-blue-950 tracking-tight leading-snug">
+                                Mewujudkan Pendidikan Bermutu & Generasi Berkarakter Luhur Toraja
+                            </h2>
+
+                            <!-- Large decorative quote marks & Sambutan Paragraphs -->
+                            <div class="relative pt-2">
+                                <span
+                                    class="text-amber-500/25 text-7xl font-serif absolute -top-4 -left-3 select-none pointer-events-none">“</span>
+                                <p
+                                    class="text-slate-700 text-sm sm:text-base leading-relaxed relative z-10 italic font-medium pl-6 border-l-4 border-amber-400 text-justify">
+                                    "<%= profil.sambutan_kepsek
+                                        || 'Selamat datang di situs resmi UPT SMPN 1 Rantepao. Kami berkomitmen untuk terus berinovasi dalam mewujudkan pendidikan yang bermutu, inklusif, dan berwawasan masa depan bagi seluruh putra-putri bangsa. Mari bersama-sama kita wujudkan generasi cerdas, berprestasi, dan berakhlak mulia.'
+                                        %>"
                                 </p>
                             </div>
-                            <% }) %>
+
+                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-2 text-justify">
+                                Sebagai sekolah rujukan di Kabupaten Toraja Utara, kami terus mengintegrasikan
+                                implementasi
+                                <strong>Kurikulum Merdeka</strong> dengan pembinaan karakter kebangsaan dan pelestarian
+                                nilai-nilai kearifan budaya lokal Toraja. Sinergi antara para pendidik, peserta didik,
+                                orang
+                                tua, dan masyarakat adalah fondasi utama keberhasilan kita bersama.
+                            </p>
+                        </div>
                     </div>
+
                 </div>
+
             </div>
         </section>
 
-        <!-- Direktori Guru & Tenaga Kependidikan -->
-        <section id="guru" class="py-16 max-w-7xl mx-auto px-4">
-            <div class="text-center mb-10">
-                <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Pendidik Berdedikasi</span>
-                <h2 class="text-3xl font-extrabold text-blue-950 mt-1">Tenaga Pendidik & Kependidikan</h2>
-                <p class="text-sm text-slate-500 max-w-xl mx-auto mt-2">Guru dan staf pengajar profesional yang
-                    berdedikasi membimbing dan mencerdaskan siswa-siswi <%= profil.nama_sekolah %>.</p>
-            </div>
-            <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <% guru.forEach(g=> { %>
-                    <div
-                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col items-center justify-between">
-                        <div class="flex flex-col items-center w-full">
-                            <div
-                                class="w-20 h-20 rounded-full overflow-hidden mb-4 border-2 border-amber-400/50 shadow flex items-center justify-center bg-blue-950 text-amber-400 font-bold text-2xl group-hover:scale-105 transition-transform flex-shrink-0">
-                                <% if (g.foto && !g.foto.startsWith('default') && g.foto !=='' ) { %>
-                                    <img src="/uploads/guru/<%= g.foto %>" alt="<%= g.nama_lengkap %>"
-                                        class="w-full h-full object-cover">
-                                    <% } else { %>
-                                        <span>
-                                            <%= g.nama_lengkap.charAt(0) %>
-                                        </span>
-                                        <% } %>
-                            </div>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-900 border border-blue-200 uppercase mb-2">
-                                <%= g.kategori_pegawai || 'Tenaga Pendidik' %>
-                            </span>
-                            <h3
-                                class="font-bold text-slate-900 text-sm leading-snug group-hover:text-blue-900 transition line-clamp-2">
-                                <%= g.nama_lengkap %>
-                            </h3>
-                            <p class="text-xs font-semibold text-amber-600 mt-1">
-                                <%= g.jabatan %>
-                            </p>
-                        </div>
-                        <div class="w-full pt-3 mt-3 border-t border-slate-100">
-                            <p class="text-[11px] text-slate-400">NIP. <%= g.nip || '-' %>
-                            </p>
-                        </div>
-                    </div>
-                    <% }) %>
+        <!-- ============================================================== -->
+        <!-- 6. VISI & MISI SEKOLAH (ANIMASI AOS DINAMIS) -->
+        <!-- ============================================================== -->
+        <section id="profil" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                <span
+                    class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                    Landasan Pendidikan
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                    Visi & Misi Sekolah
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                    Arah kebijakan dan komitmen seluruh civitas akademika <%= profil.nama_sekolah %> dalam mendidik
+                        tunas
+                        bangsa.
+                </p>
             </div>
 
-            <div class="mt-16 text-center mb-8">
-                <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Pengembangan Bakat &
-                    Minat</span>
-                <h2 id="eskul" class="text-3xl font-extrabold text-blue-950 mt-1">Ekstrakurikuler Siswa</h2>
-                <p class="text-sm text-slate-500 max-w-xl mx-auto mt-2">Wadah pembinaan karakter, kreativitas,
-                    kepanduan, dan pelestarian budaya khas Toraja bagi seluruh siswa.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <% eskul.forEach(e=> { %>
+            <div class="grid md:grid-cols-2 gap-8 items-stretch">
+
+                <!-- Visi Card (data-aos fade-right) -->
+                <div class="bg-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-blue-900/10 hover:border-blue-900 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group flex flex-col justify-between"
+                    data-aos="fade-right" data-aos-delay="100">
                     <div
-                        class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
-                        <div class="relative aspect-video overflow-hidden bg-blue-950">
-                            <% if (e.foto_eskul && e.foto_eskul !=='default-eskul.jpg' && e.foto_eskul !=='' ) { %>
-                                <img src="/uploads/eskul/<%= e.foto_eskul %>" alt="<%= e.nama_eskul %>"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                <% } else { %>
-                                    <div
-                                        class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 to-slate-900 text-amber-400 text-3xl font-bold">
-                                        🏅
+                        class="absolute -top-10 -right-10 w-36 h-36 bg-blue-50 rounded-full group-hover:scale-125 transition-transform duration-500">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-blue-900 text-white flex items-center justify-center text-xl font-bold mb-6 shadow-md shadow-blue-900/20">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <span class="text-xs font-black text-blue-900 uppercase tracking-wider">Cita-Cita Utama</span>
+                        <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Visi Sekolah</h3>
+                        <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium italic text-justify">
+                            "<%= profil.visi
+                                || 'Terwujudnya Peserta Didik yang Beriman, Berakhlak Mulia, Cerdas, Terampil, Mandiri, dan Berbudaya Toraja.'
+                                %>"
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-blue-900">
+                        <span>Berorientasi pada Profil Pelajar Pancasila</span>
+                    </div>
+                </div>
+
+                <!-- Misi Card (data-aos fade-left) -->
+                <div class="bg-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-amber-400/20 hover:border-amber-400 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group flex flex-col justify-between"
+                    data-aos="fade-left" data-aos-delay="200">
+                    <div
+                        class="absolute -top-10 -right-10 w-36 h-36 bg-amber-50 rounded-full group-hover:scale-125 transition-transform duration-500">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-amber-500 text-blue-950 flex items-center justify-center text-xl font-bold mb-6 shadow-md shadow-amber-500/20">
+                            <i class="fa-solid fa-rocket"></i>
+                        </div>
+                        <span class="text-xs font-black text-amber-600 uppercase tracking-wider">Langkah
+                            Strategis</span>
+                        <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Misi Sekolah</h3>
+                        <div
+                            class="text-slate-600 text-xs sm:text-sm whitespace-pre-line leading-relaxed font-normal text-justify">
+                            <%= profil.misi
+                                || '1. Menyelenggarakan proses pembelajaran yang efektif, bermutu, dan inovatif.\n2. Menumbuhkan nilai budi pekerti luhur dan ketaatan beragama.\n3. Mengembangkan potensi bakat akademik dan non-akademik siswa.\n4. Melestarikan budaya daerah Toraja serta peduli lingkungan hidup.'
+                                %>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-amber-600">
+                        <span>Terus Bergerak Maju Mencerdaskan Bangsa</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 7. BERITA & PENGUMUMAN TERBARU (AOS BERTINGKAT & MICRO-INTERACTIONS) -->
+        <!-- ============================================================== -->
+        <section id="berita" class="py-20 bg-slate-100/80 px-4 sm:px-6 lg:px-8 border-y border-slate-200">
+            <div class="max-w-7xl mx-auto">
+
+                <div class="grid lg:grid-cols-12 gap-10">
+
+                    <!-- Kolom Berita Utama (8 Cols) -->
+                    <div class="lg:col-span-8">
+                        <div class="flex items-end justify-between mb-8" data-aos="fade-up">
+                            <div>
+                                <span
+                                    class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-100 px-3 py-1 rounded-full">
+                                    Publikasi Terkini
+                                </span>
+                                <h2 class="text-2xl sm:text-3xl font-black text-blue-950 mt-2">
+                                    Berita & Kegiatan Sekolah
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <% if (berita && berita.length> 0) { %>
+                                <% berita.forEach((item, index)=> { %>
+                                    <div class="bg-white rounded-3xl shadow-md overflow-hidden border border-slate-200/80 flex flex-col justify-between hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
+                                        data-aos="fade-up" data-aos-delay="<%= (index % 4) * 100 %>">
+
+                                        <!-- Image Thumbnail -->
+                                        <div class="relative aspect-video overflow-hidden bg-slate-900">
+                                            <% if (item.gambar && item.gambar !=='default.jpg' && item.gambar !=='' ) {
+                                                %>
+                                                <img src="/uploads/berita/<%= item.gambar %>" alt="<%= item.judul %>"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                    loading="lazy">
+                                                <% } else { %>
+                                                    <div
+                                                        class="w-full h-full bg-gradient-to-br from-blue-900 to-slate-900 flex flex-col items-center justify-center p-4 text-center">
+                                                        <i
+                                                            class="fa-solid fa-newspaper text-3xl mb-1 text-amber-400"></i>
+                                                        <span class="text-xs font-bold text-amber-400">
+                                                            <%= item.nama_kategori || 'Warta Sekolah' %>
+                                                        </span>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="absolute top-3 left-3">
+                                                            <span
+                                                                class="text-[10px] font-black px-3 py-1 rounded-full bg-blue-950/80 text-amber-400 backdrop-blur-sm border border-amber-400/30 uppercase tracking-wider">
+                                                                <%= item.nama_kategori %>
+                                                            </span>
+                                                        </div>
+                                        </div>
+
+                                        <!-- Content -->
+                                        <div class="p-6 flex-1 flex flex-col justify-between">
+                                            <div>
+                                                <h3
+                                                    class="font-extrabold text-base sm:text-lg text-slate-900 line-clamp-2 group-hover:text-blue-900 transition-colors leading-snug">
+                                                    <a href="/berita/<%= item.slug %>">
+                                                        <%= item.judul %>
+                                                    </a>
+                                                </h3>
+                                                <p class="text-xs text-slate-500 mt-2.5 line-clamp-3 leading-relaxed">
+                                                    <%= item.isi_berita %>
+                                                </p>
+                                            </div>
+
+                                            <div
+                                                class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                                                <span class="flex items-center gap-1.5 font-medium">
+                                                    <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                                                    <span>
+                                                        <%= new Date(item.tanggal_publish).toLocaleDateString('id-ID')
+                                                            %>
+                                                    </span>
+                                                </span>
+                                                <a href="/berita/<%= item.slug %>"
+                                                    class="text-blue-900 hover:text-amber-600 font-bold transition flex items-center gap-1">
+                                                    <span>Baca Selengkapnya</span>
+                                                    <span>→</span>
+                                                </a>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <% } %>
-                                        <div class="absolute top-3 left-3">
-                                            <span
-                                                class="text-[11px] font-bold px-3 py-1 rounded-full bg-blue-950/80 text-amber-400 backdrop-blur-sm border border-amber-400/30">
-                                                🕒 <%= e.jadwal_latihan %>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <div class="col-span-2 p-8 bg-white rounded-3xl text-center text-slate-500">
+                                                Belum ada artikel berita yang dipublikasikan.
+                                            </div>
+                                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Kolom Pengumuman Resmi (4 Cols) -->
+                    <div class="lg:col-span-4" data-aos="fade-left">
+                        <div class="mb-8">
+                            <span
+                                class="text-xs font-black text-rose-600 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">
+                                Pemberitahuan
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-blue-950 mt-2">
+                                Pengumuman Resmi
+                            </h2>
+                        </div>
+
+                        <div class="space-y-4">
+                            <% if (pengumuman && pengumuman.length> 0) { %>
+                                <% pengumuman.forEach((info, idx)=> { %>
+                                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/80 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-rose-500 group"
+                                        data-aos="fade-left" data-aos-delay="<%= (idx % 4) * 100 %>">
+                                        <div
+                                            class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
+                                            <span class="flex items-center gap-1.5"><i
+                                                    class="fa-solid fa-thumbtack text-rose-500"></i><span>Terbit
+                                                    Resmi</span></span>
+                                            <span>
+                                                <%= new Date(info.tanggal_terbit).toLocaleDateString('id-ID') %>
                                             </span>
                                         </div>
-                        </div>
-                        <div class="p-6 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-lg text-blue-950 group-hover:text-amber-600 transition">
-                                    <%= e.nama_eskul %>
-                                </h3>
-                                <p class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1.5">
-                                    <span>👤</span>
-                                    <span>Pembina: <strong class="text-slate-700">
-                                            <%= e.pembina %>
-                                        </strong></span>
-                                </p>
-                                <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-                                    <%= e.deskripsi %>
-                                </p>
-                            </div>
-                            <div
-                                class="pt-4 mt-4 border-t border-slate-100 flex items-center text-xs text-blue-700 font-semibold">
-                                <span>Kegiatan Aktif Mingguan</span>
-                            </div>
+                                        <h4
+                                            class="font-extrabold text-sm text-slate-900 group-hover:text-blue-900 transition-colors leading-snug">
+                                            <%= info.judul_pengumuman %>
+                                        </h4>
+                                        <p class="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">
+                                            <%= info.isi_pengumuman %>
+                                        </p>
+                                    </div>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <div class="p-6 bg-white rounded-3xl text-center text-slate-500 text-xs">
+                                                Tidak ada pengumuman terbaru.
+                                            </div>
+                                            <% } %>
                         </div>
                     </div>
-                    <% }) %>
+
+                </div>
+
             </div>
         </section>
 
-        <!-- Galeri Foto Dokumentasi Kegiatan Terbaru -->
-        <section id="galeri-section" class="py-16 bg-white px-4 border-t border-slate-200">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <!-- ============================================================== -->
+        <!-- DIREKTORI GURU & PEGAWAI (CENTER-FOCUS CAROUSEL / SLIDER) -->
+        <!-- ============================================================== -->
+        <style>
+            /* Center-Focus Carousel Styles */
+            .guru-center-slider .swiper-slide {
+                transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: scale(0.90);
+                opacity: 0.50;
+                filter: blur(2px);
+            }
+
+            .guru-center-slider .swiper-slide-active {
+                transform: scale(1.05);
+                opacity: 1;
+                filter: blur(0);
+                z-index: 20;
+            }
+
+            .guru-center-slider .swiper-slide-active .guru-card-inner {
+                box-shadow: 0 25px 50px -12px rgba(11, 19, 43, 0.25);
+                border-color: rgba(245, 158, 11, 0.7);
+            }
+        </style>
+
+        <section id="guru" class="py-20 bg-slate-50 border-t border-slate-200 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <!-- Header: Kiri Atas (Badge CIVITAS & Judul Guru & Pegawai), Kanan Atas (Link Lihat Semua →) -->
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4" data-aos="fade-up">
                     <div>
-                        <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Dokumentasi
-                            Sekolah</span>
-                        <h2 class="text-3xl font-extrabold text-blue-950 mt-1">Galeri Kegiatan & Prestasi</h2>
-                        <p class="text-sm text-slate-500 mt-2">Momen-momen inspiratif, sarana pembelajaran, dan capaian
-                            siswa di <%= profil.nama_sekolah %>.</p>
+                        <span
+                            class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-100/80 px-3.5 py-1.5 rounded-full border border-amber-200">
+                            CIVITAS
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                            Guru & Pegawai
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                            Pendidik dan staf profesional pembimbing tunas bangsa di <%= profil.nama_sekolah
+                                || 'SMPN 1 Rantepao' %>.
+                        </p>
                     </div>
-                    <div class="mt-4 md:mt-0">
-                        <a href="/galeri"
-                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs transition shadow-md">
-                            <span>Lihat Semua Galeri Foto</span>
-                            <span>→</span>
+                    <div class="shrink-0">
+                    </div>
+                </div>
+
+                <!-- Slider Wrapper with Side Navigation Arrows -->
+                <div class="relative px-2 sm:px-12 py-4" data-aos="zoom-in">
+                    <!-- Tombol Navigasi Panah Kiri (<) -->
+                    <button type="button" id="guru-prev-btn"
+                        class="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-blue-950 text-blue-950 hover:text-white shadow-xl border border-slate-200 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none"
+                        aria-label="Guru Sebelumnya">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+
+                    <!-- Tombol Navigasi Panah Kanan (>) -->
+                    <button type="button" id="guru-next-btn"
+                        class="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-blue-950 text-blue-950 hover:text-white shadow-xl border border-slate-200 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none"
+                        aria-label="Guru Selanjutnya">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+
+                    <!-- Swiper Slider Container -->
+                    <div class="swiper guru-center-slider overflow-visible">
+                        <div class="swiper-wrapper py-6">
+                            <% if (guru && guru.length> 0) { %>
+                                <% // Jika data guru kurang dari 6, duplikasi array agar Swiper loop berjalan mulus
+                                    const guruItems=(guru.length < 6) ? [...guru, ...guru] : guru; %>
+                                    <% guruItems.forEach((g)=> { %>
+                                        <div class="swiper-slide select-none cursor-pointer">
+                                            <div
+                                                class="guru-card-inner bg-white rounded-3xl p-7 border border-slate-200/90 text-center flex flex-col items-center justify-between transition-all duration-500 shadow-sm">
+                                                <div class="flex flex-col items-center w-full">
+                                                    <!-- Teacher Photo with Ring -->
+                                                    <div
+                                                        class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden mb-4 border-4 border-amber-500 shadow-md flex items-center justify-center bg-blue-950 text-amber-400 font-black text-2xl flex-shrink-0">
+                                                        <% if (g.foto && !g.foto.startsWith('default') && g.foto !=='' )
+                                                            { %>
+                                                            <img src="/uploads/guru/<%= g.foto %>"
+                                                                alt="<%= g.nama_lengkap %>"
+                                                                class="w-full h-full object-cover"
+                                                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(g.nama_lengkap) %>&background=0b132b&color=f59e0b&size=150';">
+                                                            <% } else { %>
+                                                                <span>
+                                                                    <%= g.nama_lengkap.charAt(0) %>
+                                                                </span>
+                                                                <% } %>
+                                                    </div>
+
+                                                    <span
+                                                        class="text-[10px] font-black px-3 py-0.5 rounded-full bg-blue-50 text-blue-900 border border-blue-200 uppercase mb-2 inline-block">
+                                                        <%= g.kategori_pegawai || 'Tenaga Pendidik' %>
+                                                    </span>
+
+                                                    <h3
+                                                        class="font-extrabold text-slate-900 text-sm sm:text-base leading-snug line-clamp-2">
+                                                        <%= g.nama_lengkap %>
+                                                    </h3>
+
+                                                    <p
+                                                        class="text-xs sm:text-sm font-bold text-amber-600 mt-1 leading-snug">
+                                                        <%= g.jabatan %>
+                                                    </p>
+                                                </div>
+
+                                                <div class="w-full pt-3 mt-4 border-t border-slate-100 font-mono">
+                                                    <p class="text-[11px] text-slate-400 font-medium">
+                                                        NIP. <%= g.nip || '-' %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Kapsul Berbingkai di Bawah Slider -->
+                <div class="mt-8 text-center" data-aos="fade-up">
+                    <a href="/civitas"
+                        class="inline-flex items-center gap-3 rounded-full border-2 border-blue-900 hover:bg-blue-900 text-blue-900 hover:text-white font-extrabold text-xs sm:text-sm px-8 py-3.5 transition-all duration-300 shadow-sm hover:shadow-xl hover:scale-105 group">
+                        <i class="fa-solid fa-users text-amber-500 group-hover:text-amber-400 text-base"></i>
+                        <span>Lihat Seluruh Civitas Akademik (<%= (typeof guru !=='undefined' && guru) ? guru.length : 0
+                                %> Pegawai)</span>
+                        <span
+                            class="group-hover:translate-x-1.5 transition-transform duration-300 text-amber-500 group-hover:text-amber-400 text-base">→</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- STRUKTUR KOMITE SEKOLAH (INTERACTIVE ROYAL-NAVY & GOLD CAROUSEL) -->
+        <!-- ============================================================== -->
+        <style>
+            /* Komite Center-Focus Carousel Styles (Royal Navy & Gold Theme) */
+            .komite-center-slider .swiper-slide {
+                transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                            filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: scale(0.90);
+                opacity: 0.50;
+                filter: blur(1.5px);
+            }
+
+            .komite-center-slider .swiper-slide-active {
+                transform: scale(1.05);
+                opacity: 1;
+                filter: blur(0);
+                z-index: 20;
+            }
+
+            /* Inactive Card Styling (Translucent Royal Blue Glass) */
+            .komite-slider-card {
+                background: rgba(255, 255, 255, 0.10);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            /* Active Centered Card Styling (Gleaming Prestige White Card) */
+            .komite-center-slider .swiper-slide-active .komite-slider-card {
+                background: #ffffff;
+                border: 2px solid #f59e0b;
+                box-shadow: 0 25px 50px -12px rgba(11, 19, 43, 0.45), 0 0 30px -5px rgba(245, 158, 11, 0.35);
+            }
+
+            /* Dynamic Text & Elements on Slide Active */
+            .komite-slider-card .komite-nama {
+                color: rgba(255, 255, 255, 0.90);
+                transition: color 0.4s ease;
+            }
+            .komite-center-slider .swiper-slide-active .komite-slider-card .komite-nama {
+                color: #0b132b;
+            }
+
+            .komite-slider-card .komite-unsur-box {
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                color: #e2e8f0;
+                transition: all 0.4s ease;
+            }
+            .komite-center-slider .swiper-slide-active .komite-slider-card .komite-unsur-box {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                color: #334155;
+            }
+
+            .komite-slider-card .komite-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.15);
+                color: #fcd34d;
+                transition: all 0.4s ease;
+            }
+            .komite-center-slider .swiper-slide-active .komite-slider-card .komite-footer {
+                border-top: 1px solid #f1f5f9;
+                color: #d97706;
+            }
+
+            /* Gold Pagination Dots */
+            .komite-bullet {
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+                border-radius: 9999px;
+                background: rgba(255, 255, 255, 0.35);
+                transition: all 0.35s ease;
+                cursor: pointer;
+            }
+
+            .komite-bullet-active {
+                width: 28px;
+                background: linear-gradient(to right, #f59e0b, #fbbf24);
+                box-shadow: 0 0 12px rgba(245, 158, 11, 0.8);
+            }
+        </style>
+
+        <section id="komite"
+            class="py-20 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white relative overflow-hidden border-t border-blue-800/50">
+            <!-- Glow Light Effect Background (Gold & Blue) -->
+            <div class="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[36rem] h-[36rem] bg-amber-500/5 rounded-full blur-[140px] pointer-events-none">
+            </div>
+            <div
+                class="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-2xl mx-auto mb-12" data-aos="fade-up">
+                    <span
+                        class="text-xs font-black text-amber-400 uppercase tracking-widest bg-amber-400/10 px-3.5 py-1.5 rounded-full border border-amber-400/30 inline-flex items-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-users-gear text-amber-400"></i> Mitra Strategis Sekolah
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">
+                        Struktur Komite Sekolah
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-2">
+                        Wadah kemitraan sinergis antara masyarakat, orang tua peserta didik, dan sekolah dalam
+                        mewujudkan keunggulan mutu pendidikan di <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>.
+                    </p>
+                </div>
+
+                <% if (typeof komite !=='undefined' && komite.length> 0) { %>
+                    <!-- Slider Wrapper with Side Navigation Arrows -->
+                    <div class="relative px-2 sm:px-12 py-4" data-aos="zoom-in">
+                        <!-- Tombol Navigasi Panah Kiri (<) -->
+                        <button type="button" id="komite-prev-btn"
+                            class="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-amber-500 text-white hover:text-blue-950 shadow-xl border border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none backdrop-blur-md"
+                            aria-label="Komite Sebelumnya">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
+                        </button>
+
+                        <!-- Tombol Navigasi Panah Kanan (>) -->
+                        <button type="button" id="komite-next-btn"
+                            class="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-amber-500 text-white hover:text-blue-950 shadow-xl border border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none backdrop-blur-md"
+                            aria-label="Komite Selanjutnya">
+                            <i class="fa-solid fa-chevron-right text-sm"></i>
+                        </button>
+
+                        <!-- Swiper Slider Container -->
+                        <div class="swiper komite-center-slider overflow-visible">
+                            <div class="swiper-wrapper py-6">
+                                <% // Duplikasi data komite jika < 6 agar Swiper infinite loop berjalan mulus const
+                                    komiteItems=(komite.length < 6) ? [...komite, ...komite] : komite; %>
+                                    <% komiteItems.forEach((k)=> { %>
+                                        <div class="swiper-slide select-none cursor-pointer">
+                                            <div
+                                                class="komite-slider-card rounded-3xl p-6 sm:p-7 text-center flex flex-col items-center justify-between shadow-xl">
+
+                                                <div class="flex flex-col items-center w-full">
+                                                    <!-- Avatar Lingkaran Berbingkai Cincin Emas Ganda dengan Badge Jabatan Menempel -->
+                                                    <div class="relative mb-5 flex flex-col items-center">
+                                                        <!-- Cincin Ganda: Outer Border 2 + Inner Border 2 -->
+                                                        <div
+                                                            class="p-1 rounded-full border-2 border-amber-400 shadow-md shadow-amber-500/20 bg-gradient-to-tr from-amber-500/30 to-yellow-300/20">
+                                                            <div
+                                                                class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-amber-300/90 bg-blue-950 flex items-center justify-center shadow-inner">
+                                                                <% if (k.foto && !k.foto.startsWith('default') && k.foto
+                                                                    !=='' ) { %>
+                                                                    <img src="/uploads/komite/<%= k.foto %>"
+                                                                        alt="<%= k.nama_lengkap %>"
+                                                                        class="w-full h-full object-cover"
+                                                                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(k.nama_lengkap) %>&background=0b132b&color=f59e0b&size=150';">
+                                                                    <% } else { %>
+                                                                        <div
+                                                                            class="flex flex-col items-center justify-center">
+                                                                            <i
+                                                                                class="fa-solid fa-user-tie text-3xl mb-1 text-amber-400/90"></i>
+                                                                            <span
+                                                                                class="text-[9px] font-bold uppercase tracking-wider text-amber-300">
+                                                                                <%= k.nama_lengkap.split(' ')[0] %>
+                                                                            </span>
+                                                                        </div>
+                                                                    <% } %>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Badge Jabatan Emas Menempel di Bawah Lingkaran Foto -->
+                                                        <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
+                                                            <span class="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 text-blue-950 font-extrabold text-[11px] uppercase px-4 py-1 rounded-full shadow-lg shadow-amber-500/30 border border-white/40 flex items-center gap-1.5">
+                                                                <i class="fa-solid fa-award text-[10px]"></i>
+                                                                <span><%= k.jabatan %></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Nama Lengkap (Dynamic Color) -->
+                                                    <h3 class="komite-nama font-bold text-lg mt-3 line-clamp-2 leading-snug">
+                                                        <%= k.nama_lengkap %>
+                                                    </h3>
+
+                                                    <!-- Kotak Tipis Transparan Unsur / Pekerjaan (Dynamic) -->
+                                                    <div class="komite-unsur-box w-full rounded-xl p-3 mt-3 text-xs text-center leading-relaxed backdrop-blur-xs">
+                                                        <p class="flex items-center justify-center gap-1.5 font-medium">
+                                                            <i class="fa-solid fa-user-tag text-amber-400 text-[11px] shrink-0"></i>
+                                                            <span><%= k.pekerjaan_atau_unsur %></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Footer Masa Bakti (Dynamic) -->
+                                                <div class="komite-footer w-full pt-3.5 mt-4 flex items-center justify-center text-xs font-semibold gap-1.5">
+                                                    <i class="fa-regular fa-calendar-check text-xs"></i>
+                                                    <span>Masa Bakti: <%= k.periode %></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Indikator Slide (Dots) di Bawah Slider Komite -->
+                    <div id="komite-pagination" class="flex justify-center items-center gap-2 mt-8 z-20 relative"></div>
+
+                    <!-- Tombol Navigasi Kapsul Aksen Emas ke Halaman /komite -->
+                    <div class="mt-8 text-center" data-aos="fade-up">
+                        <a href="/komite"
+                            class="inline-flex items-center gap-3 rounded-full border-2 border-amber-400/80 bg-amber-400/15 hover:bg-amber-400 text-amber-300 hover:text-blue-950 font-extrabold text-xs sm:text-sm px-8 py-3.5 transition-all duration-300 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/30 hover:scale-105 group backdrop-blur-md">
+                            <i class="fa-solid fa-handshake text-amber-400 group-hover:text-blue-950 text-base transition-colors"></i>
+                            <span>Lihat Seluruh Pengurus Komite Sekolah</span>
+                            <span class="group-hover:translate-x-1.5 transition-transform duration-300 text-amber-400 group-hover:text-blue-950 text-base">→</span>
                         </a>
                     </div>
-                </div>
 
-                <% if (typeof galeriPreview !=='undefined' && galeriPreview && galeriPreview.length> 0) { %>
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <% galeriPreview.forEach(foto=> { %>
+                <% } else { %>
+                    <div class="text-center py-12 text-slate-300 text-xs bg-white/10 rounded-3xl border border-white/20 max-w-xl mx-auto backdrop-blur-md">
+                        <i class="fa-solid fa-users-slash text-3xl text-amber-400 mb-2"></i>
+                        <p>Belum ada data struktur Komite Sekolah yang ditampilkan.</p>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+
+    <!-- ============================================================== -->
+    <!-- EKSTRAKURIKULER SISWA -->
+    <!-- ============================================================== -->
+    <section id="eskul" class="py-20 bg-slate-50 px-4 sm:px-6 lg:px-8 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                <span
+                    class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                    Bakat & Minat Siswa
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                    Ekstrakurikuler Sekolah
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                    Wadah pembinaan karakter, kreativitas, kepanduan, dan pelestarian budaya khas Toraja bagi seluruh
+                    siswa.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+                <% if (eskul && eskul.length> 0) { %>
+                    <% eskul.forEach((e, index)=> { %>
+                        <div class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col group"
+                            data-aos="fade-up" data-aos-delay="<%= (index % 3) * 100 %>">
+
+                            <div class="relative aspect-video overflow-hidden bg-blue-950">
+                                <% if (e.foto_eskul && e.foto_eskul !==' default-eskul.jpg' && e.foto_eskul !=='' ) {
+                                                                                    %>
+                                                                                    <img src="/uploads/eskul/<%= e.foto_eskul %>"
+                                                                                        alt="<%= e.nama_eskul %>"
+                                                                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                                                                    <% } else { %>
+                                                                                        <div
+                                                                                            class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 to-slate-900 text-amber-400 text-3xl font-black">
+                                                                                            <i
+                                                                                                class="fa-solid fa-medal"></i>
+                                                                                        </div>
+                                                                                        <% } %>
+                                                                                            <div
+                                                                                                class="absolute top-3 left-3">
+                                                                                                <span
+                                                                                                    class="text-[11px] font-bold px-3 py-1 rounded-full bg-blue-950/80 text-amber-400 backdrop-blur-sm border border-amber-400/30 flex items-center gap-1.5">
+                                                                                                    <i
+                                                                                                        class="fa-solid fa-clock text-amber-300"></i>
+                                                                                                    <span>
+                                                                                                        <%= e.jadwal_latihan
+                                                                                                            %>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                            </div>
+                                                                        </div>
+
+                                                                        <div
+                                                                            class="p-6 flex-1 flex flex-col justify-between">
+                                                                            <div>
+                                                                                <h3
+                                                                                    class="font-black text-lg text-blue-950 group-hover:text-amber-600 transition-colors">
+                                                                                    <%= e.nama_eskul %>
+                                                                                </h3>
+                                                                                <p
+                                                                                    class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1.5">
+                                                                                    <i
+                                                                                        class="fa-solid fa-user-tie text-slate-400"></i>
+                                                                                    <span>Pembina: <strong
+                                                                                            class="text-slate-700">
+                                                                                            <%= e.pembina %>
+                                                                                        </strong></span>
+                                                                                </p>
+                                                                                <p
+                                                                                    class="text-xs text-slate-600 mt-3 leading-relaxed">
+                                                                                    <%= e.deskripsi %>
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="pt-4 mt-4 border-t border-slate-100 flex items-center text-xs text-blue-900 font-bold">
+                                                                                <span>Kegiatan Aktif Mingguan</span>
+                                                                            </div>
+                                                                        </div>
+
+                                                            </div>
+                                                            <% }) %>
+                                                                <% } %>
+                                                        </div>
+
+                                                    </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- PREVIEW GALERI KEGIATAN & FASILITAS -->
+        <!-- ============================================================== -->
+        <% const listGaleri=(typeof galeri !=='undefined' && Array.isArray(galeri) && galeri.length> 0) ? galeri :
+            ((typeof galeriPreview !== 'undefined' && Array.isArray(galeriPreview)) ? galeriPreview : []); %>
+            <% if (listGaleri && listGaleri.length> 0) { %>
+                <section id="galeri" class="py-20 bg-white px-4 sm:px-6 lg:px-8 border-t border-slate-200">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                            <span
+                                class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                                Dokumentasi & Aktivitas
+                            </span>
+                            <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                                Galeri Kegiatan & Fasilitas
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                                Momen-momen inspiratif, ragam aktivitas siswa, fasilitas unggulan, dan kebersamaan di
+                                lingkungan <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>.
+                            </p>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                            <% listGaleri.slice(0, 6).forEach((foto, idx)=> { %>
+                                <a href="/galeri"
+                                    class="group bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
+                                    data-aos="zoom-in" data-aos-delay="<%= (idx % 3) * 100 %>">
+                                    <div class="relative aspect-[4/3] overflow-hidden bg-blue-950">
+                                        <img src="/uploads/galeri/<%= foto.file_foto %>" alt="<%= foto.judul_foto %>"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                                            loading="lazy"
+                                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80';">
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                                            <span
+                                                class="text-white text-xs font-bold flex items-center gap-2 drop-shadow">
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-amber-400"></i>
+                                                <span>Buka di Halaman Galeri</span>
+                                            </span>
+                                        </div>
+                                        <div class="absolute top-3.5 left-3.5 z-10">
+                                            <% if (foto.kategori_galeri==='Prestasi' ) { %>
+                                                <span
+                                                    class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-md flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-trophy text-[9px]"></i>
+                                                    <span>Prestasi</span>
+                                                </span>
+                                                <% } else if (foto.kategori_galeri==='Fasilitas' ) { %>
+                                                    <span
+                                                        class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
+                                                        <i class="fa-solid fa-building-columns text-[9px]"></i>
+                                                        <span>Fasilitas</span>
+                                                    </span>
+                                                    <% } else { %>
+                                                        <span
+                                                            class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-md flex items-center gap-1.5">
+                                                            <i class="fa-solid fa-camera text-[9px]"></i>
+                                                            <span>Kegiatan</span>
+                                                        </span>
+                                                        <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="p-6 flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-center text-[11px] text-slate-400 font-medium">
+                                                <span class="flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                                                    <span>
+                                                        <%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', {
+                                                            day: 'numeric' , month: 'long' , year: 'numeric' }) %>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <h3
+                                                class="font-bold text-slate-900 text-base mt-2 line-clamp-2 group-hover:text-blue-950 transition-colors leading-snug">
+                                                <%= foto.judul_foto %>
+                                            </h3>
+                                            <% if (foto.deskripsi_singkat) { %>
+                                                <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
+                                                    <%= foto.deskripsi_singkat %>
+                                                </p>
+                                                <% } %>
+                                        </div>
+                                        <div
+                                            class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-950 font-bold group-hover:text-amber-600 transition-colors">
+                                            <span>Lihat Dokumentasi</span>
+                                            <span
+                                                class="text-amber-500 group-hover:translate-x-1 transition-transform">→</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <% }) %>
+                        </div>
+
+                        <!-- Tombol CTA Lihat Galeri Selengkapnya -->
+                        <div class="mt-14 text-center" data-aos="fade-up">
                             <a href="/galeri"
-                                class="group bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                                <div class="relative aspect-video overflow-hidden bg-slate-900">
-                                    <img src="/uploads/galeri/<%= foto.file_foto %>" alt="<%= foto.judul_foto %>"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        loading="lazy">
-                                    <div class="absolute top-2.5 left-2.5">
-                                        <span
-                                            class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-950/80 text-amber-400 backdrop-blur-sm border border-amber-400/30">
-                                            <%= foto.kategori_galeri %>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <span class="text-[10px] text-slate-400 font-medium">📅 <%= new
-                                                Date(foto.tanggal_upload).toLocaleDateString('id-ID') %></span>
-                                        <h4
-                                            class="font-bold text-slate-800 text-sm mt-1 line-clamp-2 group-hover:text-blue-700 transition">
-                                            <%= foto.judul_foto %>
-                                        </h4>
-                                    </div>
-                                    <span
-                                        class="text-[11px] text-blue-700 font-semibold mt-3 flex items-center gap-1">Lihat
-                                        Dokumentasi →</span>
-                                </div>
+                                class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-950 via-blue-900 to-blue-950 hover:from-blue-900 hover:to-blue-800 text-white font-extrabold text-sm sm:text-base shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-blue-800/50 group">
+                                <span>Lihat Galeri Selengkapnya</span>
+                                <span
+                                    class="text-amber-400 font-black group-hover:translate-x-1.5 transition-transform duration-300 text-lg leading-none">→</span>
                             </a>
-                            <% }) %>
-                    </div>
-                    <% } %>
-            </div>
-        </section>
-
-        <!-- Hubungi Kami & Peta Sekolah -->
-        <section id="kontak" class="py-16 bg-slate-100 px-4">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center max-w-xl mx-auto mb-12">
-                    <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Informasi & Bantuan</span>
-                    <h2 class="text-3xl font-extrabold text-blue-950 mt-1">Hubungi SMPN 1 Rantepao</h2>
-                    <p class="text-sm text-slate-600 mt-2">Punya pertanyaan seputar penerimaan siswa baru, kegiatan
-                        akademik, atau informasi lainnya? Silakan kirimkan pesan kepada kami.</p>
-                </div>
-
-                <!-- Pesan Sukses Alert -->
-                <div id="kontak-sukses-alert"
-                    class="hidden mb-8 max-w-2xl mx-auto p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-3">
-                    <div
-                        class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0">
-                        ✓</div>
-                    <div class="text-xs">
-                        <p class="font-bold">Pesan Berhasil Terkirim!</p>
-                        <p class="text-emerald-700 mt-0.5">Terima kasih atas pesan yang Anda sampaikan. Pihak sekolah
-                            akan segera membaca dan meresponsnya.</p>
-                    </div>
-                </div>
-
-                <div class="grid lg:grid-cols-2 gap-10 items-start">
-
-                    <!-- Formulir Kontak Pengunjung -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-lg text-blue-950 mb-1">Kirimkan Pesan Anda</h3>
-                        <p class="text-xs text-slate-500 mb-6">Isi data formulir berikut secara lengkap dan jelas.</p>
-
-                        <form action="/kontak/kirim" method="POST" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama
-                                    Lengkap</label>
-                                <input type="text" name="nama_pengirim" required
-                                    placeholder="Contoh: Bpk. Marthen Rantetoding"
-                                    class="w-full text-xs border border-slate-300 rounded-xl px-4 py-3 focus:outline-blue-600">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Email / No.
-                                    WhatsApp</label>
-                                <input type="text" name="email_atau_wa" required
-                                    placeholder="Contoh: 08123456789 atau marthen@gmail.com"
-                                    class="w-full text-xs border border-slate-300 rounded-xl px-4 py-3 focus:outline-blue-600">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Subjek
-                                    Pesan</label>
-                                <input type="text" name="subjek" required
-                                    placeholder="Contoh: Pertanyaan PPDB 2026/2027"
-                                    class="w-full text-xs border border-slate-300 rounded-xl px-4 py-3 focus:outline-blue-600">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Isi Pesan</label>
-                                <textarea name="isi_pesan" rows="4" required
-                                    placeholder="Tuliskan pertanyaan atau informasi yang ingin Anda sampaikan..."
-                                    class="w-full text-xs border border-slate-300 rounded-xl px-4 py-3 focus:outline-blue-600"></textarea>
-                            </div>
-                            <button type="submit"
-                                class="w-full py-3.5 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-md transition">
-                                Kirim Pesan Sekarang ✉
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Info Kontak & Lokasi Peta -->
-                    <div class="space-y-6">
-                        <div class="bg-blue-950 text-white p-8 rounded-3xl shadow">
-                            <h3 class="text-xl font-bold text-amber-400 mb-4">
-                                <%= profil.nama_sekolah %>
-                            </h3>
-                            <div class="space-y-3 text-xs text-slate-300">
-                                <p class="flex items-start gap-2">
-                                    <span class="text-base">📍</span>
-                                    <span>
-                                        <%= profil.alamat %>
-                                    </span>
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="text-base">📞</span>
-                                    <span>
-                                        <%= profil.telepon %>
-                                    </span>
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="text-base">✉️</span>
-                                    <span>
-                                        <%= profil.email_sekolah %>
-                                    </span>
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="text-base">🏛️</span>
-                                    <span>NPSN: <%= profil.npsn %> • Terakreditasi: <%= profil.akreditasi %></span>
-                                </p>
-                            </div>
                         </div>
+                    </div>
+                </section>
+                <% } %>
 
-                        <!-- Maps Embed -->
-                        <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                            <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider mb-2">Lokasi Sekolah
-                            </h4>
-                            <% if (profil.maps_embed && profil.maps_embed.includes('iframe')) { %>
-                                <div class="rounded-2xl overflow-hidden aspect-video">
-                                    <%- profil.maps_embed %>
+                    <!-- ============================================================== -->
+                    <!-- HUBUNGI KAMI & PETA SEKOLAH -->
+                    <!-- ============================================================== -->
+                    <section id="kontak" class="py-20 bg-slate-100 px-4 sm:px-6 lg:px-8 border-t border-slate-200">
+                        <div class="max-w-7xl mx-auto">
+
+                            <div class="text-center max-w-xl mx-auto mb-14" data-aos="fade-up">
+                                <span
+                                    class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-100 px-3.5 py-1.5 rounded-full">
+                                    Informasi & Layanan
+                                </span>
+                                <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                                    Hubungi SMPN 1 Rantepao
+                                </h2>
+                                <p class="text-xs sm:text-sm text-slate-600 mt-2">
+                                    Punya pertanyaan seputar penerimaan siswa baru, kurikulum, atau informasi lainnya?
+                                    Kami siap
+                                    membantu.
+                                </p>
+                            </div>
+
+                            <!-- Pesan Sukses Alert -->
+                            <div id="kontak-sukses-alert"
+                                class="hidden mb-8 max-w-2xl mx-auto p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-3xl flex items-center gap-3 shadow-sm">
+                                <div
+                                    class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 text-sm">
+                                    <i class="fa-solid fa-check"></i>
                                 </div>
-                                <% } else { %>
+                                <div class="text-xs">
+                                    <p class="font-black text-emerald-900">Pesan Berhasil Terkirim!</p>
+                                    <p class="text-emerald-700 mt-0.5">Terima kasih atas pesan yang Anda sampaikan.
+                                        Pihak
+                                        sekolah akan segera membaca dan meresponsnya.</p>
+                                </div>
+                            </div>
+
+                            <div class="grid lg:grid-cols-2 gap-10 items-start">
+
+                                <!-- Formulir Kontak Pengunjung -->
+                                <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-slate-200/80"
+                                    data-aos="fade-right" data-aos-delay="100">
+                                    <h3 class="font-black text-xl text-blue-950 mb-1">Kirimkan Pesan Anda</h3>
+                                    <p class="text-xs text-slate-500 mb-6">Isi data formulir berikut secara lengkap dan
+                                        jelas.
+                                    </p>
+
+                                    <form action="/kontak" method="POST" class="space-y-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Nama
+                                                Lengkap</label>
+                                            <input type="text" name="nama_pengirim" required
+                                                placeholder="Contoh: Bpk. Marthen Rantetoding"
+                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Email
+                                                / No. WhatsApp</label>
+                                            <input type="text" name="email_atau_wa" required
+                                                placeholder="Contoh: 08123456789 atau marthen@gmail.com"
+                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Subjek
+                                                Pesan</label>
+                                            <input type="text" name="subjek" required
+                                                placeholder="Contoh: Pertanyaan PPDB 2026/2027"
+                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Isi
+                                                Pesan</label>
+                                            <textarea name="isi_pesan" rows="4" required
+                                                placeholder="Tuliskan pertanyaan atau informasi yang ingin Anda sampaikan..."
+                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition"></textarea>
+                                        </div>
+                                        <button type="submit"
+                                            class="w-full py-4 bg-gradient-to-r from-blue-950 to-blue-900 hover:from-blue-900 hover:to-blue-800 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+                                            <span>Kirim Pesan Sekarang</span>
+                                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Info Kontak & Lokasi Peta -->
+                                <div class="space-y-6" data-aos="fade-left" data-aos-delay="200">
                                     <div
-                                        class="h-56 bg-slate-100 rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-dashed border-slate-300">
-                                        <span class="text-3xl mb-1">🗺️</span>
-                                        <p class="text-xs font-bold text-slate-700">
-                                            <%= profil.nama_sekolah %>
-                                        </p>
-                                        <p class="text-[11px] text-slate-500 mt-1">
-                                            <%= profil.alamat %>
-                                        </p>
+                                        class="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white p-8 sm:p-10 rounded-3xl shadow-xl border border-white/10 relative overflow-hidden">
+                                        <h3 class="text-xl sm:text-2xl font-black text-amber-400 mb-5">
+                                            <%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %>
+                                        </h3>
+                                        <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+                                            <p class="flex items-start gap-3">
+                                                <i
+                                                    class="fa-solid fa-location-dot text-amber-400 text-base mt-0.5 shrink-0"></i>
+                                                <span>
+                                                    <%= profil.alamat
+                                                        || 'Jl. Sam Ratulangi No. 1, Rantepao, Toraja Utara, Sulawesi Selatan'
+                                                        %>
+                                                </span>
+                                            </p>
+                                            <p class="flex items-center gap-3">
+                                                <i class="fa-solid fa-phone text-amber-400 text-sm shrink-0"></i>
+                                                <span>
+                                                    <%= profil.telepon || '(0423) 21123' %>
+                                                </span>
+                                            </p>
+                                            <p class="flex items-center gap-3">
+                                                <i class="fa-solid fa-envelope text-amber-400 text-sm shrink-0"></i>
+                                                <span>
+                                                    <%= profil.email_sekolah || 'info@smpn1rantepao.sch.id' %>
+                                                </span>
+                                            </p>
+                                            <p
+                                                class="flex items-center gap-3 pt-2 border-t border-white/10 font-mono text-xs text-amber-300">
+                                                <i
+                                                    class="fa-solid fa-building-columns text-amber-400 text-sm shrink-0"></i>
+                                                <span>NPSN: <%= profil.npsn %> • Terakreditasi: <%= profil.akreditasi %>
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <% } %>
+
+                                    <!-- Maps Embed -->
+                                    <div
+                                        class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-md overflow-hidden">
+                                        <h4 class="font-black text-xs text-slate-800 uppercase tracking-wider mb-3">
+                                            Lokasi Kampus Sekolah
+                                        </h4>
+                                        <% if (profil.maps_embed && profil.maps_embed.includes('iframe')) { %>
+                                            <div class="rounded-2xl overflow-hidden aspect-video shadow-inner">
+                                                <%- profil.maps_embed %>
+                                            </div>
+                                            <% } else { %>
+                                                <div
+                                                    class="h-60 bg-slate-100 rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-dashed border-slate-300">
+                                                    <i
+                                                        class="fa-solid fa-map-location-dot text-4xl mb-2 text-slate-400"></i>
+                                                    <p class="text-xs font-bold text-slate-800">
+                                                        <%= profil.nama_sekolah %>
+                                                    </p>
+                                                    <p class="text-[11px] text-slate-500 mt-1">
+                                                        <%= profil.alamat %>
+                                                    </p>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
+                    </section>
 
-                </div>
-            </div>
-        </section>
+                    <!-- Unified Footer Component -->
+                    <%- include('partials/footer') %>
 
-        <script>
-            if (window.location.search.includes('pesan_terkirim=1')) {
-                const alertBox = document.getElementById('kontak-sukses-alert');
-                if (alertBox) alertBox.classList.remove('hidden');
-            }
-        </script>
+                        <!-- ============================================================== -->
+                        <!-- INDEX SCRIPTS (PRELOADER, COUNTER UP, KONTAK ALERT) -->
+                        <!-- ============================================================== -->
+                        <script>
+                            // 1. Preloader Fade-out Handler
+                            function hidePreloader() {
+                                const preloader = document.getElementById('preloader');
+                                if (preloader && preloader.style.display !== 'none') {
+                                    preloader.style.opacity = '0';
+                                    preloader.style.pointerEvents = 'none';
+                                    setTimeout(() => {
+                                        preloader.style.display = 'none';
+                                    }, 700);
+                                }
+                            }
+                            window.addEventListener('load', hidePreloader);
+                            // Fallback: sembunyikan maksimal setelah 2.5 detik
+                            setTimeout(hidePreloader, 2500);
 
-        <!-- Unified Footer Component -->
-        <%- include('partials/footer') %>
+                            // 2. Counter Up Animation with IntersectionObserver
+                            const counters = document.querySelectorAll('.counter-number');
+                            let counterAnimated = false;
 
+                            function runCounters() {
+                                counters.forEach(counter => {
+                                    const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
+                                    let current = 0;
+                                    const increment = Math.max(1, Math.ceil(target / 40));
+                                    const stepTime = Math.max(20, Math.floor(1500 / (target / increment)));
+
+                                    const timer = setInterval(() => {
+                                        current += increment;
+                                        if (current >= target) {
+                                            counter.textContent = target.toLocaleString('id-ID');
+                                            clearInterval(timer);
+                                        } else {
+                                            counter.textContent = current.toLocaleString('id-ID');
+                                        }
+                                    }, stepTime);
+                                });
+                            }
+
+                            if ('IntersectionObserver' in window) {
+                                const observer = new IntersectionObserver((entries, obs) => {
+                                    entries.forEach(entry => {
+                                        if (entry.isIntersecting && !counterAnimated) {
+                                            counterAnimated = true;
+                                            runCounters();
+                                            obs.disconnect();
+                                        }
+                                    });
+                                }, { threshold: 0.25 });
+
+                                const firstCounter = document.querySelector('.counter-number');
+                                if (firstCounter && firstCounter.closest('section')) {
+                                    observer.observe(firstCounter.closest('section'));
+                                }
+                            } else {
+                                runCounters();
+                            }
+
+                            // 3. Pesan Kontak Terkirim URL Query Handler
+                            if (window.location.search.includes('pesan_terkirim=1')) {
+                                const alertBox = document.getElementById('kontak-sukses-alert');
+                                if (alertBox) alertBox.classList.remove('hidden');
+                            }
+
+                            // 4. Inisialisasi Center-Focus Carousel Guru & Pegawai
+                            if (typeof Swiper !== 'undefined' && document.querySelector('.guru-center-slider')) {
+                                const swiperGuru = new Swiper('.guru-center-slider', {
+                                    slidesPerView: 1.2,
+                                    spaceBetween: 16,
+                                    centeredSlides: true,
+                                    loop: true,
+                                    slideToClickedSlide: true,
+                                    grabCursor: true,
+                                    autoplay: {
+                                        delay: 3500,
+                                        disableOnInteraction: false,
+                                        pauseOnMouseEnter: true
+                                    },
+                                    navigation: {
+                                        nextEl: '#guru-next-btn',
+                                        prevEl: '#guru-prev-btn',
+                                    },
+                                    breakpoints: {
+                                        640: {
+                                            slidesPerView: 2.2,
+                                            spaceBetween: 24,
+                                        },
+                                        1024: {
+                                            slidesPerView: 3.2,
+                                            spaceBetween: 32,
+                                        },
+                                        1280: {
+                                            slidesPerView: 3.6,
+                                            spaceBetween: 36,
+                                        }
+                                    }
+                                });
+                            }
+
+                            // 5. Inisialisasi Center-Focus Carousel Komite Sekolah (Dark-Gold)
+                            if (typeof Swiper !== 'undefined' && document.querySelector('.komite-center-slider')) {
+                                const komiteCount = <%= (typeof komite !== 'undefined' && komite) ? komite.length : 0 %>;
+                                const swiperKomite = new Swiper('.komite-center-slider', {
+                                    slidesPerView: 1.15,
+                                    spaceBetween: 16,
+                                    centeredSlides: true,
+                                    loop: true,
+                                    slideToClickedSlide: true,
+                                    grabCursor: true,
+                                    autoplay: {
+                                        delay: 4000,
+                                        disableOnInteraction: false,
+                                        pauseOnMouseEnter: true
+                                    },
+                                    navigation: {
+                                        nextEl: '#komite-next-btn',
+                                        prevEl: '#komite-prev-btn',
+                                    },
+                                    pagination: {
+                                        el: '#komite-pagination',
+                                        clickable: true,
+                                        bulletClass: 'komite-bullet',
+                                        bulletActiveClass: 'komite-bullet-active',
+                                        renderBullet: function (index, className) {
+                                            if (index >= komiteCount) return '';
+                                            return '<span class="' + className + '"></span>';
+                                        }
+                                    },
+                                    breakpoints: {
+                                        640: {
+                                            slidesPerView: 1.8,
+                                            spaceBetween: 24,
+                                        },
+                                        1024: {
+                                            slidesPerView: 2.8,
+                                            spaceBetween: 32,
+                                        },
+                                        1280: {
+                                            slidesPerView: 3.2,
+                                            spaceBetween: 36,
+                                        }
+                                    }
+                                });
+                            }
+                        </script>
 </body>
 
 </html>

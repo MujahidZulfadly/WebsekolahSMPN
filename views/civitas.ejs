@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <%- include('partials/head', { title: 'Direktori Civitas Akademik - ' + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao') }) %>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen selection:bg-amber-500 selection:text-blue-950">
+
+    <!-- Navbar Global -->
+    <%- include('partials/navbar', { activePage: 'guru' }) %>
+
+    <!-- ============================================================== -->
+    <!-- SUB-HERO BANNER & LIVE SEARCH BAR -->
+    <!-- ============================================================== -->
+    <section class="relative bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white pt-14 pb-24 sm:pt-16 sm:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Ambient Background Glow Circles -->
+        <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-blue-600/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 -right-24 w-80 h-80 rounded-full bg-amber-500/15 blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10 text-center">
+            
+            <!-- Breadcrumbs Navigation -->
+            <nav class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-slate-300 mb-5" data-aos="fade-down" data-aos-duration="600">
+                <a href="/" class="hover:text-amber-400 transition-colors font-medium">Beranda</a>
+                <span class="text-slate-500 text-[10px]">/</span>
+                <span class="text-amber-400 font-bold">Civitas Akademik</span>
+            </nav>
+
+            <!-- Badge Civitas Akademika -->
+            <div data-aos="fade-up" data-aos-duration="700">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-black uppercase tracking-wider backdrop-blur-md mb-4 shadow-sm">
+                    <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+                    <span>Civitas Akademika</span>
+                </span>
+            </div>
+
+            <!-- Big Page Title -->
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight" data-aos="fade-up" data-aos-duration="800">
+                Daftar Pegawai & Staf
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mt-3.5 text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-duration="900">
+                Mengenal jajaran pendidik dan staf profesional pencetak generasi berprestasi di <%= profil.nama_sekolah || 'UPT SMPN 1 Rantepao' %>
+            </p>
+
+            <!-- Large White Capsule Search Bar (rounded-full) -->
+            <div class="mt-8 max-w-2xl mx-auto px-2" data-aos="fade-up" data-aos-duration="1000">
+                <div class="relative bg-white rounded-full shadow-2xl p-2 sm:p-2.5 flex items-center border border-white/30 focus-within:ring-4 focus-within:ring-amber-400/50 transition-all duration-300 group">
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-blue-950 text-amber-400 flex items-center justify-center shrink-0 text-base shadow-md group-focus-within:bg-amber-500 group-focus-within:text-blue-950 transition-colors duration-300">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <input type="text" id="civitasSearchInput"
+                        placeholder="Cari nama pegawai, NIP, atau jabatan..."
+                        class="w-full bg-transparent border-none text-slate-800 placeholder-slate-400 text-xs sm:text-sm font-semibold px-4 py-2 focus:outline-none"
+                        autocomplete="off">
+                    <button type="button" id="civitasClearBtn"
+                        class="hidden text-slate-400 hover:text-rose-500 px-3 py-1.5 text-sm transition focus:outline-none"
+                        title="Hapus Pencarian">
+                        <i class="fa-solid fa-circle-xmark text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Wave SVG Divider -->
+        <div class="absolute bottom-0 left-0 right-0 leading-none z-10 pointer-events-none">
+            <svg class="w-full h-8 sm:h-12 text-slate-50 fill-current" viewBox="0 0 1440 80" preserveAspectRatio="none">
+                <path d="M0,32L80,42.7C160,53,320,75,480,69.3C640,64,800,32,960,26.7C1120,21,1280,43,1360,53.3L1440,64L1440,80L1360,80C1280,80,1120,80,960,80C800,80,640,80,480,80C320,80,160,80,80,80L0,80Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- DIREKTORI CIVITAS (GRID & LIVE FILTER) -->
+    <!-- ============================================================== -->
+    <main class="flex-grow py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- Section Subheader: Judul di Kiri, Badge Pegawai di Kanan -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-slate-200" data-aos="fade-up">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight flex items-center gap-2.5">
+                        <i class="fa-solid fa-chalkboard-user text-amber-500"></i>
+                        <span>Daftar Pegawai & Staf</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1" id="searchFeedback">
+                        Menampilkan seluruh dewan guru dan tenaga kependidikan aktif.
+                    </p>
+                </div>
+
+                <!-- Badge Jumlah Pegawai -->
+                <div class="shrink-0">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-900 font-extrabold text-xs sm:text-sm shadow-sm">
+                        <i class="fa-solid fa-user-check text-amber-600"></i>
+                        <span id="badgeCounter"><span id="visibleCount"><%= (guru && guru.length) ? guru.length : 0 %></span> Pegawai</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Grid Kartu Pegawai (4 Kolom di Desktop) -->
+            <% if (guru && guru.length > 0) { %>
+                <div id="pegawaiGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+                    <% guru.forEach((g, idx) => { %>
+                        <div class="pegawai-card bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-amber-400/60 transition-all duration-300 text-center flex flex-col justify-between group"
+                            data-aos="zoom-in" data-aos-delay="<%= (idx % 4) * 60 %>"
+                            data-nama="<%= (g.nama_lengkap || '').toLowerCase() %>"
+                            data-nip="<%= (g.nip || '').toLowerCase() %>"
+                            data-jabatan="<%= (g.jabatan || '').toLowerCase() %>"
+                            data-kategori="<%= (g.kategori_pegawai || '').toLowerCase() %>">
+                            
+                            <div class="flex flex-col items-center w-full">
+                                <!-- Circular Framed Photo (border-4 border-amber-500) -->
+                                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden mb-4 border-4 border-amber-500 shadow-md flex items-center justify-center bg-blue-950 text-amber-400 font-black text-2xl group-hover:scale-105 group-hover:rotate-2 transition-transform duration-300 flex-shrink-0">
+                                    <% if (g.foto && !g.foto.startsWith('default') && g.foto !== '') { %>
+                                        <img src="/uploads/guru/<%= g.foto %>" alt="<%= g.nama_lengkap %>"
+                                            class="w-full h-full object-cover"
+                                            loading="lazy"
+                                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(g.nama_lengkap) %>&background=0b132b&color=f59e0b&size=150';">
+                                    <% } else { %>
+                                        <span><%= g.nama_lengkap.charAt(0) %></span>
+                                    <% } %>
+                                </div>
+
+                                <!-- Badge Kategori -->
+                                <span class="text-[10px] font-black px-3 py-0.5 rounded-full bg-blue-50 text-blue-900 border border-blue-200 uppercase mb-2 inline-block">
+                                    <%= g.kategori_pegawai || 'Tenaga Pendidik' %>
+                                </span>
+
+                                <!-- Nama Lengkap -->
+                                <h3 class="font-extrabold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-blue-950 transition-colors line-clamp-2">
+                                    <%= g.nama_lengkap %>
+                                </h3>
+
+                                <!-- Jabatan -->
+                                <p class="text-xs sm:text-sm font-bold text-amber-600 mt-1.5 leading-snug">
+                                    <%= g.jabatan %>
+                                </p>
+                            </div>
+
+                            <!-- NIP Footer -->
+                            <div class="w-full pt-3 mt-4 border-t border-slate-100 font-mono">
+                                <p class="text-[11px] text-slate-400 font-medium">
+                                    NIP. <%= g.nip || '-' %>
+                                </p>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+
+                <!-- Empty State ketika Pencarian Tidak Ditemukan -->
+                <div id="noResultsState" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-2xl mx-auto mb-4 border border-amber-200">
+                        <i class="fa-solid fa-user-slash"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-blue-950 mb-1">Tidak Ada Pegawai yang Sesuai</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-6">
+                        Kata kunci pencarian tidak cocok dengan nama lengkap, NIP, maupun jabatan pegawai yang terdaftar.
+                    </p>
+                    <button type="button" id="resetSearchBtn"
+                        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs transition shadow-md hover:scale-105">
+                        <i class="fa-solid fa-arrow-rotate-left text-amber-400"></i>
+                        <span>Reset Pencarian</span>
+                    </button>
+                </div>
+
+            <% } else { %>
+                <div class="text-center py-16 px-4 bg-white rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="w-16 h-16 rounded-full bg-blue-50 text-blue-950 flex items-center justify-center text-2xl mx-auto mb-4">
+                        <i class="fa-solid fa-users-slash"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-blue-950 mb-1">Belum Ada Data Pegawai</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+                        Data civitas akademik belum diinputkan ke dalam sistem basis data.
+                    </p>
+                </div>
+            <% } %>
+
+        </div>
+    </main>
+
+    <!-- Footer Global -->
+    <%- include('partials/footer') %>
+
+    <!-- Live Search Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('civitasSearchInput');
+            const clearBtn = document.getElementById('civitasClearBtn');
+            const resetBtn = document.getElementById('resetSearchBtn');
+            const cards = document.querySelectorAll('.pegawai-card');
+            const visibleCountElem = document.getElementById('visibleCount');
+            const searchFeedback = document.getElementById('searchFeedback');
+            const noResultsState = document.getElementById('noResultsState');
+            const pegawaiGrid = document.getElementById('pegawaiGrid');
+            const totalCount = cards.length;
+
+            function doFilter() {
+                if (!searchInput) return;
+                const keyword = searchInput.value.trim().toLowerCase();
+
+                // Tampilkan atau sembunyikan tombol clear
+                if (clearBtn) {
+                    if (keyword.length > 0) {
+                        clearBtn.classList.remove('hidden');
+                    } else {
+                        clearBtn.classList.add('hidden');
+                    }
+                }
+
+                let matches = 0;
+
+                cards.forEach(card => {
+                    const nama = card.getAttribute('data-nama') || '';
+                    const nip = card.getAttribute('data-nip') || '';
+                    const jabatan = card.getAttribute('data-jabatan') || '';
+                    const kategori = card.getAttribute('data-kategori') || '';
+
+                    const isMatch = nama.includes(keyword) || 
+                                    nip.includes(keyword) || 
+                                    jabatan.includes(keyword) || 
+                                    kategori.includes(keyword);
+
+                    if (isMatch) {
+                        card.style.display = '';
+                        matches++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Update counter
+                if (visibleCountElem) {
+                    visibleCountElem.textContent = matches;
+                }
+
+                // Update feedback text & empty state
+                if (matches === 0 && totalCount > 0) {
+                    if (pegawaiGrid) pegawaiGrid.classList.add('hidden');
+                    if (noResultsState) noResultsState.classList.remove('hidden');
+                    if (searchFeedback) searchFeedback.textContent = 'Tidak ditemukan pegawai dengan kata kunci "' + searchInput.value + '"';
+                } else {
+                    if (pegawaiGrid) pegawaiGrid.classList.remove('hidden');
+                    if (noResultsState) noResultsState.classList.add('hidden');
+                    if (searchFeedback) {
+                        if (keyword.length > 0) {
+                            searchFeedback.textContent = 'Menemukan ' + matches + ' pegawai yang sesuai dengan pencarian.';
+                        } else {
+                            searchFeedback.textContent = 'Menampilkan seluruh dewan guru dan tenaga kependidikan aktif.';
+                        }
+                    }
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', doFilter);
+                searchInput.addEventListener('keyup', doFilter);
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    searchInput.value = '';
+                    doFilter();
+                    searchInput.focus();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function () {
+                    if (searchInput) searchInput.value = '';
+                    doFilter();
+                    if (searchInput) searchInput.focus();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+

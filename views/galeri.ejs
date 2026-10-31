@@ -1,82 +1,54 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeri Dokumentasi & Kegiatan - <%= profil.nama_sekolah %></title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <%- include('partials/head', { title: 'Galeri Dokumentasi & Rekam Jejak - ' + (profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO') }) %>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-blue-950">
 
     <!-- Unified Navbar Component -->
     <%- include('partials/navbar', { activePage: 'galeri' }) %>
 
-    <!-- Breadcrumb Bar -->
-    <div class="bg-slate-100 border-b border-slate-200 py-3.5 px-4">
-        <div class="max-w-7xl mx-auto flex items-center text-xs text-slate-500 gap-2">
-            <a href="/" class="hover:text-blue-900 font-medium">Beranda</a>
-            <span>/</span>
-            <span class="text-slate-800 font-semibold">Galeri Dokumentasi Sekolah</span>
-        </div>
-    </div>
-
-    <!-- Hero Section Galeri -->
-    <section class="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 text-white py-14 px-4 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto relative z-10 text-center">
-            <span class="inline-block bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3">
-                Dokumentasi Visual
-            </span>
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">
-                Galeri & Rekam Jejak Kegiatan
-            </h1>
-            <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto mt-3 leading-relaxed">
-                Koleksi foto dokumentasi aktivitas belajar mengajar, upacara, pelestarian budaya Toraja, fasilitas sarana sekolah, dan prestasi siswa <%= profil.nama_sekolah %>.
-            </p>
-        </div>
-    </section>
+    <!-- Sub-Hero Banner -->
+    <%- include('partials/subhero', {
+        badge: 'Dokumentasi Visual',
+        title: 'Galeri & Rekam Jejak Sekolah',
+        subtitle: 'Koleksi dokumentasi foto aktivitas belajar, upacara, budaya Toraja, fasilitas sarana, dan capaian prestasi ' + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao'),
+        breadcrumbs: [
+            { label: 'Beranda', url: '/' },
+            { label: 'Galeri Foto' }
+        ],
+        waveFill: 'text-slate-50'
+    }) %>
 
     <!-- Main Content: Filter & Gallery Grid -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex-1">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 w-full flex-1">
 
         <!-- Filter Tab Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
-            <a href="/galeri" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 <%= (kategoriAktif === 'Semua') ? 'bg-blue-950 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' %>">
+        <div data-aos="fade-up" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-10">
+            <a href="/galeri" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Semua') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
                 <span>Semua Foto</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] <%= (kategoriAktif === 'Semua') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Semua') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
                     <%= statsGaleri.total || galeriList.length %>
                 </span>
             </a>
-            <a href="/galeri?kategori=Kegiatan" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 <%= (kategoriAktif === 'Kegiatan') ? 'bg-blue-950 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' %>">
-                <span>🎭 Kegiatan Sekolah</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] <%= (kategoriAktif === 'Kegiatan') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+            <a href="/galeri?kategori=Kegiatan" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Kegiatan') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                <i class="fa-solid fa-masks-theater text-xs text-blue-400"></i>
+                <span>Kegiatan Sekolah</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Kegiatan') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
                     <%= statsGaleri.kegiatan || 0 %>
                 </span>
             </a>
-            <a href="/galeri?kategori=Fasilitas" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 <%= (kategoriAktif === 'Fasilitas') ? 'bg-blue-950 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' %>">
-                <span>🏛️ Sarana & Fasilitas</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] <%= (kategoriAktif === 'Fasilitas') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+            <a href="/galeri?kategori=Fasilitas" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Fasilitas') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                <i class="fa-solid fa-building-columns text-xs text-emerald-500"></i>
+                <span>Sarana & Fasilitas</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Fasilitas') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
                     <%= statsGaleri.fasilitas || 0 %>
                 </span>
             </a>
-            <a href="/galeri?kategori=Prestasi" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 <%= (kategoriAktif === 'Prestasi') ? 'bg-blue-950 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' %>">
-                <span>🏆 Prestasi Siswa</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] <%= (kategoriAktif === 'Prestasi') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+            <a href="/galeri?kategori=Prestasi" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Prestasi') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                <i class="fa-solid fa-trophy text-xs text-amber-500"></i>
+                <span>Prestasi Siswa</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Prestasi') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
                     <%= statsGaleri.prestasi || 0 %>
                 </span>
             </a>
@@ -86,7 +58,8 @@
         <% if (galeriList && galeriList.length > 0) { %>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 <% galeriList.forEach((foto, idx) => { %>
-                    <div class="gallery-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer"
+                    <div data-aos="zoom-in" data-aos-delay="<%= (idx % 6) * 80 %>"
+                         class="gallery-card bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group cursor-pointer"
                          data-idx="<%= idx %>"
                          data-id="<%= foto.id_galeri %>"
                          data-judul="<%= foto.judul_foto %>"
@@ -96,55 +69,62 @@
                          data-src="/uploads/galeri/<%= foto.file_foto %>">
                         
                         <!-- Image Container with Zoom effect -->
-                        <div class="relative overflow-hidden aspect-[4/3] bg-slate-900">
+                        <div class="relative overflow-hidden aspect-[4/3] bg-blue-950">
                             <img src="/uploads/galeri/<%= foto.file_foto %>" 
                                  alt="<%= foto.judul_foto %>" 
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                                  loading="lazy"
                                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80';">
                             
+                            <!-- Ambient Gradient Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+
                             <!-- Category Badge -->
-                            <div class="absolute top-3 left-3 z-10">
+                            <div class="absolute top-3.5 left-3.5 z-10">
                                 <% if (foto.kategori_galeri === 'Prestasi') { %>
-                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-blue-950 shadow-md">
-                                        🏆 Prestasi
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-md flex items-center gap-1.5">
+                                        <i class="fa-solid fa-trophy text-[9px]"></i>
+                                        <span>Prestasi</span>
                                     </span>
                                 <% } else if (foto.kategori_galeri === 'Fasilitas') { %>
-                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-600 text-white shadow-md">
-                                        🏛️ Fasilitas
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
+                                        <i class="fa-solid fa-building-columns text-[9px]"></i>
+                                        <span>Fasilitas</span>
                                     </span>
                                 <% } else { %>
-                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-600 text-white shadow-md">
-                                        🎭 Kegiatan
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-md flex items-center gap-1.5">
+                                        <i class="fa-solid fa-masks-theater text-[9px]"></i>
+                                        <span>Kegiatan</span>
                                     </span>
                                 <% } %>
                             </div>
 
                             <!-- Click to enlarge hover overlay -->
-                            <div class="absolute inset-0 bg-blue-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <span class="bg-white/90 text-blue-950 text-xs font-bold px-3.5 py-1.5 rounded-xl shadow flex items-center gap-1.5">
-                                    🔍 Perbesar Foto
+                            <div class="absolute inset-0 bg-blue-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <span class="bg-white/95 text-blue-950 text-xs font-black px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
+                                    <i class="fa-solid fa-magnifying-glass text-blue-950"></i>
+                                    <span>Perbesar Foto</span>
                                 </span>
                             </div>
                         </div>
 
                         <!-- Card Content -->
-                        <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <p class="text-[11px] font-semibold text-slate-400 mb-1 flex items-center gap-1">
-                                    <span>📅</span>
+                                <p class="text-[11px] font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-day text-slate-400"></i>
                                     <span><%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></span>
                                 </p>
-                                <h3 class="font-bold text-slate-900 text-base leading-snug group-hover:text-blue-700 transition">
+                                <h3 class="font-extrabold text-slate-900 text-base leading-snug group-hover:text-amber-600 transition-colors">
                                     <%= foto.judul_foto %>
                                 </h3>
-                                <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
+                                <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed font-normal">
                                     <%= foto.deskripsi_singkat %>
                                 </p>
                             </div>
-                            <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-700 font-semibold">
-                                <span>Lihat Dokumentasi</span>
-                                <span>→</span>
+                            <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-950 font-bold group-hover:text-amber-600 transition-colors">
+                                <span>Lihat Detail Foto</span>
+                                <span class="group-hover:translate-x-1 transition-transform">→</span>
                             </div>
                         </div>
 
@@ -152,20 +132,18 @@
                 <% }) %>
             </div>
         <% } else { %>
-            <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
-                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                    🖼️
+            <div data-aos="zoom-in" class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
+                <div class="w-16 h-16 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+                    <i class="fa-solid fa-images text-blue-900 text-2xl"></i>
                 </div>
-                <h3 class="font-bold text-lg text-slate-800">Belum Ada Foto Dokumentasi</h3>
+                <h3 class="font-extrabold text-lg text-blue-950">Belum Ada Foto Dokumentasi</h3>
                 <p class="text-xs text-slate-500 mt-2 leading-relaxed">
-                    Koleksi foto untuk kategori <span class="font-semibold text-blue-900">"<%= kategoriAktif %>"</span> belum tersedia. Foto dokumentasi baru dapat diunggah melalui Panel Admin.
+                    Koleksi foto untuk kategori <span class="font-bold text-amber-600">"<%= kategoriAktif %>"</span> belum tersedia saat ini. Silakan periksa kembali di lain waktu.
                 </p>
                 <div class="mt-6 flex justify-center gap-3">
-                    <a href="/galeri" class="text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition">
-                        Semua Kategori
-                    </a>
-                    <a href="/admin?tab=galeri" class="text-xs font-bold text-white bg-blue-950 hover:bg-blue-900 px-4 py-2 rounded-xl transition">
-                        Upload Foto di Admin ⚙
+                    <a href="/galeri" class="text-xs font-bold text-blue-950 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group text-slate-500"></i>
+                        <span>Lihat Semua Kategori</span>
                     </a>
                 </div>
             </div>
@@ -183,10 +161,13 @@
                     <span id="lb-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white">
                         Kegiatan
                     </span>
-                    <span id="lb-tgl" class="text-xs text-slate-400">📅 Tanggal</span>
+                    <span id="lb-tgl" class="text-xs text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                        <span id="lb-tgl-val">Tanggal</span>
+                    </span>
                 </div>
-                <button type="button" id="lb-close-btn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-lg font-bold transition">
-                    ✕
+                <button type="button" id="lb-close-btn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
@@ -234,7 +215,12 @@
                     lbImg.src = src;
                     lbJudul.textContent = judul;
                     lbDeskripsi.textContent = deskripsi || '-';
-                    lbTgl.textContent = '📅 ' + tgl;
+                    const tglValEl = document.getElementById('lb-tgl-val');
+                    if (tglValEl) {
+                        tglValEl.textContent = tgl;
+                    } else {
+                        lbTgl.innerHTML = '<i class="fa-solid fa-calendar-day mr-1 text-slate-400"></i>' + tgl;
+                    }
                     lbBadge.textContent = kategori;
 
                     if (kategori === 'Prestasi') {

@@ -1,20 +1,59 @@
-<!-- Unified Footer SMPN 1 Rantepao -->
-<footer class="bg-slate-900 text-slate-400 py-10 text-center text-sm border-t border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
-        <p class="font-extrabold text-white text-base tracking-wide"><%= profil.nama_sekolah || 'UPT SMP NEGERI 1 RANTEPAO' %></p>
-        <p class="text-xs text-slate-400 max-w-xl mx-auto leading-relaxed">
-            <%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao, Kabupaten Toraja Utara, Sulawesi Selatan' %> <br class="hidden sm:inline">
-            Telp: <%= profil.telepon || '-' %> | Email: <%= profil.email_sekolah || '-' %>
+<% const footerProfil = (typeof profil !== 'undefined' && profil) ? profil : {}; %>
+<!-- ============================================================== -->
+<!-- UNIFIED FOOTER SMPN 1 RANTEPAO -->
+<!-- ============================================================== -->
+<footer class="bg-slate-950 text-slate-400 py-12 text-center text-sm border-t border-slate-800 relative z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+        
+        <!-- School Monogram & Title -->
+        <div class="flex items-center justify-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-blue-950 font-black text-lg flex items-center justify-center shadow">
+                S1
+            </div>
+            <p class="font-extrabold text-white text-base sm:text-lg tracking-wide">
+                <%= footerProfil.nama_sekolah || 'UPT SMP NEGERI 1 RANTEPAO' %>
+            </p>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <%= footerProfil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao, Kabupaten Toraja Utara, Sulawesi Selatan' %> <br class="hidden sm:inline">
+            Telp: <%= footerProfil.telepon || '(0423) 21123' %> | Email: <%= footerProfil.email_sekolah || 'info@smpn1rantepao.sch.id' %>
         </p>
-        <div class="pt-4 mt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-            <p>&copy; <%= new Date().getFullYear() %> <%= profil.nama_sekolah %> • Toraja Utara</p>
-            <p class="flex items-center gap-3">
-                <a href="/ppdb" class="hover:text-amber-400 transition">PPDB 2026</a>
-                <span>•</span>
-                <a href="/galeri" class="hover:text-amber-400 transition">Galeri Foto</a>
-                <span>•</span>
-                <a href="/admin" class="hover:text-amber-400 underline transition text-amber-500 font-semibold">Panel Admin ⚙</a>
+
+        <div class="pt-6 mt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+            <p>&copy; <%= new Date().getFullYear() %> <%= footerProfil.nama_sekolah || 'UPT SMPN 1 Rantepao' %> • Toraja Utara. Seluruh Hak Cipta Dilindungi.</p>
+            <p class="text-slate-500 font-mono text-[11px]">
+                NPSN: <%= footerProfil.npsn || '40306123' %> • Terakreditasi <%= footerProfil.akreditasi || 'A' %>
             </p>
         </div>
     </div>
 </footer>
+
+<!-- Swiper Carousel JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- AOS (Animate On Scroll) JS CDN -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+    // Inisialisasi AOS Animation
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                once: true,
+                duration: 800,
+                offset: 50,
+                easing: 'ease-out-cubic'
+            });
+        }
+
+        // Mobile Menu Toggle Universal Handler
+        const mobileBtn = document.getElementById('mobile-toggle-btn');
+        const mobileMenu = document.getElementById('mobile-menu-pane');
+        if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>

@@ -1,26 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Administrator - SMPN 1 Rantepao</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <%- include('partials/head', { title: 'Login Administrator - SMPN 1 RANTEPAO' }) %>
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 min-h-screen flex items-center justify-center p-4 font-sans text-slate-800 relative overflow-hidden">
 
@@ -53,7 +34,7 @@
             <!-- Error / Alert Message -->
             <% if (typeof alert !== 'undefined' && alert) { %>
                 <div class="mb-6 p-4 rounded-xl text-xs font-semibold flex items-center gap-3 border <%= alert.status === 'error' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-emerald-50 border-emerald-200 text-emerald-700' %>">
-                    <span class="text-base"><%= alert.status === 'error' ? '⚠️' : 'ℹ️' %></span>
+                    <span class="text-sm"><i class="fa-solid <%= alert.status === 'error' ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-info text-blue-600' %>"></i></span>
                     <span><%= alert.message %></span>
                 </div>
             <% } %>
@@ -95,11 +76,12 @@
             <div class="mt-8 pt-6 border-t border-slate-100 text-center">
                 <div class="inline-block bg-amber-50 border border-amber-200/80 rounded-xl px-4 py-2.5 text-xs text-amber-900 text-left">
                     <p class="font-bold flex items-center gap-1.5 text-amber-800">
-                        <span>💡</span> Kredensial Default Login:
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                        <span>Kredensial Default Login:</span>
                     </p>
                     <p class="mt-1 font-mono text-[11px] text-amber-950">
                         Username: <span class="font-bold bg-amber-100 px-1.5 py-0.5 rounded">admin</span> | 
-                        Password: <span class="font-bold bg-amber-100 px-1.5 py-0.5 rounded">password</span>
+                        Password: <span class="font-bold bg-amber-100 px-1.5 py-0.5 rounded">admin123</span> / <span class="font-bold bg-amber-100 px-1.5 py-0.5 rounded">password</span>
                     </p>
                 </div>
             </div>

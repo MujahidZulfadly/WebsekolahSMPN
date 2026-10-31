@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -96,6 +98,14 @@
                     <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= stats.totalGuru %></span>
                 </button>
 
+                <button type="button" onclick="switchTab('komite')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="komite">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users-gear w-5 text-center text-slate-400 group-hover:text-amber-400 transition text-sm"></i>
+                        <span>Komite Sekolah</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= (typeof stats !== 'undefined' && stats.totalKomite) ? stats.totalKomite : 0 %></span>
+                </button>
+
                 <button type="button" onclick="switchTab('ppdb')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="ppdb">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -174,14 +184,15 @@
 
             <div class="flex items-center gap-3">
                 <div class="hidden sm:flex items-center text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/60 font-medium">
-                    📅 <%= new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                    <i class="fa-regular fa-calendar text-slate-400 mr-2"></i><%= new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
                 </div>
                 <a href="/" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-                    <span>Lihat Portal</span>
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500"></i>
+                    <span>Lihat Website</span>
                 </a>
-                <a href="/logout" onclick="return confirm('Keluar dari panel admin?')" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg transition" title="Logout">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <a href="/logout" onclick="return confirm('Apakah Anda yakin ingin keluar (logout) dari panel admin?')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-red-600 hover:text-white bg-red-50 hover:bg-red-600 border border-red-200 hover:border-red-600 rounded-lg transition shadow-xs" title="Keluar dari Panel Admin">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span>Keluar (Logout)</span>
                 </a>
             </div>
         </header>
@@ -191,9 +202,9 @@
             <div class="mx-6 mt-6 p-4 rounded-xl border flex items-center justify-between <%= alert.status === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-red-50 border-red-200 text-red-800' %> shadow-sm" id="alert-box">
                 <div class="flex items-center gap-3">
                     <% if (alert.status === 'success') { %>
-                        <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold">✓</div>
+                        <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-check"></i></div>
                     <% } else { %>
-                        <div class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center font-bold">✕</div>
+                        <div class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-xmark"></i></div>
                     <% } %>
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-wider"><%= alert.status === 'success' ? 'Berhasil' : 'Pemberitahuan' %></p>
@@ -263,6 +274,23 @@
                         <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                             <span class="text-slate-500">Tenaga pendidik</span>
                             <button type="button" onclick="switchTab('guru')" class="text-emerald-600 font-semibold hover:underline">Kelola →</button>
+                        </div>
+                    </div>
+
+                    <!-- Stat Card: Komite Sekolah -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Komite Sekolah</p>
+                                <h3 class="text-3xl font-extrabold text-slate-800 mt-1"><%= (typeof stats !== 'undefined' && stats.totalKomite) ? stats.totalKomite : 0 %></h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <i class="fa-solid fa-users-gear text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="text-slate-500">Pengurus kemitraan</span>
+                            <button type="button" onclick="switchTab('komite')" class="text-blue-600 font-semibold hover:underline">Kelola →</button>
                         </div>
                     </div>
 
@@ -360,8 +388,11 @@
                             <button type="button" onclick="openModal('modal-tambah-guru')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition">
                                 + Guru/Staf
                             </button>
-                            <button type="button" onclick="switchTab('profil')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition">
-                                ⚙ Edit Profil
+                            <button type="button" onclick="openModal('modal-tambah-komite')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition">
+                                + Komite
+                            </button>
+                            <button type="button" onclick="switchTab('profil')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-gear"></i> Edit Profil
                             </button>
                         </div>
                     </div>
@@ -387,7 +418,7 @@
                                             <p class="text-xs font-bold text-slate-800 truncate"><%= item.judul %></p>
                                             <div class="flex items-center gap-2 mt-1">
                                                 <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700"><%= item.nama_kategori %></span>
-                                                <span class="text-[10px] text-slate-400">📅 <%= new Date(item.tanggal_publish).toLocaleDateString('id-ID') %></span>
+                                                <span class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar-days text-slate-400 mr-1"></i><%= new Date(item.tanggal_publish).toLocaleDateString('id-ID') %></span>
                                             </div>
                                         </div>
                                         <span class="text-[10px] px-2 py-0.5 rounded font-semibold flex-shrink-0 <%= item.status === 'publish' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600' %>">
@@ -415,7 +446,7 @@
                                     <div class="py-3">
                                         <div class="flex items-center justify-between">
                                             <p class="text-xs font-bold text-slate-800 truncate"><%= p.judul_pengumuman %></p>
-                                            <span class="text-[10px] text-slate-400">📅 <%= new Date(p.tanggal_terbit).toLocaleDateString('id-ID') %></span>
+                                            <span class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar-days text-slate-400 mr-1"></i><%= new Date(p.tanggal_terbit).toLocaleDateString('id-ID') %></span>
                                         </div>
                                         <p class="text-xs text-slate-500 mt-1 line-clamp-1"><%= p.isi_pengumuman %></p>
                                     </div>
@@ -676,6 +707,106 @@
             </div>
 
             <!-- ============================================== -->
+            <!-- TAB: KELOLA KOMITE SEKOLAH -->
+            <!-- ============================================== -->
+            <div id="tab-komite" class="tab-content">
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-800">Struktur Pengurus Komite Sekolah</h3>
+                            <p class="text-xs text-slate-400">Kelola data pengurus komite, jabatan, periode masa bakti, dan perwakilan unsur kemitraan</p>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <input type="text" id="search-komite" onkeyup="filterKomiteTable()" placeholder="Cari nama pengurus..." class="text-xs border border-slate-200 rounded-lg px-3 py-2 w-48 focus:outline-blue-600">
+                            <button type="button" onclick="openModal('modal-tambah-komite')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition shadow flex items-center gap-1.5 flex-shrink-0">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Tambah Pengurus Komite</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse" id="table-komite">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-100">
+                                    <th class="py-3 px-4 w-12 text-center">Urutan</th>
+                                    <th class="py-3 px-4">Foto & Nama Lengkap</th>
+                                    <th class="py-3 px-4">Jabatan</th>
+                                    <th class="py-3 px-4">Periode</th>
+                                    <th class="py-3 px-4">Pekerjaan / Unsur Perwakilan</th>
+                                    <th class="py-3 px-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% if (typeof komite === 'undefined' || komite.length === 0) { %>
+                                    <tr>
+                                        <td colspan="6" class="py-8 text-center text-xs text-slate-400">Belum ada data pengurus komite sekolah.</td>
+                                    </tr>
+                                <% } %>
+                                <% if (typeof komite !== 'undefined') { %>
+                                    <% komite.forEach(k => { %>
+                                        <tr class="hover:bg-slate-50/80 transition">
+                                            <td class="py-3 px-4 text-center text-xs font-semibold text-slate-400"><%= k.urutan_tampil %></td>
+                                            <td class="py-3 px-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 rounded-xl bg-slate-900 text-amber-400 font-bold flex items-center justify-center text-xs border border-slate-200 overflow-hidden flex-shrink-0">
+                                                        <% if (k.foto && !k.foto.startsWith('default') && k.foto !== '') { %>
+                                                            <img src="/uploads/komite/<%= k.foto %>" alt="<%= k.nama_lengkap %>" class="w-full h-full object-cover">
+                                                        <% } else { %>
+                                                            <i class="fa-solid fa-user-tie"></i>
+                                                        <% } %>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-bold text-slate-800 text-xs"><%= k.nama_lengkap %></p>
+                                                        <p class="text-[10px] text-slate-400">ID Komite #<%= k.id_komite %></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-50 text-amber-800 border border-amber-200 inline-flex items-center gap-1">
+                                                    <i class="fa-solid fa-award text-[9px]"></i> <%= k.jabatan %>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4 text-xs font-semibold text-slate-600">
+                                                <i class="fa-regular fa-calendar-check text-slate-400 mr-1"></i><%= k.periode %>
+                                            </td>
+                                            <td class="py-3 px-4 text-xs text-slate-700">
+                                                <%= k.pekerjaan_atau_unsur %>
+                                            </td>
+                                            <td class="py-3 px-4 text-center whitespace-nowrap">
+                                                <div class="inline-flex items-center gap-1.5">
+                                                    <button type="button" 
+                                                            class="btn-edit-komite px-2.5 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition flex items-center gap-1.5 shadow-xs" 
+                                                            title="Edit Pengurus Komite"
+                                                            onclick="openEditKomite(this)"
+                                                            data-id="<%= k.id_komite %>"
+                                                            data-nama="<%= k.nama_lengkap %>"
+                                                            data-jabatan="<%= k.jabatan %>"
+                                                            data-periode="<%= k.periode %>"
+                                                            data-unsur="<%= k.pekerjaan_atau_unsur %>"
+                                                            data-urutan="<%= k.urutan_tampil %>"
+                                                            data-foto="<%= k.foto || '' %>">
+                                                        <i class="fa-solid fa-pen-to-square text-xs pointer-events-none"></i>
+                                                        <span class="pointer-events-none">Edit</span>
+                                                    </button>
+                                                    <form action="/admin/komite/hapus/<%= k.id_komite %>" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data pengurus komite <%= k.nama_lengkap %>?')">
+                                                        <button type="submit" class="px-2.5 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition flex items-center gap-1.5 shadow-xs" title="Hapus Pengurus Komite">
+                                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                                            <span>Hapus</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
             <!-- TAB 5: EDIT PROFIL SEKOLAH -->
             <!-- ============================================== -->
             <div id="tab-profil" class="tab-content">
@@ -696,7 +827,8 @@
                     <!-- Section: Identitas & Kontak -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                         <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
-                            <span>🏫</span> Identitas Umum & Akreditasi
+                            <i class="fa-solid fa-school text-blue-900"></i>
+                            <span>Identitas Umum & Akreditasi</span>
                         </h4>
                         <div class="grid md:grid-cols-3 gap-4">
                             <div>
@@ -733,7 +865,8 @@
                     <!-- Section: Kepala Sekolah -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                         <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
-                            <span>👨‍💼</span> Data Kepala Sekolah & Sambutan
+                            <i class="fa-solid fa-user-tie text-blue-900"></i>
+                            <span>Data Kepala Sekolah & Sambutan</span>
                         </h4>
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
@@ -754,7 +887,8 @@
                     <!-- Section: Visi, Misi & Sejarah -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                         <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
-                            <span>📜</span> Visi, Misi & Sejarah Singkat
+                            <i class="fa-solid fa-scroll text-blue-900"></i>
+                            <span>Visi, Misi & Sejarah Singkat</span>
                         </h4>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Visi Sekolah</label>
@@ -773,7 +907,8 @@
                     <!-- Section: Google Maps Embed -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                         <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
-                            <span>🗺️</span> Embed Google Maps
+                            <i class="fa-solid fa-map-location-dot text-blue-900"></i>
+                            <span>Embed Google Maps</span>
                         </h4>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Kode / URL Embed Google Maps (iframe / link)</label>
@@ -793,7 +928,8 @@
                 <!-- Section: Keamanan & Ganti Password Admin -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm mt-8 space-y-4">
                     <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
-                        <span>🔒</span> Keamanan Akun & Ganti Password Administrator
+                        <i class="fa-solid fa-shield-halved text-blue-900"></i>
+                        <span>Keamanan Akun & Ganti Password Administrator</span>
                     </h4>
                     <form action="/admin/profil/ganti-password" method="POST" class="space-y-4">
                         <div class="grid md:grid-cols-3 gap-4">
@@ -811,8 +947,9 @@
                             </div>
                         </div>
                         <div class="flex justify-end pt-2">
-                            <button type="submit" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl transition shadow">
-                                🔐 Perbarui Kata Sandi Akun
+                            <button type="submit" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl transition shadow flex items-center gap-2">
+                                <i class="fa-solid fa-key text-xs"></i>
+                                <span>Perbarui Kata Sandi Akun</span>
                             </button>
                         </div>
                     </form>
@@ -914,7 +1051,8 @@
                             <p class="text-xs text-slate-400">Kelola kegiatan pengembangan bakat, minat, kepanduan, dan seni budaya Toraja</p>
                         </div>
                         <button type="button" onclick="openModal('modal-tambah-eskul')" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
-                            <span>➕ Tambah Eskul</span>
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Eskul</span>
                         </button>
                     </div>
 
@@ -948,7 +1086,9 @@
                                                         <% if (e.foto_eskul && e.foto_eskul !== 'default-eskul.jpg') { %>
                                                             <img src="/uploads/eskul/<%= e.foto_eskul %>" alt="<%= e.nama_eskul %>" class="w-full h-full object-cover">
                                                         <% } else { %>
-                                                            <div class="w-full h-full flex items-center justify-center text-amber-400 text-xs font-bold">🏅</div>
+                                                            <div class="w-full h-full flex items-center justify-center text-amber-400 text-xs font-bold">
+                                                                <i class="fa-solid fa-medal text-sm"></i>
+                                                            </div>
                                                         <% } %>
                                                     </div>
                                                     <div>
@@ -961,7 +1101,7 @@
                                                 <%= e.pembina %>
                                             </td>
                                             <td class="py-3 px-4 text-xs text-slate-600 whitespace-nowrap">
-                                                🕒 <%= e.jadwal_latihan %>
+                                                <i class="fa-regular fa-clock text-slate-400 mr-1"></i><%= e.jadwal_latihan %>
                                             </td>
                                             <td class="py-3 px-4 text-xs text-slate-500 max-w-xs">
                                                 <p class="line-clamp-2"><%= e.deskripsi %></p>
@@ -1009,7 +1149,8 @@
                                 ↗ Buka Halaman Galeri
                             </a>
                             <button type="button" onclick="openModal('modal-tambah-galeri')" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
-                                <span>➕ Upload Foto Galeri</span>
+                                <i class="fa-solid fa-plus text-xs"></i>
+                                <span>Upload Foto Galeri</span>
                             </button>
                         </div>
                     </div>
@@ -1034,17 +1175,17 @@
                                             <img src="/uploads/galeri/<%= foto.file_foto %>" alt="<%= foto.judul_foto %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                             <div class="absolute top-2 left-2">
                                                 <% if (foto.kategori_galeri === 'Prestasi') { %>
-                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-blue-950">🏆 Prestasi</span>
+                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-blue-950 inline-flex items-center gap-1"><i class="fa-solid fa-trophy text-[9px]"></i> Prestasi</span>
                                                 <% } else if (foto.kategori_galeri === 'Fasilitas') { %>
-                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white">🏛️ Fasilitas</span>
+                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white inline-flex items-center gap-1"><i class="fa-solid fa-building-columns text-[9px]"></i> Fasilitas</span>
                                                 <% } else { %>
-                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white">🎭 Kegiatan</span>
+                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white inline-flex items-center gap-1"><i class="fa-solid fa-masks-theater text-[9px]"></i> Kegiatan</span>
                                                 <% } %>
                                             </div>
                                         </div>
                                         <div class="p-4 flex-1 flex flex-col justify-between">
                                             <div>
-                                                <p class="text-[10px] text-slate-400 font-medium">📅 <%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID') %></p>
+                                                <p class="text-[10px] text-slate-400 font-medium"><i class="fa-regular fa-calendar text-slate-400 mr-1"></i><%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID') %></p>
                                                 <h4 class="font-bold text-xs text-slate-800 mt-1 line-clamp-2"><%= foto.judul_foto %></h4>
                                                 <p class="text-[11px] text-slate-500 mt-1.5 line-clamp-2"><%= foto.deskripsi_singkat %></p>
                                             </div>
@@ -1056,11 +1197,13 @@
                                                         data-kategori="<%= foto.kategori_galeri %>"
                                                         data-deskripsi="<%= foto.deskripsi_singkat %>"
                                                         data-tgl="<%= new Date(foto.tanggal_upload).toISOString().split('T')[0] %>">
-                                                    <span>✏️ Edit</span>
+                                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                                    <span>Edit</span>
                                                 </button>
                                                 <form action="/admin/galeri/hapus/<%= foto.id_galeri %>" method="POST" onsubmit="return confirm('Hapus foto ini dari galeri?')">
-                                                    <button type="submit" class="text-xs font-semibold text-red-600 hover:text-red-800 transition">
-                                                        🗑️ Hapus
+                                                    <button type="submit" class="text-xs font-semibold text-red-600 hover:text-red-800 transition flex items-center gap-1">
+                                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                                        <span>Hapus</span>
                                                     </button>
                                                 </form>
                                             </div>
@@ -1090,13 +1233,15 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
                             <button type="button" onclick="window.print()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-sm">
-                                <span>🖨️ Cetak Rekap</span>
+                                <i class="fa-solid fa-print text-xs"></i>
+                                <span>Cetak Rekap</span>
                             </button>
                             <a href="/ppdb" target="_blank" class="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 border border-blue-200">
                                 <span>↗ Form Publik</span>
                             </a>
                             <button type="button" onclick="openModal('modal-tambah-ppdb')" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl shadow-sm transition">
-                                <span>➕ Tambah Pendaftar Manual</span>
+                                <i class="fa-solid fa-user-plus text-xs"></i>
+                                <span>Tambah Pendaftar Manual</span>
                             </button>
                         </div>
                     </div>
@@ -1140,7 +1285,7 @@
                     <div class="p-4 bg-white border-b border-slate-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
                         <div class="relative flex-1 max-w-md">
                             <input type="text" id="search-ppdb" onkeyup="filterPPDBTable()" placeholder="Cari nama siswa, nomor reg, NISN, atau asal SD..." class="w-full text-xs border border-slate-300 rounded-xl pl-9 pr-3 py-2.5 bg-slate-50 focus:bg-white focus:outline-blue-600 transition">
-                            <span class="absolute left-3 top-3 text-slate-400 text-xs">🔍</span>
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-xs"></i>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2">
@@ -1202,7 +1347,7 @@
                                                     <%= item.no_pendaftaran %>
                                                 </span>
                                                 <span class="text-[10px] text-slate-400 block mt-1">
-                                                    📅 <%= new Date(item.tanggal_daftar).toLocaleDateString('id-ID') %>
+                                                    <i class="fa-regular fa-calendar text-slate-400 mr-1"></i><%= new Date(item.tanggal_daftar).toLocaleDateString('id-ID') %>
                                                 </span>
                                             </td>
 
@@ -1223,27 +1368,27 @@
                                             <td class="py-3.5 px-4">
                                                 <span class="font-medium text-slate-800"><%= item.asal_sekolah %></span>
                                                 <span class="text-[10px] text-slate-400 block line-clamp-1 max-w-[180px]" title="<%= item.alamat_domisili %>">
-                                                    📍 <%= item.alamat_domisili %>
+                                                    <i class="fa-solid fa-location-dot text-slate-400 mr-1"></i><%= item.alamat_domisili %>
                                                 </span>
                                             </td>
 
                                             <!-- Jalur Pendaftaran -->
                                             <td class="py-3.5 px-4">
                                                 <% if (item.jalur_pendaftaran === 'Zonasi') { %>
-                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                                                        📍 Zonasi
+                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-1">
+                                                        <i class="fa-solid fa-map-pin text-[10px]"></i> Zonasi
                                                     </span>
                                                 <% } else if (item.jalur_pendaftaran === 'Prestasi') { %>
-                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                                                        🏆 Prestasi
+                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1">
+                                                        <i class="fa-solid fa-trophy text-[10px]"></i> Prestasi
                                                     </span>
                                                 <% } else if (item.jalur_pendaftaran === 'Afirmasi') { %>
-                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                        🤝 Afirmasi
+                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center gap-1">
+                                                        <i class="fa-solid fa-handshake-angle text-[10px]"></i> Afirmasi
                                                     </span>
                                                 <% } else { %>
-                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
-                                                        💼 Perpindahan
+                                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200 inline-flex items-center gap-1">
+                                                        <i class="fa-solid fa-briefcase text-[10px]"></i> Perpindahan
                                                     </span>
                                                 <% } %>
                                             </td>
@@ -1256,7 +1401,8 @@
                                                 <a href="https://wa.me/<%= waLink %>?text=Halo%20Bpk/Ibu%20<%= encodeURIComponent(item.nama_ortu) %>,%20kami%20dari%20Panitia%20PPDB%20SMPN%201%20Rantepao%20terkait%20pendaftaran%20ananda%20<%= encodeURIComponent(item.nama_siswa) %>" 
                                                    target="_blank" 
                                                    class="inline-flex items-center gap-1 text-[11px] text-emerald-600 hover:text-emerald-700 font-bold mt-0.5">
-                                                    <span>💬 <%= item.no_hp %></span>
+                                                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                                    <span><%= item.no_hp %></span>
                                                 </a>
                                             </td>
 
@@ -1269,15 +1415,18 @@
                                                     </span>
                                                 <% } else if (item.status_seleksi === 'Berkas Terverifikasi') { %>
                                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                                                        ✓ Berkas Terverifikasi
+                                                        <i class="fa-solid fa-circle-check text-xs"></i>
+                                                        <span>Berkas Terverifikasi</span>
                                                     </span>
                                                 <% } else if (item.status_seleksi === 'Diterima') { %>
                                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                        🎉 Diterima Lulus
+                                                        <i class="fa-solid fa-award text-xs"></i>
+                                                        <span>Diterima Lulus</span>
                                                     </span>
                                                 <% } else { %>
                                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200">
-                                                        ✕ Tidak Diterima
+                                                        <i class="fa-solid fa-circle-xmark text-xs"></i>
+                                                        <span>Tidak Diterima</span>
                                                     </span>
                                                 <% } %>
                                             </td>
@@ -1302,7 +1451,7 @@
                                                             data-catatan="<%= item.catatan || '-' %>"
                                                             data-status="<%= item.status_seleksi %>"
                                                             data-tanggal="<%= new Date(item.tanggal_daftar).toLocaleString('id-ID') %>">
-                                                        👁️
+                                                        <i class="fa-solid fa-eye text-xs"></i>
                                                     </button>
 
                                                     <!-- Ubah Status Button -->
@@ -1314,7 +1463,7 @@
                                                             data-nama="<%= item.nama_siswa %>"
                                                             data-status="<%= item.status_seleksi %>"
                                                             data-catatan="<%= item.catatan || '' %>">
-                                                        ⚖️
+                                                        <i class="fa-solid fa-scale-balanced text-xs"></i>
                                                     </button>
 
                                                     <!-- Edit Button -->
@@ -1333,14 +1482,17 @@
                                                             data-alamat="<%= item.alamat_domisili %>"
                                                             data-catatan="<%= item.catatan || '' %>"
                                                             data-status="<%= item.status_seleksi %>">
-                                                        ✏️
+                                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
                                                     </button>
 
                                                     <!-- Delete Form -->
                                                     <form action="/admin/ppdb/hapus/<%= item.id_pendaftar %>" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data calon siswa <%= item.nama_siswa %> (<%= item.no_pendaftaran %>)?')">
                                                         <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Data">
-                                                            🗑️
+                                                            <i class="fa-solid fa-trash-can text-xs"></i>
                                                         </button>
+                                                    </form>
+                                                </div>
+                                            </td>
                                                     </form>
                                                 </div>
                                             </td>
@@ -1371,8 +1523,13 @@
     <div id="modal-tambah-eskul" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">➕ Tambah Ekstrakurikuler</h3>
-                <button type="button" onclick="closeModal('modal-tambah-eskul')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-blue-600"></i>
+                    <span>Tambah Ekstrakurikuler</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-eskul')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form action="/admin/eskul/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1409,8 +1566,13 @@
     <div id="modal-edit-eskul" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">✏️ Edit Ekstrakurikuler</h3>
-                <button type="button" onclick="closeModal('modal-edit-eskul')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                    <span>Edit Ekstrakurikuler</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-eskul')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form id="form-edit-eskul" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1447,8 +1609,13 @@
     <div id="modal-tambah-galeri" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">📸 Upload Foto Dokumentasi Galeri</h3>
-                <button type="button" onclick="closeModal('modal-tambah-galeri')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-blue-600"></i>
+                    <span>Upload Foto Dokumentasi Galeri</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-galeri')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form action="/admin/galeri/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1459,9 +1626,9 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Galeri</label>
                         <select name="kategori_galeri" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 bg-white focus:outline-blue-600">
-                            <option value="Kegiatan">🎭 Kegiatan Sekolah</option>
-                            <option value="Fasilitas">🏛️ Fasilitas & Sarana</option>
-                            <option value="Prestasi">🏆 Prestasi Siswa</option>
+                            <option value="Kegiatan">Kegiatan Sekolah</option>
+                            <option value="Fasilitas">Fasilitas & Sarana</option>
+                            <option value="Prestasi">Prestasi Siswa</option>
                         </select>
                     </div>
                     <div>
@@ -1489,8 +1656,13 @@
     <div id="modal-edit-galeri" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">✏️ Edit Informasi Foto Galeri</h3>
-                <button type="button" onclick="closeModal('modal-edit-galeri')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                    <span>Edit Informasi Foto Galeri</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-galeri')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form id="form-edit-galeri" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1501,9 +1673,9 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Galeri</label>
                         <select id="edit-galeri-kategori" name="kategori_galeri" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 bg-white focus:outline-blue-600">
-                            <option value="Kegiatan">🎭 Kegiatan Sekolah</option>
-                            <option value="Fasilitas">🏛️ Fasilitas & Sarana</option>
-                            <option value="Prestasi">🏆 Prestasi Siswa</option>
+                            <option value="Kegiatan">Kegiatan Sekolah</option>
+                            <option value="Fasilitas">Fasilitas & Sarana</option>
+                            <option value="Prestasi">Prestasi Siswa</option>
                         </select>
                     </div>
                     <div>
@@ -1531,8 +1703,13 @@
     <div id="modal-tambah-berita" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">➕ Tulis Berita Baru</h3>
-                <button type="button" onclick="closeModal('modal-tambah-berita')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-blue-600"></i>
+                    <span>Tulis Berita Baru</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-berita')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form action="/admin/berita/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1577,8 +1754,13 @@
     <div id="modal-edit-berita" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">✏️ Edit Berita</h3>
-                <button type="button" onclick="closeModal('modal-edit-berita')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                    <span>Edit Berita</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-berita')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form id="form-edit-berita" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1623,8 +1805,13 @@
     <div id="modal-tambah-pengumuman" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">📢 Tambah Pengumuman Baru</h3>
-                <button type="button" onclick="closeModal('modal-tambah-pengumuman')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn text-amber-500"></i>
+                    <span>Tambah Pengumuman Baru</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-pengumuman')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form action="/admin/pengumuman/tambah" method="POST" class="space-y-4 mt-4">
                 <div>
@@ -1651,8 +1838,13 @@
     <div id="modal-edit-pengumuman" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">✏️ Edit Pengumuman</h3>
-                <button type="button" onclick="closeModal('modal-edit-pengumuman')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                    <span>Edit Pengumuman</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-pengumuman')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form id="form-edit-pengumuman" method="POST" class="space-y-4 mt-4">
                 <div>
@@ -1679,8 +1871,13 @@
     <div id="modal-tambah-guru" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">👨‍🏫 Tambah Guru / Staf Baru</h3>
-                <button type="button" onclick="closeModal('modal-tambah-guru')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-chalkboard-user text-blue-600"></i>
+                    <span>Tambah Guru / Staf Baru</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-guru')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form action="/admin/guru/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1745,8 +1942,13 @@
     <div id="modal-edit-guru" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">✏️ Edit Data Guru / Staf</h3>
-                <button type="button" onclick="closeModal('modal-edit-guru')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                    <span>Edit Data Guru / Staf</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-guru')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <form id="form-edit-guru" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
@@ -1807,12 +2009,127 @@
         </div>
     </div>
 
+    <!-- MODAL TAMBAH KOMITE SEKOLAH -->
+    <div id="modal-tambah-komite" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-blue-600"></i> Tambah Pengurus Komite
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-komite')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form action="/admin/komite/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap & Gelar *</label>
+                    <input type="text" name="nama_lengkap" required placeholder="Contoh: Drs. Yulius Rantetana, M.Si." class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan di Komite *</label>
+                        <input type="text" name="jabatan" required placeholder="Contoh: Ketua Komite / Sekretaris" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Periode Masa Bakti *</label>
+                        <input type="text" name="periode" value="2024 - 2027" required placeholder="Contoh: 2024 - 2027" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Pekerjaan / Unsur Perwakilan *</label>
+                        <input type="text" name="pekerjaan_atau_unsur" required placeholder="Contoh: Tokoh Masyarakat / Orang Tua" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan Tampil</label>
+                        <input type="number" name="urutan_tampil" value="10" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto Pengurus (Opsional)</label>
+                    <input type="file" name="foto_komite" accept="image/*" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:outline-blue-600">
+                    <p class="text-[10px] text-slate-400 mt-1">Format: JPG, PNG, WEBP (Maksimal 5MB)</p>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-tambah-komite')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Simpan Pengurus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT KOMITE SEKOLAH -->
+    <div id="modal-edit-komite" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i> Edit Pengurus Komite
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-komite')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form id="form-edit-komite" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
+                <!-- Preview Foto Saat Ini -->
+                <div class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 border border-slate-300 flex items-center justify-center text-amber-400 font-bold text-xs flex-shrink-0">
+                        <img id="edit-komite-img" src="" alt="Foto Pengurus" class="w-full h-full object-cover hidden">
+                        <i id="edit-komite-icon" class="fa-solid fa-user-tie text-lg"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="font-bold text-slate-800 text-xs">Foto Pengurus Saat Ini</p>
+                        <p id="edit-komite-filename" class="text-slate-400 text-[11px] truncate">default-komite.jpg</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap & Gelar *</label>
+                    <input type="text" id="edit-komite-nama" name="nama_lengkap" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan di Komite *</label>
+                        <input type="text" id="edit-komite-jabatan" name="jabatan" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Periode Masa Bakti *</label>
+                        <input type="text" id="edit-komite-periode" name="periode" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Pekerjaan / Unsur Perwakilan *</label>
+                        <input type="text" id="edit-komite-unsur" name="pekerjaan_atau_unsur" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan Tampil</label>
+                        <input type="number" id="edit-komite-urutan" name="urutan_tampil" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ganti Foto Pengurus (Opsional)</label>
+                    <input type="file" name="foto_komite" accept="image/*" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:outline-blue-600">
+                    <p class="text-[10px] text-slate-400 mt-1">Kosongkan jika tidak ingin mengubah foto</p>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-edit-komite')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- 7. MODAL LIHAT PESAN PENGUNJUNG -->
     <div id="modal-lihat-pesan" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">✉️ Detail Pesan Masuk</h3>
-                <button type="button" onclick="closeModal('modal-lihat-pesan')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-regular fa-envelope text-blue-600"></i>
+                    <span>Detail Pesan Masuk</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-lihat-pesan')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
             <div class="space-y-3 mt-4 text-xs">
                 <div>
@@ -1851,10 +2168,15 @@
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                    <h3 class="font-bold text-base sm:text-lg text-slate-800">➕ Tambah Calon Siswa (PPDB Manual)</h3>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus text-blue-600"></i>
+                        <span>Tambah Calon Siswa (PPDB Manual)</span>
+                    </h3>
                     <p class="text-xs text-slate-400">Pendaftaran langsung oleh Panitia di Sekretariat PPDB SMPN 1 Rantepao</p>
                 </div>
-                <button type="button" onclick="closeModal('modal-tambah-ppdb')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <button type="button" onclick="closeModal('modal-tambah-ppdb')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
             <form action="/admin/ppdb/tambah" method="POST" class="space-y-4 mt-5 text-xs">
@@ -1887,10 +2209,10 @@
                     <div>
                         <label class="block font-semibold text-slate-600 mb-1">Jalur Pendaftaran *</label>
                         <select name="jalur_pendaftaran" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white">
-                            <option value="Zonasi">📍 Jalur Zonasi (Domisili KK)</option>
-                            <option value="Prestasi">🏆 Jalur Prestasi (Akademik / Non-Akademik)</option>
-                            <option value="Afirmasi">🤝 Jalur Afirmasi (KIP / PKH / Disabilitas)</option>
-                            <option value="Perpindahan Tugas">💼 Jalur Perpindahan Tugas Orang Tua</option>
+                            <option value="Zonasi">Jalur Zonasi (Domisili KK)</option>
+                            <option value="Prestasi">Jalur Prestasi (Akademik / Non-Akademik)</option>
+                            <option value="Afirmasi">Jalur Afirmasi (KIP / PKH / Disabilitas)</option>
+                            <option value="Perpindahan Tugas">Jalur Perpindahan Tugas Orang Tua</option>
                         </select>
                     </div>
                     <div>
@@ -1942,7 +2264,9 @@
                     <span id="detail-ppdb-no" class="px-3 py-1 rounded-lg bg-blue-900 text-white font-mono font-bold text-xs">PPDB-2026-XXXX</span>
                     <span id="detail-ppdb-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">Status</span>
                 </div>
-                <button type="button" onclick="closeModal('modal-detail-ppdb')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <button type="button" onclick="closeModal('modal-detail-ppdb')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
             <div class="mt-5 space-y-5 text-xs">
@@ -2025,8 +2349,13 @@
     <div id="modal-status-ppdb" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-base text-slate-800">⚖️ Ubah Status Seleksi PPDB</h3>
-                <button type="button" onclick="closeModal('modal-status-ppdb')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-scale-balanced text-blue-600"></i>
+                    <span>Ubah Status Seleksi PPDB</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-status-ppdb')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
             <div class="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
@@ -2039,10 +2368,10 @@
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Pilih Status Seleksi *</label>
                     <select id="status-ppdb-select" name="status_seleksi" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white font-semibold">
-                        <option value="Menunggu Verifikasi">⏳ Menunggu Verifikasi</option>
-                        <option value="Berkas Terverifikasi">✓ Berkas Terverifikasi (Valid)</option>
-                        <option value="Diterima">🎉 Diterima (Lulus Seleksi)</option>
-                        <option value="Tidak Diterima">✕ Tidak Diterima</option>
+                        <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
+                        <option value="Berkas Terverifikasi">Berkas Terverifikasi (Valid)</option>
+                        <option value="Diterima">Diterima (Lulus Seleksi)</option>
+                        <option value="Tidak Diterima">Tidak Diterima</option>
                     </select>
                 </div>
 
@@ -2066,10 +2395,15 @@
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                    <h3 class="font-bold text-base sm:text-lg text-slate-800">✏️ Edit Data Calon Siswa PPDB</h3>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                        <span>Edit Data Calon Siswa PPDB</span>
+                    </h3>
                     <p id="edit-ppdb-header-no" class="text-xs text-blue-900 font-mono font-bold mt-0.5"></p>
                 </div>
-                <button type="button" onclick="closeModal('modal-edit-ppdb')" class="text-slate-400 hover:text-slate-600">✕</button>
+                <button type="button" onclick="closeModal('modal-edit-ppdb')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
             <form id="form-edit-ppdb" method="POST" class="space-y-4 mt-4 text-xs">
@@ -2102,10 +2436,10 @@
                     <div>
                         <label class="block font-semibold text-slate-600 mb-1">Jalur Pendaftaran *</label>
                         <select id="edit-ppdb-jalur" name="jalur_pendaftaran" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white">
-                            <option value="Zonasi">📍 Jalur Zonasi (Domisili KK)</option>
-                            <option value="Prestasi">🏆 Jalur Prestasi (Akademik / Non-Akademik)</option>
-                            <option value="Afirmasi">🤝 Jalur Afirmasi (KIP / PKH / Disabilitas)</option>
-                            <option value="Perpindahan Tugas">💼 Jalur Perpindahan Tugas Orang Tua</option>
+                            <option value="Zonasi">Jalur Zonasi (Domisili KK)</option>
+                            <option value="Prestasi">Jalur Prestasi (Akademik / Non-Akademik)</option>
+                            <option value="Afirmasi">Jalur Afirmasi (KIP / PKH / Disabilitas)</option>
+                            <option value="Perpindahan Tugas">Jalur Perpindahan Tugas Orang Tua</option>
                         </select>
                     </div>
                     <div>
@@ -2156,6 +2490,7 @@
             'berita': 'Kelola Berita & Artikel',
             'pengumuman': 'Kelola Pengumuman Resmi',
             'guru': 'Kelola Guru & Tenaga Kependidikan',
+            'komite': 'Kelola Komite Sekolah',
             'ppdb': 'Kelola Penerimaan Peserta Didik Baru (PPDB 2026/2027)',
             'eskul': 'Kelola Ekstrakurikuler Siswa',
             'galeri': 'Kelola Galeri Dokumentasi Foto',
@@ -2243,6 +2578,13 @@
                 document.getElementById('edit-guru-urutan').value = editGuruBtn.dataset.urutan;
                 document.getElementById('edit-guru-status').value = editGuruBtn.dataset.status;
                 openModal('modal-edit-guru');
+                return;
+            }
+
+            // 3b. Edit Komite Sekolah
+            const editKomiteBtn = e.target.closest('.btn-edit-komite');
+            if (editKomiteBtn) {
+                openEditKomite(editKomiteBtn);
                 return;
             }
 
@@ -2421,6 +2763,52 @@
                 const text = r.innerText.toLowerCase();
                 r.style.display = text.includes(query) ? '' : 'none';
             });
+        }
+
+        // Search in Komite Table
+        function filterKomiteTable() {
+            const query = document.getElementById('search-komite').value.toLowerCase();
+            const rows = document.querySelectorAll('#table-komite tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // Open & Populate Edit Modal for Komite Sekolah
+        function openEditKomite(btn) {
+            if (!btn) return;
+            const id = btn.dataset.id;
+            const nama = btn.dataset.nama || '';
+            const jabatan = btn.dataset.jabatan || '';
+            const periode = btn.dataset.periode || '';
+            const unsur = btn.dataset.unsur || '';
+            const urutan = btn.dataset.urutan || 10;
+            const foto = btn.dataset.foto || '';
+
+            document.getElementById('form-edit-komite').action = '/admin/komite/edit/' + id;
+            document.getElementById('edit-komite-nama').value = nama;
+            document.getElementById('edit-komite-jabatan').value = jabatan;
+            document.getElementById('edit-komite-periode').value = periode;
+            document.getElementById('edit-komite-unsur').value = unsur;
+            document.getElementById('edit-komite-urutan').value = urutan;
+
+            const imgEl = document.getElementById('edit-komite-img');
+            const iconEl = document.getElementById('edit-komite-icon');
+            const fileEl = document.getElementById('edit-komite-filename');
+
+            if (foto && !foto.startsWith('default') && foto !== '') {
+                imgEl.src = '/uploads/komite/' + foto;
+                imgEl.classList.remove('hidden');
+                iconEl.classList.add('hidden');
+                fileEl.textContent = foto;
+            } else {
+                imgEl.classList.add('hidden');
+                iconEl.classList.remove('hidden');
+                fileEl.textContent = 'default-komite.jpg (Foto Bawaan)';
+            }
+
+            openModal('modal-edit-komite');
         }
 
         // Sidebar toggle for mobile
