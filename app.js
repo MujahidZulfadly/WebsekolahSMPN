@@ -5,16 +5,24 @@ const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const ExcelJS = require('exceljs');
+const compression = require('compression');
 require('dotenv').config();
 const db = require('./config/database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Setup Template Engine & Static Files
+// Optimasi Header & Kompresi Respons (Gzip / Brotli)
+app.disable('x-powered-by');
+app.use(compression());
+
+// Setup Template Engine & Static Files dengan Browser Caching
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1d',
+    etag: true
+}));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use(express.json({ limit: '25mb' }));
 
@@ -249,30 +257,19 @@ initKalenderAkademik();
 // Helper untuk Mengambil Data Statistik Pengunjung Real-Time (Murni 100% Real Database dari 0)
 async function getStatistikPengunjung() {
     try {
-        const [[onlineRow]] = await db.query(`
-            SELECT COUNT(DISTINCT ip_address) AS online 
-            FROM statistik_pengunjung 
-            WHERE waktu_terakhir >= NOW() - INTERVAL 5 MINUTE
-        `);
-        const [[todayRow]] = await db.query(`
-            SELECT COUNT(*) AS total, COALESCE(SUM(hits), 0) AS hits 
-            FROM statistik_pengunjung 
-            WHERE tanggal = CURDATE()
-        `);
-        const [[yesterdayRow]] = await db.query(`
-            SELECT COUNT(*) AS total 
-            FROM statistik_pengunjung 
-            WHERE tanggal = CURDATE() - INTERVAL 1 DAY
-        `);
-        const [[monthRow]] = await db.query(`
-            SELECT COUNT(*) AS total 
-            FROM statistik_pengunjung 
-            WHERE YEAR(tanggal) = YEAR(CURDATE()) AND MONTH(tanggal) = MONTH(CURDATE())
-        `);
-        const [[totalRow]] = await db.query(`
-            SELECT COUNT(*) AS total, COALESCE(SUM(hits), 0) AS hits 
-            FROM statistik_pengunjung
-        `);
+        const [
+            [[onlineRow]],
+            [[todayRow]],
+            [[yesterdayRow]],
+            [[monthRow]],
+            [[totalRow]]
+        ] = await Promise.all([
+            db.query(`SELECT COUNT(DISTINCT ip_address) AS online FROM statistik_pengunjung WHERE waktu_terakhir >= NOW() - INTERVAL 5 MINUTE`),
+            db.query(`SELECT COUNT(*) AS total, COALESCE(SUM(hits), 0) AS hits FROM statistik_pengunjung WHERE tanggal = CURDATE()`),
+            db.query(`SELECT COUNT(*) AS total FROM statistik_pengunjung WHERE tanggal = CURDATE() - INTERVAL 1 DAY`),
+            db.query(`SELECT COUNT(*) AS total FROM statistik_pengunjung WHERE YEAR(tanggal) = YEAR(CURDATE()) AND MONTH(tanggal) = MONTH(CURDATE())`),
+            db.query(`SELECT COUNT(*) AS total, COALESCE(SUM(hits), 0) AS hits FROM statistik_pengunjung`)
+        ]);
 
         // Opsi B: Murni 100% dari data database asli (tanpa penambahan dummy / baseline)
         const online = Math.max(0, onlineRow?.online || 0);
@@ -457,31 +454,44 @@ app.get('/api/statistik-pengunjung', async (req, res) => {
 // Halaman Beranda Utama
 app.get('/', async (req, res) => {
     try {
-        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const [
+            [profilRows],
+            [berita],
+            [pengumuman],
+            [guru],
+            [komite],
+            [eskul],
+            [galeri],
+            [statsData],
+            [kalenderAkademik],
+            statistikPengunjung
+        ] = await Promise.all([
+            db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1'),
+            db.query(`
+                SELECT b.*, k.nama_kategori 
+                FROM berita b 
+                JOIN kategori_berita k ON b.kategori_id = k.id_kategori 
+                WHERE b.status = 'publish' 
+                ORDER BY b.tanggal_publish DESC LIMIT 4
+            `),
+            db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4'),
+            db.query('SELECT * FROM guru_staf WHERE status_aktif = "Aktif" ORDER BY urutan_tampil ASC, id_guru ASC'),
+            db.query('SELECT * FROM komite_sekolah ORDER BY urutan_tampil ASC, id_komite ASC'),
+            db.query('SELECT * FROM ekstrakurikuler'),
+            db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC, id_galeri DESC LIMIT 12'),
+            db.query(`
+                SELECT 
+                    (SELECT COUNT(*) FROM guru_staf WHERE status_aktif = 'Aktif') AS totalGuru,
+                    (SELECT COUNT(*) FROM ekstrakurikuler) AS totalEskul,
+                    (SELECT COUNT(*) FROM galeri) AS totalGaleri,
+                    (SELECT COUNT(*) FROM komite_sekolah) AS totalKomite,
+                    (SELECT COUNT(*) FROM berita WHERE status = 'publish') AS totalBerita
+            `),
+            db.query('SELECT * FROM kalender_akademik ORDER BY tanggal_mulai ASC'),
+            getStatistikPengunjung()
+        ]);
+
         const profil = profilRows[0] || {};
-        const [berita] = await db.query(`
-            SELECT b.*, k.nama_kategori 
-            FROM berita b 
-            JOIN kategori_berita k ON b.kategori_id = k.id_kategori 
-            WHERE b.status = 'publish' 
-            ORDER BY b.tanggal_publish DESC LIMIT 4
-        `);
-        const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
-        const [guru] = await db.query('SELECT * FROM guru_staf WHERE status_aktif = "Aktif" ORDER BY urutan_tampil ASC, id_guru ASC');
-        const [komite] = await db.query('SELECT * FROM komite_sekolah ORDER BY urutan_tampil ASC, id_komite ASC');
-        const [eskul] = await db.query('SELECT * FROM ekstrakurikuler');
-        const [galeri] = await db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC, id_galeri DESC LIMIT 12');
-
-        // Data Statistik Real-time dari Database
-        const [statsData] = await db.query(`
-            SELECT 
-                (SELECT COUNT(*) FROM guru_staf WHERE status_aktif = 'Aktif') AS totalGuru,
-                (SELECT COUNT(*) FROM ekstrakurikuler) AS totalEskul,
-                (SELECT COUNT(*) FROM galeri) AS totalGaleri,
-                (SELECT COUNT(*) FROM komite_sekolah) AS totalKomite,
-                (SELECT COUNT(*) FROM berita WHERE status = 'publish') AS totalBerita
-        `);
-
         const statistik = {
             siswaAktif: profil.jumlah_siswa || 886,
             totalGuru: statsData[0]?.totalGuru || guru.length,
@@ -490,14 +500,6 @@ app.get('/', async (req, res) => {
             totalGaleri: statsData[0]?.totalGaleri || galeri.length,
             totalKomite: statsData[0]?.totalKomite || komite.length
         };
-
-        const statistikPengunjung = await getStatistikPengunjung();
-
-        // Data Agenda & Kalender Akademik Sekolah
-        const [kalenderAkademik] = await db.query(`
-            SELECT * FROM kalender_akademik 
-            ORDER BY tanggal_mulai ASC
-        `);
 
         res.render('index', {
             profil,
@@ -1261,33 +1263,49 @@ app.post('/ppdb/update', isPpdbAuthenticated, ppdbUpload.fields([
 // 1. Tampilkan Dashboard Admin Terpadu
 app.get('/admin', isAuthenticated, async (req, res) => {
     try {
-        const [berita] = await db.query(`
-            SELECT b.*, k.nama_kategori 
-            FROM berita b 
-            JOIN kategori_berita k ON b.kategori_id = k.id_kategori 
-            ORDER BY b.tanggal_publish DESC
-        `);
-        const [kategori] = await db.query('SELECT * FROM kategori_berita ORDER BY nama_kategori ASC');
-        const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC');
-        const [guru] = await db.query('SELECT * FROM guru_staf ORDER BY urutan_tampil ASC, id_guru ASC');
-        const [komite] = await db.query('SELECT * FROM komite_sekolah ORDER BY urutan_tampil ASC, id_komite ASC');
-        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
-        const profil = profilRows[0] || {};
-        const [pesan] = await db.query('SELECT * FROM pesan_kontak ORDER BY tanggal_kirim DESC');
-        const [eskul] = await db.query('SELECT * FROM ekstrakurikuler ORDER BY id_eskul ASC');
-        const [galeri] = await db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC, id_galeri DESC');
-        const [pendaftarPPDB] = await db.query('SELECT * FROM pendaftar_ppdb ORDER BY tanggal_daftar DESC, id_pendaftar DESC');
-        const [halamanStatis] = await db.query("SELECT * FROM halaman_statis WHERE slug != 'visi-misi' ORDER BY id ASC");
-        const [ppdbPengaturanRows] = await db.query('SELECT * FROM ppdb_pengaturan WHERE id = 1');
-        const ppdbSetting = ppdbPengaturanRows[0] || {};
+        const [
+            [berita],
+            [kategori],
+            [pengumuman],
+            [guru],
+            [komite],
+            [profilRows],
+            [pesan],
+            [eskul],
+            [galeri],
+            [pendaftarPPDB],
+            [halamanStatis],
+            [ppdbPengaturanRows],
+            [osisProfilRows],
+            [osisPengurus],
+            [osisProker],
+            [osisMading],
+            [kalender],
+            statistikPengunjung
+        ] = await Promise.all([
+            db.query(`SELECT b.*, k.nama_kategori FROM berita b JOIN kategori_berita k ON b.kategori_id = k.id_kategori ORDER BY b.tanggal_publish DESC`),
+            db.query('SELECT * FROM kategori_berita ORDER BY nama_kategori ASC'),
+            db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC'),
+            db.query('SELECT * FROM guru_staf ORDER BY urutan_tampil ASC, id_guru ASC'),
+            db.query('SELECT * FROM komite_sekolah ORDER BY urutan_tampil ASC, id_komite ASC'),
+            db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1'),
+            db.query('SELECT * FROM pesan_kontak ORDER BY tanggal_kirim DESC'),
+            db.query('SELECT * FROM ekstrakurikuler ORDER BY id_eskul ASC'),
+            db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC, id_galeri DESC'),
+            db.query('SELECT * FROM pendaftar_ppdb ORDER BY tanggal_daftar DESC, id_pendaftar DESC'),
+            db.query("SELECT * FROM halaman_statis WHERE slug != 'visi-misi' ORDER BY id ASC"),
+            db.query('SELECT * FROM ppdb_pengaturan WHERE id = 1'),
+            db.query('SELECT * FROM osis_profil WHERE id = 1'),
+            db.query('SELECT * FROM osis_pengurus ORDER BY urutan_tampil ASC, id ASC'),
+            db.query('SELECT * FROM osis_proker ORDER BY urutan_tampil ASC, id ASC'),
+            db.query('SELECT * FROM osis_mading ORDER BY id DESC'),
+            db.query('SELECT * FROM kalender_akademik ORDER BY tanggal_mulai ASC'),
+            getStatistikPengunjung()
+        ]);
 
-        // Data OSIS untuk Dashboard Admin
-        const [osisProfilRows] = await db.query('SELECT * FROM osis_profil WHERE id = 1');
+        const profil = profilRows[0] || {};
+        const ppdbSetting = ppdbPengaturanRows[0] || {};
         const osisProfil = osisProfilRows[0] || {};
-        const [osisPengurus] = await db.query('SELECT * FROM osis_pengurus ORDER BY urutan_tampil ASC, id ASC');
-        const [osisProker] = await db.query('SELECT * FROM osis_proker ORDER BY urutan_tampil ASC, id ASC');
-        const [osisMading] = await db.query('SELECT * FROM osis_mading ORDER BY id DESC');
-        const [kalender] = await db.query('SELECT * FROM kalender_akademik ORDER BY tanggal_mulai ASC');
 
         const stats = {
             totalBerita: berita.length,
@@ -1313,8 +1331,6 @@ app.get('/admin', isAuthenticated, async (req, res) => {
         const activeTab = req.query.tab || 'overview';
         const activeSubtab = req.query.subtab || 'pengurus';
         const alert = req.query.msg ? { status: req.query.status || 'success', message: req.query.msg } : null;
-
-        const statistikPengunjung = await getStatistikPengunjung();
 
         res.render('admin', {
             user: req.session.user,
