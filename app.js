@@ -4,6 +4,7 @@ const fs = require('fs');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
+const ExcelJS = require('exceljs');
 require('dotenv').config();
 const db = require('./config/database');
 
@@ -14,8 +15,8 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+app.use(express.json({ limit: '25mb' }));
 
 // Setup Session Middleware
 app.use(session({
@@ -28,7 +29,7 @@ app.use(session({
 }));
 
 // Setup Multer File Upload
-['public/uploads/berita', 'public/uploads/guru', 'public/uploads/profil', 'public/uploads/eskul', 'public/uploads/galeri', 'public/uploads/komite', 'public/uploads/ppdb'].forEach(dir => {
+['public/uploads/berita', 'public/uploads/guru', 'public/uploads/profil', 'public/uploads/eskul', 'public/uploads/galeri', 'public/uploads/komite', 'public/uploads/ppdb', 'public/uploads/osis'].forEach(dir => {
     const fullPath = path.join(__dirname, dir);
     if (!fs.existsSync(fullPath)) {
         fs.mkdirSync(fullPath, { recursive: true });
@@ -39,12 +40,16 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (file.fieldname === 'foto_komite') {
             cb(null, path.join(__dirname, 'public/uploads/komite'));
+        } else if (file.fieldname === 'foto_kepsek') {
+            cb(null, path.join(__dirname, 'public/uploads/profil'));
         } else if (file.fieldname === 'foto') {
             cb(null, path.join(__dirname, 'public/uploads/guru'));
         } else if (file.fieldname === 'foto_eskul') {
             cb(null, path.join(__dirname, 'public/uploads/eskul'));
         } else if (file.fieldname === 'file_foto') {
             cb(null, path.join(__dirname, 'public/uploads/galeri'));
+        } else if (file.fieldname === 'foto_osis' || file.fieldname === 'foto_ketua_osis' || file.fieldname === 'foto_mading') {
+            cb(null, path.join(__dirname, 'public/uploads/osis'));
         } else {
             cb(null, path.join(__dirname, 'public/uploads/berita'));
         }
@@ -58,7 +63,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Maksimal 5MB
+    limits: { fileSize: 25 * 1024 * 1024 }, // Maksimal 25MB (fleksibel untuk foto kamera resolusi tinggi)
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png|webp|gif/;
         const mime = allowedTypes.test(file.mimetype);
@@ -84,7 +89,7 @@ const ppdbStorage = multer.diskStorage({
 
 const ppdbUpload = multer({
     storage: ppdbStorage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Maksimal 5MB per berkas
+    limits: { fileSize: 20 * 1024 * 1024 }, // Maksimal 20MB per berkas
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png|webp|pdf/;
         const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
@@ -96,6 +101,254 @@ const ppdbUpload = multer({
         cb(new Error('Format berkas harus berupa dokumen PDF atau gambar (JPG, PNG, WEBP)'));
     }
 });
+
+// Inisialisasi Otomatis Tabel Halaman Statis jika belum ada
+async function initHalamanStatis() {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS halaman_statis (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                slug VARCHAR(50) NOT NULL UNIQUE,
+                ikon VARCHAR(80) NOT NULL DEFAULT 'fa-solid fa-file-lines',
+                judul VARCHAR(150) NOT NULL,
+                ringkasan VARCHAR(500) NULL,
+                warna_badge VARCHAR(30) NOT NULL DEFAULT 'blue',
+                konten MEDIUMTEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `);
+
+        const [colsIkon] = await db.query("SHOW COLUMNS FROM halaman_statis LIKE 'ikon'");
+        if (colsIkon.length === 0) {
+            await db.query("ALTER TABLE halaman_statis ADD COLUMN ikon VARCHAR(80) NOT NULL DEFAULT 'fa-solid fa-file-lines' AFTER slug");
+        }
+        const [colsRingkasan] = await db.query("SHOW COLUMNS FROM halaman_statis LIKE 'ringkasan'");
+        if (colsRingkasan.length === 0) {
+            await db.query("ALTER TABLE halaman_statis ADD COLUMN ringkasan VARCHAR(500) NULL AFTER judul");
+        }
+        const [colsWarna] = await db.query("SHOW COLUMNS FROM halaman_statis LIKE 'warna_badge'");
+        if (colsWarna.length === 0) {
+            await db.query("ALTER TABLE halaman_statis ADD COLUMN warna_badge VARCHAR(30) NOT NULL DEFAULT 'blue' AFTER ringkasan");
+        }
+        const [colsItems] = await db.query("SHOW COLUMNS FROM halaman_statis LIKE 'items_json'");
+        if (colsItems.length === 0) {
+            await db.query("ALTER TABLE halaman_statis ADD COLUMN items_json MEDIUMTEXT NULL AFTER konten");
+        }
+        const [colsPembuka] = await db.query("SHOW COLUMNS FROM halaman_statis LIKE 'paragraf_pembuka'");
+        if (colsPembuka.length === 0) {
+            await db.query("ALTER TABLE halaman_statis ADD COLUMN paragraf_pembuka TEXT NULL AFTER items_json");
+        }
+        const [colsPenutup] = await db.query("SHOW COLUMNS FROM halaman_statis LIKE 'paragraf_penutup'");
+        if (colsPenutup.length === 0) {
+            await db.query("ALTER TABLE halaman_statis ADD COLUMN paragraf_penutup TEXT NULL AFTER paragraf_pembuka");
+        }
+    } catch (err) {
+        // Logging non-fatal jika db belum siap saat boot
+    }
+}
+initHalamanStatis();
+
+// Inisialisasi Otomatis Tabel Pengaturan Gelombang & Jadwal PPDB
+async function initPpdbPengaturan() {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS ppdb_pengaturan (
+                id INT PRIMARY KEY DEFAULT 1,
+                tahun_ajaran VARCHAR(20) NOT NULL DEFAULT '2026/2027',
+                nama_gelombang VARCHAR(150) NOT NULL DEFAULT 'Gelombang 1 (Reguler & Zonasi)',
+                status_loket ENUM('Buka', 'Verifikasi', 'Pengumuman', 'Daftar Ulang', 'Tutup') NOT NULL DEFAULT 'Buka',
+                tgl_mulai_daftar DATE NULL,
+                tgl_selesai_daftar DATE NULL,
+                tgl_pengumuman DATE NULL,
+                tgl_daftar_ulang DATE NULL,
+                kuota_total INT NOT NULL DEFAULT 320,
+                kuota_zonasi INT NOT NULL DEFAULT 160,
+                kuota_prestasi INT NOT NULL DEFAULT 96,
+                kuota_afirmasi INT NOT NULL DEFAULT 48,
+                kuota_mutasi INT NOT NULL DEFAULT 16,
+                pesan_pengumuman TEXT NULL,
+                kontak_panitia VARCHAR(50) NOT NULL DEFAULT '0812-3456-7890',
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `);
+        const [rows] = await db.query('SELECT id FROM ppdb_pengaturan WHERE id = 1');
+        if (rows.length === 0) {
+            await db.query(`
+                INSERT INTO ppdb_pengaturan (
+                    id, tahun_ajaran, nama_gelombang, status_loket,
+                    tgl_mulai_daftar, tgl_selesai_daftar, tgl_pengumuman, tgl_daftar_ulang,
+                    kuota_total, kuota_zonasi, kuota_prestasi, kuota_afirmasi, kuota_mutasi,
+                    pesan_pengumuman, kontak_panitia
+                ) VALUES (
+                    1, '2026/2027', 'Gelombang 1 (Reguler & Zonasi)', 'Buka',
+                    '2026-06-15', '2026-06-30', '2026-07-04', '2026-07-06',
+                    320, 160, 96, 48, 16,
+                    'Pendaftaran Peserta Didik Baru (PPDB) Tahun Ajaran 2026/2027 telah dibuka. Silakan buat akun calon siswa dan lengkapi formulir pendaftaran serta berkas persyaratan sebelum batas akhir pendaftaran.',
+                    '0812-3456-7890'
+                );
+            `);
+        }
+    } catch (err) {
+        // Logging non-fatal jika db belum siap saat boot
+    }
+}
+initPpdbPengaturan();
+
+// ==========================================
+// INISIALISASI & FITUR STATISTIK PENGUNJUNG REAL-TIME
+// ==========================================
+
+// Inisialisasi Otomatis Tabel Statistik Pengunjung jika belum ada
+async function initStatistikPengunjung() {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS statistik_pengunjung (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                ip_address VARCHAR(45) NOT NULL,
+                user_agent VARCHAR(255) NULL,
+                halaman VARCHAR(120) NOT NULL DEFAULT '/',
+                tanggal DATE NOT NULL,
+                waktu_terakhir TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                hits INT NOT NULL DEFAULT 1,
+                UNIQUE KEY uq_ip_tanggal (ip_address, tanggal),
+                INDEX idx_tanggal (tanggal),
+                INDEX idx_waktu (waktu_terakhir)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `);
+    } catch (err) {
+        // Abaikan jika db belum siap saat booting
+    }
+}
+initStatistikPengunjung();
+
+// Inisialisasi Otomatis Tabel Kalender Akademik jika belum ada
+async function initKalenderAkademik() {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS kalender_akademik (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                judul_kegiatan VARCHAR(200) NOT NULL,
+                deskripsi TEXT NULL,
+                tanggal_mulai DATE NOT NULL,
+                tanggal_selesai DATE NULL,
+                kategori ENUM('Akademik', 'Ujian', 'Libur', 'Kegiatan', 'Rapat') NOT NULL DEFAULT 'Akademik',
+                warna_badge VARCHAR(30) NOT NULL DEFAULT 'blue',
+                lokasi VARCHAR(150) NULL DEFAULT 'Kampus SMPN 1 Rantepao',
+                urutan INT NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_tanggal (tanggal_mulai)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `);
+    } catch (err) {
+        // Logging non-fatal jika db belum siap saat boot
+    }
+}
+initKalenderAkademik();
+
+// Helper untuk Mengambil Data Statistik Pengunjung Real-Time (Murni 100% Real Database dari 0)
+async function getStatistikPengunjung() {
+    try {
+        const [[onlineRow]] = await db.query(`
+            SELECT COUNT(DISTINCT ip_address) AS online 
+            FROM statistik_pengunjung 
+            WHERE waktu_terakhir >= NOW() - INTERVAL 5 MINUTE
+        `);
+        const [[todayRow]] = await db.query(`
+            SELECT COUNT(*) AS total, COALESCE(SUM(hits), 0) AS hits 
+            FROM statistik_pengunjung 
+            WHERE tanggal = CURDATE()
+        `);
+        const [[yesterdayRow]] = await db.query(`
+            SELECT COUNT(*) AS total 
+            FROM statistik_pengunjung 
+            WHERE tanggal = CURDATE() - INTERVAL 1 DAY
+        `);
+        const [[monthRow]] = await db.query(`
+            SELECT COUNT(*) AS total 
+            FROM statistik_pengunjung 
+            WHERE YEAR(tanggal) = YEAR(CURDATE()) AND MONTH(tanggal) = MONTH(CURDATE())
+        `);
+        const [[totalRow]] = await db.query(`
+            SELECT COUNT(*) AS total, COALESCE(SUM(hits), 0) AS hits 
+            FROM statistik_pengunjung
+        `);
+
+        // Opsi B: Murni 100% dari data database asli (tanpa penambahan dummy / baseline)
+        const online = Math.max(0, onlineRow?.online || 0);
+        const hariIni = Math.max(0, todayRow?.total || 0);
+        const kemarin = Math.max(0, yesterdayRow?.total || 0);
+        const bulanIni = Math.max(0, monthRow?.total || 0);
+        const totalPengunjung = Math.max(0, totalRow?.total || 0);
+        const totalHits = Number(totalRow?.hits || 0);
+
+        return {
+            online,
+            hariIni,
+            kemarin,
+            bulanIni,
+            totalPengunjung,
+            totalHits
+        };
+    } catch (err) {
+        return {
+            online: 0,
+            hariIni: 0,
+            kemarin: 0,
+            bulanIni: 0,
+            totalPengunjung: 0,
+            totalHits: 0
+        };
+    }
+}
+
+// Middleware Pelacak Pengunjung Real-Time (Mendukung Hosting cPanel, Cloudflare, Nginx, VPS, dsb.)
+const trackVisitor = async (req, res, next) => {
+    try {
+        const url = req.path;
+        // Hanya lacak halaman HTML publik (kecuali static assets, uploads, file langsung, atau endpoint API)
+        const isStaticOrApi = url.startsWith('/uploads') ||
+                              url.startsWith('/css') ||
+                              url.startsWith('/js') ||
+                              url.startsWith('/images') ||
+                              url.startsWith('/api') ||
+                              url.includes('.') ||
+                              req.method !== 'GET';
+
+        if (!isStaticOrApi) {
+            // Ambil IP pengunjung yang akurat dari header proxy cloud hosting
+            let ip = req.headers['cf-connecting-ip'] || 
+                     req.headers['x-forwarded-for'] || 
+                     req.headers['x-real-ip'] || 
+                     req.socket.remoteAddress || 
+                     '127.0.0.1';
+            if (typeof ip === 'string' && ip.includes(',')) {
+                ip = ip.split(',')[0].trim();
+            }
+            if (ip === '::1' || ip === '::ffff:127.0.0.1') {
+                ip = '127.0.0.1';
+            }
+
+            const userAgent = (req.headers['user-agent'] || '').substring(0, 255);
+            const halaman = url.substring(0, 120) || '/';
+
+            // Atomic upsert: 1 baris per IP per tanggal, hits bertambah dan waktu_terakhir di-update
+            db.query(`
+                INSERT INTO statistik_pengunjung (ip_address, user_agent, halaman, tanggal, hits, waktu_terakhir)
+                VALUES (?, ?, ?, CURDATE(), 1, NOW())
+                ON DUPLICATE KEY UPDATE 
+                    hits = hits + 1,
+                    halaman = VALUES(halaman),
+                    user_agent = VALUES(user_agent),
+                    waktu_terakhir = NOW()
+            `, [ip, userAgent, halaman]).catch(() => {});
+        }
+    } catch (e) {
+        // Non-blocking error handling
+    }
+    next();
+};
+app.use(trackVisitor);
 
 // Middleware Proteksi Halaman Admin
 function isAuthenticated(req, res, next) {
@@ -191,10 +444,21 @@ app.get('/logout', (req, res) => {
 // ROUTE HALAMAN PUBLIK
 // ==========================================
 
+// Endpoint Real-Time Statistik Pengunjung (JSON API untuk Polling Frontend)
+app.get('/api/statistik-pengunjung', async (req, res) => {
+    try {
+        const stats = await getStatistikPengunjung();
+        res.json({ success: true, data: stats });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // Halaman Beranda Utama
 app.get('/', async (req, res) => {
     try {
         const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const profil = profilRows[0] || {};
         const [berita] = await db.query(`
             SELECT b.*, k.nama_kategori 
             FROM berita b 
@@ -206,17 +470,47 @@ app.get('/', async (req, res) => {
         const [guru] = await db.query('SELECT * FROM guru_staf WHERE status_aktif = "Aktif" ORDER BY urutan_tampil ASC, id_guru ASC');
         const [komite] = await db.query('SELECT * FROM komite_sekolah ORDER BY urutan_tampil ASC, id_komite ASC');
         const [eskul] = await db.query('SELECT * FROM ekstrakurikuler');
-        const [galeri] = await db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC LIMIT 6');
+        const [galeri] = await db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC, id_galeri DESC LIMIT 12');
+
+        // Data Statistik Real-time dari Database
+        const [statsData] = await db.query(`
+            SELECT 
+                (SELECT COUNT(*) FROM guru_staf WHERE status_aktif = 'Aktif') AS totalGuru,
+                (SELECT COUNT(*) FROM ekstrakurikuler) AS totalEskul,
+                (SELECT COUNT(*) FROM galeri) AS totalGaleri,
+                (SELECT COUNT(*) FROM komite_sekolah) AS totalKomite,
+                (SELECT COUNT(*) FROM berita WHERE status = 'publish') AS totalBerita
+        `);
+
+        const statistik = {
+            siswaAktif: profil.jumlah_siswa || 886,
+            totalGuru: statsData[0]?.totalGuru || guru.length,
+            rombel: profil.jumlah_rombel || 24,
+            totalEskul: statsData[0]?.totalEskul || eskul.length,
+            totalGaleri: statsData[0]?.totalGaleri || galeri.length,
+            totalKomite: statsData[0]?.totalKomite || komite.length
+        };
+
+        const statistikPengunjung = await getStatistikPengunjung();
+
+        // Data Agenda & Kalender Akademik Sekolah
+        const [kalenderAkademik] = await db.query(`
+            SELECT * FROM kalender_akademik 
+            ORDER BY tanggal_mulai ASC
+        `);
 
         res.render('index', {
-            profil: profilRows[0] || {},
+            profil,
             berita,
             pengumuman,
             guru,
             komite,
             eskul,
             galeri,
-            galeriPreview: galeri
+            galeriPreview: galeri,
+            statistik,
+            statistikPengunjung,
+            kalenderAkademik
         });
     } catch (error) {
         res.status(500).send('Terjadi kesalahan server: ' + error.message);
@@ -334,6 +628,18 @@ app.get('/ppdb', async (req, res) => {
         const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
         const profil = profilRows[0] || {};
         const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
+        const [ppdbRows] = await db.query('SELECT * FROM ppdb_pengaturan WHERE id = 1');
+        const ppdbSetting = ppdbRows[0] || {
+            tahun_ajaran: '2026/2027',
+            nama_gelombang: 'Gelombang 1 (Reguler & Zonasi)',
+            status_loket: 'Buka',
+            kuota_total: 320,
+            kuota_zonasi: 160,
+            kuota_prestasi: 96,
+            kuota_afirmasi: 48,
+            kuota_mutasi: 16,
+            kontak_panitia: '0812-3456-7890'
+        };
 
         let hasilCek = null;
         const keyword = req.query.q ? req.query.q.trim() : null;
@@ -351,7 +657,7 @@ app.get('/ppdb', async (req, res) => {
             };
         }
 
-        res.render('ppdb', { profil, hasilCek, pengumuman });
+        res.render('ppdb', { profil, hasilCek, pengumuman, ppdbSetting });
     } catch (error) {
         res.status(500).send('Kesalahan server PPDB: ' + error.message);
     }
@@ -381,6 +687,13 @@ app.get('/civitas', async (req, res) => {
     }
 });
 
+// ==========================================
+// REDIRECT VISI & MISI KE SECTION BERANDA (/#visi-misi)
+// ==========================================
+app.get(['/visi-misi', '/visi-dan-misi'], (req, res) => {
+    res.redirect('/#visi-misi');
+});
+
 // Halaman Publik Direktori Lengkap Komite Sekolah (/komite)
 app.get('/komite', async (req, res) => {
     try {
@@ -401,6 +714,144 @@ app.get('/komite', async (req, res) => {
         });
     } catch (error) {
         res.status(500).send('Kesalahan server komite: ' + error.message);
+    }
+});
+
+// ==========================================
+// HALAMAN KHUSUS OSIS (/osis)
+// ==========================================
+app.get('/osis', async (req, res) => {
+    try {
+        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const profil = profilRows[0] || {};
+        const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
+
+        // 1. Ambil data profil & sambutan Ketua OSIS dari database
+        let sambutanKetua = {
+            nama: 'Gabriel Ranteallo',
+            kelas: 'Kelas IX-A',
+            periode: '2025/2026',
+            visi: 'Terwujudnya OSIS SMPN 1 Rantepao yang Berkarakter, Inovatif, Kolaboratif, serta Menjunjung Tinggi Keluhuran Budaya Toraja.',
+            teks: `Salam hangat dan salam sejahtera untuk seluruh rekan-rekan siswa, bapak/ibu guru pembina, dan civitas akademika UPT SMP Negeri 1 Rantepao tercinta.\n\nPuji dan syukur kita panjatkan kepada Tuhan Yang Maha Esa atas kepercayaan yang diberikan kepada kami untuk mengemban amanah sebagai Pengurus OSIS Masa Bakti 2025/2026. Organisasi Siswa Intra Sekolah (OSIS) bukan sekadar wadah seremonial, melainkan rumah bersama untuk menempa jiwa kepemimpinan, menyalurkan bakat kreatif, dan memupuk solidaritas antar-angkatan.\n\nMengusung semangat falsafah Toraja "Misa' Kada Dipotuo, Pantan Kada Dipomate" (Bersatu kita teguh, bercerai kita runtuh), kami berkomitmen menjadikan OSIS sebagai jembatan aspirasi siswa yang inklusif, transparan, dan berdaya saing. Mari bersama-sama kita jadikan masa putih-biru ini penuh dengan torehan karya berharga, prestasi akademik maupun non-akademik, serta kebanggaan bagi almamater kita tercinta!`,
+            foto: 'ketua-osis.jpg'
+        };
+        try {
+            const [sambutanRows] = await db.query('SELECT * FROM osis_profil WHERE id = 1');
+            if (sambutanRows.length > 0) {
+                const s = sambutanRows[0];
+                sambutanKetua = {
+                    nama: s.nama_ketua || sambutanKetua.nama,
+                    kelas: s.kelas_ketua || sambutanKetua.kelas,
+                    periode: s.periode || sambutanKetua.periode,
+                    visi: s.visi_utama || sambutanKetua.visi,
+                    teks: s.teks_sambutan || sambutanKetua.teks,
+                    foto: s.foto_ketua || sambutanKetua.foto
+                };
+            }
+        } catch (e) {}
+
+        // 2. Ambil data pengurus OSIS dari tabel
+        let pengurusList = [];
+        try {
+            const [rows] = await db.query('SELECT * FROM osis_pengurus ORDER BY urutan_tampil ASC, id ASC');
+            pengurusList = rows;
+        } catch (e) {
+            pengurusList = [];
+        }
+
+        // 3. Ambil data Program Kerja OSIS dari tabel
+        let prokerList = [];
+        try {
+            const [pRows] = await db.query('SELECT * FROM osis_proker ORDER BY urutan_tampil ASC, id ASC');
+            prokerList = pRows;
+        } catch (e) {
+            prokerList = [];
+        }
+
+        // 4. Ambil data Mading Online Siswa dari tabel
+        let madingList = [];
+        try {
+            const [mRows] = await db.query('SELECT * FROM osis_mading ORDER BY id DESC');
+            madingList = mRows;
+        } catch (e) {
+            madingList = [];
+        }
+
+        const galeriOsis = [
+            {
+                judul: 'Upacara Pelantikan Pengurus OSIS 2025/2026',
+                tanggal: 'September 2025',
+                kategori: 'Pelantikan',
+                foto: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop'
+            },
+            {
+                judul: 'Latihan Dasar Kepemimpinan Siswa (LDKS) Terbuka',
+                tanggal: 'Oktober 2025',
+                kategori: 'LDKS',
+                foto: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop'
+            },
+            {
+                judul: 'Laga Final Pekan Olahraga & Seni (PORSENI)',
+                tanggal: 'Desember 2025',
+                kategori: 'PORSENI',
+                foto: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800&auto=format&fit=crop'
+            },
+            {
+                judul: 'Aksi Bersih Lingkungan & Peduli Sa\'dan',
+                tanggal: 'Januari 2026',
+                kategori: 'Adiwiyata',
+                foto: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=800&auto=format&fit=crop'
+            },
+            {
+                judul: 'Pentas Seni Budaya & Tari Pa\'gellu Massal',
+                tanggal: 'Februari 2026',
+                kategori: 'Seni Budaya',
+                foto: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop'
+            },
+            {
+                judul: 'Rapat Pleno Kerja Bulanan Pengurus OSIS',
+                tanggal: 'Maret 2026',
+                kategori: 'Rapat Kerja',
+                foto: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop'
+            }
+        ];
+
+        const alert = req.query.msg ? { status: req.query.status || 'success', message: req.query.msg } : null;
+
+        res.render('osis', {
+            profil,
+            pengumuman,
+            pengurusList,
+            sambutanKetua,
+            prokerList,
+            madingList,
+            galeriOsis,
+            activePage: 'osis',
+            alert,
+            title: 'OSIS UPT SMP Negeri 1 Rantepao - Organisasi Siswa Intra Sekolah'
+        });
+    } catch (error) {
+        res.status(500).send('Kesalahan server OSIS: ' + error.message);
+    }
+});
+
+// Route Kirim Aspirasi Siswa ke OSIS
+app.post('/osis/aspirasi', async (req, res) => {
+    try {
+        const { nama_siswa, kelas_kontak, kategori_aspirasi, isi_aspirasi } = req.body;
+        if (!nama_siswa || !isi_aspirasi) {
+            return res.redirect('/osis?status=error&msg=' + encodeURIComponent('Nama dan isi aspirasi wajib diisi!'));
+        }
+
+        const subjek = `[Aspirasi OSIS - ${kategori_aspirasi || 'Umum'}] dari ${nama_siswa} (${kelas_kontak || 'Siswa'})`;
+        await db.query(
+            'INSERT INTO pesan_kontak (nama_pengirim, email_atau_wa, subjek, isi_pesan, status_baca) VALUES (?, ?, ?, ?, "Belum Dibaca")',
+            [nama_siswa.trim(), kelas_kontak || 'Siswa SMPN 1 Rantepao', subjek, isi_aspirasi.trim()]
+        );
+
+        res.redirect('/osis?status=success&msg=' + encodeURIComponent('Terima kasih! Aspirasi dan ide kreatifmu berhasil dikirimkan kepada pengurus OSIS dan pihak sekolah.'));
+    } catch (error) {
+        res.redirect('/osis?status=error&msg=' + encodeURIComponent('Gagal mengirimkan aspirasi: ' + error.message));
     }
 });
 
@@ -431,6 +882,11 @@ app.get('/api/ppdb/cek', async (req, res) => {
 // Submit Formulir Konsultasi & Pendaftaran PPDB Online
 app.post('/ppdb/daftar', async (req, res) => {
     try {
+        const [pRows] = await db.query('SELECT status_loket FROM ppdb_pengaturan WHERE id = 1');
+        if (pRows.length > 0 && pRows[0].status_loket === 'Tutup') {
+            return res.redirect('/ppdb?status=error&msg=' + encodeURIComponent('Pendaftaran PPDB saat ini sedang ditutup.'));
+        }
+
         const {
             nama_calon_siswa,
             nisn,
@@ -506,12 +962,19 @@ app.get('/ppdb/register', async (req, res) => {
         if (req.session && req.session.ppdbUser) {
             return res.redirect('/ppdb/dashboard');
         }
+
+        const [pRows] = await db.query('SELECT * FROM ppdb_pengaturan WHERE id = 1');
+        const ppdbSetting = pRows[0] || {};
+        if (ppdbSetting.status_loket === 'Tutup') {
+            return res.redirect('/ppdb?status=error&msg=' + encodeURIComponent('Pendaftaran akun calon siswa baru saat ini telah ditutup.'));
+        }
+
         const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
         const profil = profilRows[0] || {};
         const [pengumuman] = await db.query('SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4');
         const alert = req.query.msg ? { status: req.query.status || 'info', message: req.query.msg } : null;
 
-        res.render('ppdb/register', { profil, pengumuman, alert });
+        res.render('ppdb/register', { profil, pengumuman, alert, ppdbSetting });
     } catch (error) {
         res.status(500).send('Kesalahan server: ' + error.message);
     }
@@ -520,6 +983,11 @@ app.get('/ppdb/register', async (req, res) => {
 // 2. Proses Registrasi Akun Baru Calon Siswa
 app.post('/ppdb/register', async (req, res) => {
     try {
+        const [pRows] = await db.query('SELECT status_loket FROM ppdb_pengaturan WHERE id = 1');
+        if (pRows.length > 0 && pRows[0].status_loket === 'Tutup') {
+            return res.redirect('/ppdb/register?status=error&msg=' + encodeURIComponent('Pendaftaran akun calon siswa baru saat ini telah ditutup.'));
+        }
+
         const { nama_siswa, email, no_wa, password, confirm_password } = req.body;
 
         if (!nama_siswa || !email || !password) {
@@ -809,6 +1277,17 @@ app.get('/admin', isAuthenticated, async (req, res) => {
         const [eskul] = await db.query('SELECT * FROM ekstrakurikuler ORDER BY id_eskul ASC');
         const [galeri] = await db.query('SELECT * FROM galeri ORDER BY tanggal_upload DESC, id_galeri DESC');
         const [pendaftarPPDB] = await db.query('SELECT * FROM pendaftar_ppdb ORDER BY tanggal_daftar DESC, id_pendaftar DESC');
+        const [halamanStatis] = await db.query("SELECT * FROM halaman_statis WHERE slug != 'visi-misi' ORDER BY id ASC");
+        const [ppdbPengaturanRows] = await db.query('SELECT * FROM ppdb_pengaturan WHERE id = 1');
+        const ppdbSetting = ppdbPengaturanRows[0] || {};
+
+        // Data OSIS untuk Dashboard Admin
+        const [osisProfilRows] = await db.query('SELECT * FROM osis_profil WHERE id = 1');
+        const osisProfil = osisProfilRows[0] || {};
+        const [osisPengurus] = await db.query('SELECT * FROM osis_pengurus ORDER BY urutan_tampil ASC, id ASC');
+        const [osisProker] = await db.query('SELECT * FROM osis_proker ORDER BY urutan_tampil ASC, id ASC');
+        const [osisMading] = await db.query('SELECT * FROM osis_mading ORDER BY id DESC');
+        const [kalender] = await db.query('SELECT * FROM kalender_akademik ORDER BY tanggal_mulai ASC');
 
         const stats = {
             totalBerita: berita.length,
@@ -823,11 +1302,19 @@ app.get('/admin', isAuthenticated, async (req, res) => {
             ppdbMenunggu: pendaftarPPDB.filter(p => p.status_seleksi === 'Menunggu Verifikasi').length,
             ppdbTerverifikasi: pendaftarPPDB.filter(p => p.status_seleksi === 'Berkas Terverifikasi').length,
             ppdbDiterima: pendaftarPPDB.filter(p => p.status_seleksi === 'Diterima').length,
-            ppdbTidakDiterima: pendaftarPPDB.filter(p => p.status_seleksi === 'Tidak Diterima').length
+            ppdbTidakDiterima: pendaftarPPDB.filter(p => p.status_seleksi === 'Tidak Diterima').length,
+            totalHalamanStatis: halamanStatis.length,
+            totalOsisPengurus: osisPengurus.length,
+            totalOsisProker: osisProker.length,
+            totalOsisMading: osisMading.length,
+            totalKalender: kalender.length
         };
 
         const activeTab = req.query.tab || 'overview';
+        const activeSubtab = req.query.subtab || 'pengurus';
         const alert = req.query.msg ? { status: req.query.status || 'success', message: req.query.msg } : null;
+
+        const statistikPengunjung = await getStatistikPengunjung();
 
         res.render('admin', {
             user: req.session.user,
@@ -841,8 +1328,17 @@ app.get('/admin', isAuthenticated, async (req, res) => {
             eskul,
             galeri,
             pendaftarPPDB,
+            halamanStatis,
+            osisProfil,
+            osisPengurus,
+            osisProker,
+            osisMading,
+            ppdbSetting,
+            kalender,
             stats,
+            statistikPengunjung,
             activeTab,
+            activeSubtab,
             alert
         });
     } catch (error) {
@@ -945,6 +1441,85 @@ app.post('/admin/pengumuman/hapus/:id', isAuthenticated, async (req, res) => {
 });
 
 // ==========================================
+// CRUD KALENDER AKADEMIK & AGENDA SEKOLAH (DIPROTEKSI)
+// ==========================================
+
+// 1. Tambah Agenda Kalender Baru
+app.post('/admin/kalender/tambah', isAuthenticated, async (req, res) => {
+    try {
+        const { judul_kegiatan, deskripsi, tanggal_mulai, tanggal_selesai, kategori, warna_badge, lokasi, urutan } = req.body;
+        if (!judul_kegiatan || !tanggal_mulai) {
+            return res.redirect('/admin?tab=kalender&status=error&msg=' + encodeURIComponent('Judul kegiatan dan tanggal mulai wajib diisi!'));
+        }
+
+        await db.query(`
+            INSERT INTO kalender_akademik (judul_kegiatan, deskripsi, tanggal_mulai, tanggal_selesai, kategori, warna_badge, lokasi, urutan)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `, [
+            judul_kegiatan,
+            deskripsi || '',
+            tanggal_mulai,
+            tanggal_selesai || null,
+            kategori || 'Akademik',
+            warna_badge || 'blue',
+            lokasi || 'Kampus SMPN 1 Rantepao',
+            parseInt(urutan) || 0
+        ]);
+
+        res.redirect('/admin?tab=kalender&status=success&msg=' + encodeURIComponent('Agenda kalender akademik berhasil ditambahkan!'));
+    } catch (error) {
+        res.redirect('/admin?tab=kalender&status=error&msg=' + encodeURIComponent('Gagal menambah agenda: ' + error.message));
+    }
+});
+
+// 2. Edit Agenda Kalender
+app.post('/admin/kalender/edit/:id', isAuthenticated, async (req, res) => {
+    try {
+        const { judul_kegiatan, deskripsi, tanggal_mulai, tanggal_selesai, kategori, warna_badge, lokasi, urutan } = req.body;
+
+        await db.query(`
+            UPDATE kalender_akademik 
+            SET judul_kegiatan = ?, deskripsi = ?, tanggal_mulai = ?, tanggal_selesai = ?, kategori = ?, warna_badge = ?, lokasi = ?, urutan = ?
+            WHERE id = ?
+        `, [
+            judul_kegiatan,
+            deskripsi || '',
+            tanggal_mulai,
+            tanggal_selesai || null,
+            kategori || 'Akademik',
+            warna_badge || 'blue',
+            lokasi || 'Kampus SMPN 1 Rantepao',
+            parseInt(urutan) || 0,
+            req.params.id
+        ]);
+
+        res.redirect('/admin?tab=kalender&status=success&msg=' + encodeURIComponent('Agenda kalender akademik berhasil diperbarui!'));
+    } catch (error) {
+        res.redirect('/admin?tab=kalender&status=error&msg=' + encodeURIComponent('Gagal memperbarui agenda: ' + error.message));
+    }
+});
+
+// 3. Hapus Agenda Kalender
+app.post('/admin/kalender/hapus/:id', isAuthenticated, async (req, res) => {
+    try {
+        await db.query('DELETE FROM kalender_akademik WHERE id = ?', [req.params.id]);
+        res.redirect('/admin?tab=kalender&status=success&msg=' + encodeURIComponent('Agenda kalender berhasil dihapus!'));
+    } catch (error) {
+        res.redirect('/admin?tab=kalender&status=error&msg=' + encodeURIComponent('Gagal menghapus agenda: ' + error.message));
+    }
+});
+
+// Endpoint Publik / AJAX Kalender Akademik
+app.get('/api/kalender-akademik', async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM kalender_akademik ORDER BY tanggal_mulai ASC');
+        res.json({ success: true, data: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ==========================================
 // CRUD GURU & STAF (DIPROTEKSI + FILE UPLOAD)
 // ==========================================
 app.post('/admin/guru/tambah', isAuthenticated, upload.single('foto'), async (req, res) => {
@@ -956,6 +1531,30 @@ app.post('/admin/guru/tambah', isAuthenticated, upload.single('foto'), async (re
             'INSERT INTO guru_staf (nip, nama_lengkap, jenis_kelamin, jabatan, kategori_pegawai, urutan_tampil, status_aktif, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [nip || null, nama_lengkap, jenis_kelamin || 'L', jabatan, kategori_pegawai || 'Guru', urutan_tampil || 99, status_aktif || 'Aktif', foto]
         );
+
+        // SINKRONISASI OTOMATIS KE PROFIL SEKOLAH JIKA JABATAN / KATEGORI KEPALA SEKOLAH
+        const isKepsek = (kategori_pegawai === 'Kepala Sekolah') || (jabatan && jabatan.toLowerCase().includes('kepala sekolah'));
+        if (isKepsek) {
+            try {
+                if (req.file) {
+                    const srcPath = path.join(__dirname, 'public/uploads/guru', req.file.filename);
+                    const destPath = path.join(__dirname, 'public/uploads/profil', req.file.filename);
+                    try { fs.copyFileSync(srcPath, destPath); } catch (cErr) {}
+                    await db.query(
+                        'UPDATE profil_sekolah SET nama_kepsek = ?, nip_kepsek = ?, foto_kepsek = ? WHERE id_profil = 1',
+                        [nama_lengkap, nip || null, req.file.filename]
+                    );
+                } else {
+                    await db.query(
+                        'UPDATE profil_sekolah SET nama_kepsek = ?, nip_kepsek = ? WHERE id_profil = 1',
+                        [nama_lengkap, nip || null]
+                    );
+                }
+            } catch (syncErr) {
+                console.warn('Peringatan: Gagal sinkronisasi tambah guru ke profil_sekolah:', syncErr.message);
+            }
+        }
+
         res.redirect('/admin?tab=guru&status=success&msg=' + encodeURIComponent('Data guru/staf berhasil ditambahkan!'));
     } catch (error) {
         res.redirect('/admin?tab=guru&status=error&msg=' + encodeURIComponent('Gagal menambah data guru/staf: ' + error.message));
@@ -977,6 +1576,30 @@ app.post('/admin/guru/edit/:id', isAuthenticated, upload.single('foto'), async (
                 [nip || null, nama_lengkap, jenis_kelamin, jabatan, kategori_pegawai, urutan_tampil || 99, status_aktif, req.params.id]
             );
         }
+
+        // SINKRONISASI OTOMATIS KE PROFIL SEKOLAH JIKA JABATAN / KATEGORI KEPALA SEKOLAH
+        const isKepsek = (kategori_pegawai === 'Kepala Sekolah') || (jabatan && jabatan.toLowerCase().includes('kepala sekolah'));
+        if (isKepsek) {
+            try {
+                if (req.file) {
+                    const srcPath = path.join(__dirname, 'public/uploads/guru', req.file.filename);
+                    const destPath = path.join(__dirname, 'public/uploads/profil', req.file.filename);
+                    try { fs.copyFileSync(srcPath, destPath); } catch (cErr) {}
+                    await db.query(
+                        'UPDATE profil_sekolah SET nama_kepsek = ?, nip_kepsek = ?, foto_kepsek = ? WHERE id_profil = 1',
+                        [nama_lengkap, nip || null, req.file.filename]
+                    );
+                } else {
+                    await db.query(
+                        'UPDATE profil_sekolah SET nama_kepsek = ?, nip_kepsek = ? WHERE id_profil = 1',
+                        [nama_lengkap, nip || null]
+                    );
+                }
+            } catch (syncKepsekErr) {
+                console.warn('Peringatan: Gagal sinkronisasi data guru ke profil_sekolah:', syncKepsekErr.message);
+            }
+        }
+
         res.redirect('/admin?tab=guru&status=success&msg=' + encodeURIComponent('Data guru/staf berhasil diperbarui!'));
     } catch (error) {
         res.redirect('/admin?tab=guru&status=error&msg=' + encodeURIComponent('Gagal memperbarui data guru/staf: ' + error.message));
@@ -1054,28 +1677,291 @@ app.post('/admin/komite/hapus/:id', isAuthenticated, async (req, res) => {
 });
 
 // ==========================================
+// CRUD KELOLA OSIS (DIPROTEKSI)
+// ==========================================
+
+// 1. Update Profil & Sambutan Ketua OSIS
+app.post('/admin/osis/profil/update', isAuthenticated, upload.single('foto_ketua_osis'), async (req, res) => {
+    try {
+        const { nama_ketua, kelas_ketua, periode, visi_utama, teks_sambutan } = req.body;
+        if (req.file) {
+            const foto_ketua = req.file.filename;
+            try {
+                const [oldRows] = await db.query('SELECT foto_ketua FROM osis_profil WHERE id = 1');
+                if (oldRows.length > 0 && oldRows[0].foto_ketua && !oldRows[0].foto_ketua.startsWith('default') && !oldRows[0].foto_ketua.endsWith('-osis.jpg')) {
+                    const oldPath = path.join(__dirname, 'public/uploads/osis', oldRows[0].foto_ketua);
+                    if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+                }
+            } catch (delErr) {}
+
+            await db.query(
+                'UPDATE osis_profil SET nama_ketua = ?, kelas_ketua = ?, periode = ?, visi_utama = ?, teks_sambutan = ?, foto_ketua = ? WHERE id = 1',
+                [nama_ketua, kelas_ketua, periode, visi_utama, teks_sambutan, foto_ketua]
+            );
+        } else {
+            await db.query(
+                'UPDATE osis_profil SET nama_ketua = ?, kelas_ketua = ?, periode = ?, visi_utama = ?, teks_sambutan = ? WHERE id = 1',
+                [nama_ketua, kelas_ketua, periode, visi_utama, teks_sambutan]
+            );
+        }
+        res.redirect('/admin?tab=osis&subtab=sambutan&status=success&msg=' + encodeURIComponent('Sambutan & Profil Ketua OSIS berhasil diperbarui!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=sambutan&status=error&msg=' + encodeURIComponent('Gagal memperbarui profil OSIS: ' + error.message));
+    }
+});
+
+// 2. Tambah Pengurus OSIS
+app.post('/admin/osis/pengurus/tambah', isAuthenticated, upload.single('foto_osis'), async (req, res) => {
+    try {
+        const { nama_lengkap, jabatan, kategori, kelas, motto, urutan_tampil } = req.body;
+        const foto = req.file ? req.file.filename : 'default-osis.jpg';
+        await db.query(
+            'INSERT INTO osis_pengurus (nama_lengkap, jabatan, kategori, kelas, motto, foto, urutan_tampil) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [nama_lengkap, jabatan, kategori || 'Pengurus Inti', kelas, motto || '', foto, parseInt(urutan_tampil) || 10]
+        );
+        res.redirect('/admin?tab=osis&subtab=pengurus&status=success&msg=' + encodeURIComponent('Pengurus OSIS berhasil ditambahkan!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=pengurus&status=error&msg=' + encodeURIComponent('Gagal menambah pengurus OSIS: ' + error.message));
+    }
+});
+
+// 3. Edit Pengurus OSIS
+app.post('/admin/osis/pengurus/edit/:id', isAuthenticated, upload.single('foto_osis'), async (req, res) => {
+    try {
+        const { nama_lengkap, jabatan, kategori, kelas, motto, urutan_tampil } = req.body;
+        if (req.file) {
+            const [rows] = await db.query('SELECT foto FROM osis_pengurus WHERE id = ?', [req.params.id]);
+            if (rows.length > 0 && rows[0].foto && !rows[0].foto.startsWith('default') && !rows[0].foto.endsWith('-osis.jpg')) {
+                const oldPath = path.join(__dirname, 'public/uploads/osis', rows[0].foto);
+                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+            }
+            await db.query(
+                'UPDATE osis_pengurus SET nama_lengkap = ?, jabatan = ?, kategori = ?, kelas = ?, motto = ?, urutan_tampil = ?, foto = ? WHERE id = ?',
+                [nama_lengkap, jabatan, kategori || 'Pengurus Inti', kelas, motto || '', parseInt(urutan_tampil) || 10, req.file.filename, req.params.id]
+            );
+        } else {
+            await db.query(
+                'UPDATE osis_pengurus SET nama_lengkap = ?, jabatan = ?, kategori = ?, kelas = ?, motto = ?, urutan_tampil = ? WHERE id = ?',
+                [nama_lengkap, jabatan, kategori || 'Pengurus Inti', kelas, motto || '', parseInt(urutan_tampil) || 10, req.params.id]
+            );
+        }
+        res.redirect('/admin?tab=osis&subtab=pengurus&status=success&msg=' + encodeURIComponent('Data Pengurus OSIS berhasil diperbarui!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=pengurus&status=error&msg=' + encodeURIComponent('Gagal memperbarui pengurus OSIS: ' + error.message));
+    }
+});
+
+// 4. Hapus Pengurus OSIS
+app.post('/admin/osis/pengurus/hapus/:id', isAuthenticated, async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT foto FROM osis_pengurus WHERE id = ?', [req.params.id]);
+        if (rows.length > 0 && rows[0].foto && !rows[0].foto.startsWith('default') && !rows[0].foto.endsWith('-osis.jpg')) {
+            const oldPath = path.join(__dirname, 'public/uploads/osis', rows[0].foto);
+            if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        await db.query('DELETE FROM osis_pengurus WHERE id = ?', [req.params.id]);
+        res.redirect('/admin?tab=osis&subtab=pengurus&status=success&msg=' + encodeURIComponent('Pengurus OSIS berhasil dihapus!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=pengurus&status=error&msg=' + encodeURIComponent('Gagal menghapus pengurus OSIS: ' + error.message));
+    }
+});
+
+// 5. Tambah Program Kerja OSIS
+app.post('/admin/osis/proker/tambah', isAuthenticated, async (req, res) => {
+    try {
+        const { judul, kategori, icon, jadwal, target, status, deskripsi, urutan_tampil } = req.body;
+        await db.query(
+            'INSERT INTO osis_proker (judul, kategori, icon, jadwal, target, status, deskripsi, urutan_tampil) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [judul, kategori, icon || 'fa-compass', jadwal, target, status || 'Sedang Berjalan', deskripsi, parseInt(urutan_tampil) || 10]
+        );
+        res.redirect('/admin?tab=osis&subtab=proker&status=success&msg=' + encodeURIComponent('Program Kerja OSIS berhasil ditambahkan!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=proker&status=error&msg=' + encodeURIComponent('Gagal menambah program kerja OSIS: ' + error.message));
+    }
+});
+
+// 6. Edit Program Kerja OSIS
+app.post('/admin/osis/proker/edit/:id', isAuthenticated, async (req, res) => {
+    try {
+        const { judul, kategori, icon, jadwal, target, status, deskripsi, urutan_tampil } = req.body;
+        await db.query(
+            'UPDATE osis_proker SET judul = ?, kategori = ?, icon = ?, jadwal = ?, target = ?, status = ?, deskripsi = ?, urutan_tampil = ? WHERE id = ?',
+            [judul, kategori, icon || 'fa-compass', jadwal, target, status || 'Sedang Berjalan', deskripsi, parseInt(urutan_tampil) || 10, req.params.id]
+        );
+        res.redirect('/admin?tab=osis&subtab=proker&status=success&msg=' + encodeURIComponent('Program Kerja OSIS berhasil diperbarui!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=proker&status=error&msg=' + encodeURIComponent('Gagal memperbarui program kerja OSIS: ' + error.message));
+    }
+});
+
+// 7. Hapus Program Kerja OSIS
+app.post('/admin/osis/proker/hapus/:id', isAuthenticated, async (req, res) => {
+    try {
+        await db.query('DELETE FROM osis_proker WHERE id = ?', [req.params.id]);
+        res.redirect('/admin?tab=osis&subtab=proker&status=success&msg=' + encodeURIComponent('Program Kerja OSIS berhasil dihapus!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=proker&status=error&msg=' + encodeURIComponent('Gagal menghapus program kerja OSIS: ' + error.message));
+    }
+});
+
+// 8. Tambah Mading Siswa
+app.post('/admin/osis/mading/tambah', isAuthenticated, upload.single('foto_mading'), async (req, res) => {
+    try {
+        const { judul, kategori, penulis, kelas, tanggal, cuplikan, likes } = req.body;
+        const foto = req.file ? req.file.filename : null;
+        const tgl = tanggal || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        await db.query(
+            'INSERT INTO osis_mading (judul, kategori, penulis, kelas, tanggal, cuplikan, likes, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [judul, kategori, penulis, kelas, tgl, cuplikan, parseInt(likes) || 0, foto]
+        );
+        res.redirect('/admin?tab=osis&subtab=mading&status=success&msg=' + encodeURIComponent('Karya mading siswa berhasil dipublikasikan!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=mading&status=error&msg=' + encodeURIComponent('Gagal mempublikasikan mading: ' + error.message));
+    }
+});
+
+// 9. Edit Mading Siswa
+app.post('/admin/osis/mading/edit/:id', isAuthenticated, upload.single('foto_mading'), async (req, res) => {
+    try {
+        const { judul, kategori, penulis, kelas, tanggal, cuplikan, likes } = req.body;
+        if (req.file) {
+            const [rows] = await db.query('SELECT foto FROM osis_mading WHERE id = ?', [req.params.id]);
+            if (rows.length > 0 && rows[0].foto) {
+                const oldPath = path.join(__dirname, 'public/uploads/osis', rows[0].foto);
+                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+            }
+            await db.query(
+                'UPDATE osis_mading SET judul = ?, kategori = ?, penulis = ?, kelas = ?, tanggal = ?, cuplikan = ?, likes = ?, foto = ? WHERE id = ?',
+                [judul, kategori, penulis, kelas, tanggal, cuplikan, parseInt(likes) || 0, req.file.filename, req.params.id]
+            );
+        } else {
+            await db.query(
+                'UPDATE osis_mading SET judul = ?, kategori = ?, penulis = ?, kelas = ?, tanggal = ?, cuplikan = ?, likes = ? WHERE id = ?',
+                [judul, kategori, penulis, kelas, tanggal, cuplikan, parseInt(likes) || 0, req.params.id]
+            );
+        }
+        res.redirect('/admin?tab=osis&subtab=mading&status=success&msg=' + encodeURIComponent('Karya mading siswa berhasil diperbarui!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=mading&status=error&msg=' + encodeURIComponent('Gagal memperbarui mading: ' + error.message));
+    }
+});
+
+// 10. Hapus Mading Siswa
+app.post('/admin/osis/mading/hapus/:id', isAuthenticated, async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT foto FROM osis_mading WHERE id = ?', [req.params.id]);
+        if (rows.length > 0 && rows[0].foto) {
+            const oldPath = path.join(__dirname, 'public/uploads/osis', rows[0].foto);
+            if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        await db.query('DELETE FROM osis_mading WHERE id = ?', [req.params.id]);
+        res.redirect('/admin?tab=osis&subtab=mading&status=success&msg=' + encodeURIComponent('Karya mading berhasil dihapus!'));
+    } catch (error) {
+        res.redirect('/admin?tab=osis&subtab=mading&status=error&msg=' + encodeURIComponent('Gagal menghapus mading: ' + error.message));
+    }
+});
+
+// ==========================================
 // EDIT PROFIL SEKOLAH (DIPROTEKSI)
 // ==========================================
-app.post('/admin/profil/update', isAuthenticated, async (req, res) => {
+app.post('/admin/profil/update', isAuthenticated, upload.single('foto_kepsek'), async (req, res) => {
     try {
         const {
             nama_sekolah, npsn, akreditasi, nama_kepsek, nip_kepsek,
             sambutan_kepsek, sejarah, visi, misi, alamat, telepon,
-            email_sekolah, maps_embed
+            email_sekolah, maps_embed, jumlah_siswa, jumlah_rombel
         } = req.body;
 
-        await db.query(`
-            UPDATE profil_sekolah SET
-                nama_sekolah = ?, npsn = ?, akreditasi = ?, nama_kepsek = ?, nip_kepsek = ?,
-                sambutan_kepsek = ?, sejarah = ?, visi = ?, misi = ?, alamat = ?, telepon = ?,
-                email_sekolah = ?, maps_embed = ?
-            WHERE id_profil = 1
-        `, [
-            nama_sekolah, npsn, akreditasi, nama_kepsek, nip_kepsek,
-            sambutan_kepsek, sejarah, visi, misi, alamat, telepon,
-            email_sekolah, maps_embed
-        ]);
-        res.redirect('/admin?tab=profil&status=success&msg=' + encodeURIComponent('Profil sekolah berhasil diperbarui!'));
+        if (req.file) {
+            const foto_kepsek = req.file.filename;
+
+            // Hapus file foto lama jika ada
+            try {
+                const [oldRows] = await db.query('SELECT foto_kepsek FROM profil_sekolah WHERE id_profil = 1');
+                if (oldRows.length > 0 && oldRows[0].foto_kepsek && oldRows[0].foto_kepsek !== 'kepsek.jpg') {
+                    const oldPath = path.join(__dirname, 'public/uploads/profil', oldRows[0].foto_kepsek);
+                    if (fs.existsSync(oldPath)) {
+                        fs.unlinkSync(oldPath);
+                    }
+                }
+            } catch (errDel) {
+                console.warn('Peringatan: Gagal menghapus foto lama kepsek:', errDel.message);
+            }
+
+            await db.query(`
+                UPDATE profil_sekolah SET
+                    nama_sekolah = ?, npsn = ?, akreditasi = ?, nama_kepsek = ?, nip_kepsek = ?,
+                    sambutan_kepsek = ?, sejarah = ?, visi = ?, misi = ?, alamat = ?, telepon = ?,
+                    email_sekolah = ?, maps_embed = ?, jumlah_siswa = ?, jumlah_rombel = ?,
+                    foto_kepsek = ?
+                WHERE id_profil = 1
+            `, [
+                nama_sekolah, npsn, akreditasi, nama_kepsek, nip_kepsek,
+                sambutan_kepsek, sejarah, visi, misi, alamat, telepon,
+                email_sekolah, maps_embed,
+                parseInt(jumlah_siswa) || 886, parseInt(jumlah_rombel) || 24,
+                foto_kepsek
+            ]);
+        } else {
+            await db.query(`
+                UPDATE profil_sekolah SET
+                    nama_sekolah = ?, npsn = ?, akreditasi = ?, nama_kepsek = ?, nip_kepsek = ?,
+                    sambutan_kepsek = ?, sejarah = ?, visi = ?, misi = ?, alamat = ?, telepon = ?,
+                    email_sekolah = ?, maps_embed = ?, jumlah_siswa = ?, jumlah_rombel = ?
+                WHERE id_profil = 1
+            `, [
+                nama_sekolah, npsn, akreditasi, nama_kepsek, nip_kepsek,
+                sambutan_kepsek, sejarah, visi, misi, alamat, telepon,
+                email_sekolah, maps_embed,
+                parseInt(jumlah_siswa) || 886, parseInt(jumlah_rombel) || 24
+            ]);
+        }
+
+        // SINKRONISASI OTOMATIS KE TABEL GURU_STAF (DATA KEPALA SEKOLAH)
+        try {
+            const [kepsekGuru] = await db.query(
+                "SELECT id_guru, foto FROM guru_staf WHERE kategori_pegawai = 'Kepala Sekolah' OR jabatan LIKE '%Kepala Sekolah%' LIMIT 1"
+            );
+
+            if (req.file) {
+                // Salin file foto dari public/uploads/profil ke public/uploads/guru agar bisa diakses di slider guru
+                const srcPath = path.join(__dirname, 'public/uploads/profil', req.file.filename);
+                const destPath = path.join(__dirname, 'public/uploads/guru', req.file.filename);
+                try {
+                    fs.copyFileSync(srcPath, destPath);
+                } catch (copyErr) {
+                    console.warn('Peringatan: Gagal menyalin foto kepsek ke folder guru:', copyErr.message);
+                }
+
+                if (kepsekGuru.length > 0) {
+                    await db.query(
+                        "UPDATE guru_staf SET nama_lengkap = ?, nip = ?, foto = ?, kategori_pegawai = 'Kepala Sekolah', jabatan = 'Kepala Sekolah' WHERE id_guru = ?",
+                        [nama_kepsek, nip_kepsek || null, req.file.filename, kepsekGuru[0].id_guru]
+                    );
+                } else {
+                    await db.query(
+                        "INSERT INTO guru_staf (nip, nama_lengkap, jenis_kelamin, jabatan, kategori_pegawai, urutan_tampil, status_aktif, foto) VALUES (?, ?, 'L', 'Kepala Sekolah', 'Kepala Sekolah', 1, 'Aktif', ?)",
+                        [nip_kepsek || null, nama_kepsek, req.file.filename]
+                    );
+                }
+            } else {
+                if (kepsekGuru.length > 0) {
+                    await db.query(
+                        "UPDATE guru_staf SET nama_lengkap = ?, nip = ?, kategori_pegawai = 'Kepala Sekolah', jabatan = 'Kepala Sekolah' WHERE id_guru = ?",
+                        [nama_kepsek, nip_kepsek || null, kepsekGuru[0].id_guru]
+                    );
+                } else {
+                    await db.query(
+                        "INSERT INTO guru_staf (nip, nama_lengkap, jenis_kelamin, jabatan, kategori_pegawai, urutan_tampil, status_aktif, foto) VALUES (?, ?, 'L', 'Kepala Sekolah', 'Kepala Sekolah', 1, 'Aktif', 'default-guru.png')",
+                        [nip_kepsek || null, nama_kepsek]
+                    );
+                }
+            }
+        } catch (syncErr) {
+            console.warn('Peringatan: Gagal sinkronisasi profil ke guru_staf:', syncErr.message);
+        }
+
+        res.redirect('/admin?tab=profil&status=success&msg=' + encodeURIComponent('Profil sekolah dan data Kepala Sekolah berhasil disinkronkan!'));
     } catch (error) {
         res.redirect('/admin?tab=profil&status=error&msg=' + encodeURIComponent('Gagal memperbarui profil: ' + error.message));
     }
@@ -1418,6 +2304,533 @@ app.post('/admin/ppdb/hapus/:id', isAuthenticated, async (req, res) => {
     } catch (error) {
         res.redirect('/admin?tab=ppdb&status=error&msg=' + encodeURIComponent('Gagal menghapus data: ' + error.message));
     }
+});
+
+// 5. Update Pengaturan Gelombang, Jadwal & Kuota PPDB
+app.post('/admin/ppdb/pengaturan', isAuthenticated, async (req, res) => {
+    try {
+        const {
+            tahun_ajaran,
+            nama_gelombang,
+            status_loket,
+            tgl_mulai_daftar,
+            tgl_selesai_daftar,
+            tgl_pengumuman,
+            tgl_daftar_ulang,
+            kuota_total,
+            kuota_zonasi,
+            kuota_prestasi,
+            kuota_afirmasi,
+            kuota_mutasi,
+            pesan_pengumuman,
+            kontak_panitia
+        } = req.body;
+
+        await db.query(`
+            UPDATE ppdb_pengaturan SET
+                tahun_ajaran = ?,
+                nama_gelombang = ?,
+                status_loket = ?,
+                tgl_mulai_daftar = ?,
+                tgl_selesai_daftar = ?,
+                tgl_pengumuman = ?,
+                tgl_daftar_ulang = ?,
+                kuota_total = ?,
+                kuota_zonasi = ?,
+                kuota_prestasi = ?,
+                kuota_afirmasi = ?,
+                kuota_mutasi = ?,
+                pesan_pengumuman = ?,
+                kontak_panitia = ?
+            WHERE id = 1
+        `, [
+            tahun_ajaran ? tahun_ajaran.trim() : '2026/2027',
+            nama_gelombang ? nama_gelombang.trim() : 'Gelombang 1 (Reguler & Zonasi)',
+            ['Buka', 'Verifikasi', 'Pengumuman', 'Daftar Ulang', 'Tutup'].includes(status_loket) ? status_loket : 'Buka',
+            tgl_mulai_daftar ? tgl_mulai_daftar.trim() : null,
+            tgl_selesai_daftar ? tgl_selesai_daftar.trim() : null,
+            tgl_pengumuman ? tgl_pengumuman.trim() : null,
+            tgl_daftar_ulang ? tgl_daftar_ulang.trim() : null,
+            parseInt(kuota_total) || 320,
+            parseInt(kuota_zonasi) || 160,
+            parseInt(kuota_prestasi) || 96,
+            parseInt(kuota_afirmasi) || 48,
+            parseInt(kuota_mutasi) || 16,
+            pesan_pengumuman ? pesan_pengumuman.trim() : null,
+            kontak_panitia ? kontak_panitia.trim() : '0812-3456-7890'
+        ]);
+
+        res.redirect('/admin?tab=ppdb&status=success&msg=' + encodeURIComponent('Pengaturan gelombang, status loket, jadwal, dan kuota PPDB berhasil diperbarui!'));
+    } catch (error) {
+        console.error('Error update PPDB pengaturan:', error);
+        res.redirect('/admin?tab=ppdb&status=error&msg=' + encodeURIComponent('Gagal memperbarui pengaturan PPDB: ' + error.message));
+    }
+});
+
+// 6. Ekspor Data Pendaftar PPDB ke File Excel (.xlsx)
+app.get('/admin/ppdb/export', isAuthenticated, async (req, res) => {
+    try {
+        const { jalur, status, q } = req.query;
+
+        let query = 'SELECT * FROM pendaftar_ppdb WHERE 1=1';
+        const params = [];
+
+        if (jalur && jalur.trim()) {
+            query += ' AND jalur_pendaftaran = ?';
+            params.push(jalur.trim());
+        }
+        if (status && status.trim()) {
+            query += ' AND status_seleksi = ?';
+            params.push(status.trim());
+        }
+        if (q && q.trim()) {
+            query += ' AND (nama_siswa LIKE ? OR no_pendaftaran LIKE ? OR nisn LIKE ? OR asal_sekolah LIKE ?)';
+            const term = `%${q.trim()}%`;
+            params.push(term, term, term, term);
+        }
+
+        query += ' ORDER BY tanggal_daftar DESC, id_pendaftar DESC';
+
+        const [rows] = await db.query(query, params);
+        const [profilRows] = await db.query('SELECT nama_sekolah, alamat FROM profil_sekolah WHERE id_profil = 1');
+        const profil = profilRows[0] || {};
+        const [ppdbPengaturan] = await db.query('SELECT tahun_ajaran, nama_gelombang FROM ppdb_pengaturan WHERE id = 1');
+        const setting = ppdbPengaturan[0] || {};
+
+        const workbook = new ExcelJS.Workbook();
+        workbook.creator = 'UPT SMP Negeri 1 Rantepao';
+        workbook.created = new Date();
+
+        const worksheet = workbook.addWorksheet('Data Pendaftar PPDB', {
+            views: [{ showGridLines: true }]
+        });
+
+        // 1. KOP Judul Laporan
+        worksheet.mergeCells('A1:P1');
+        worksheet.mergeCells('A2:P2');
+        worksheet.mergeCells('A3:P3');
+
+        worksheet.getCell('A1').value = (profil.nama_sekolah || 'UPT SMP NEGERI 1 RANTEPAO').toUpperCase();
+        worksheet.getCell('A1').font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FF0F172A' } };
+        worksheet.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' };
+
+        worksheet.getCell('A2').value = `REKAPITULASI PENDAFTARAN PESERTA DIDIK BARU (PPDB) TAHUN AJARAN ${setting.tahun_ajaran || '2026/2027'}`;
+        worksheet.getCell('A2').font = { name: 'Calibri', size: 12, bold: true, color: { argb: 'FF1E3A8A' } };
+        worksheet.getCell('A2').alignment = { horizontal: 'center', vertical: 'middle' };
+
+        let filterText = `Gelombang: ${setting.nama_gelombang || 'Semua'} | Total Data: ${rows.length} Calon Siswa | Diekspor pada: ${new Date().toLocaleString('id-ID')}`;
+        if (jalur) filterText += ` | Jalur: ${jalur}`;
+        if (status) filterText += ` | Status: ${status}`;
+        worksheet.getCell('A3').value = filterText;
+        worksheet.getCell('A3').font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF64748B' } };
+        worksheet.getCell('A3').alignment = { horizontal: 'center', vertical: 'middle' };
+
+        worksheet.addRow([]); // Baris kosong A4
+
+        // 2. Definisi Header Kolom Tabel (Baris 5)
+        const headers = [
+            { header: 'No', width: 6 },
+            { header: 'No. Pendaftaran', width: 18 },
+            { header: 'Tanggal Daftar', width: 16 },
+            { header: 'Nama Lengkap Calon Siswa', width: 32 },
+            { header: 'NISN', width: 16 },
+            { header: 'L/P', width: 8 },
+            { header: 'Tempat, Tanggal Lahir', width: 24 },
+            { header: 'Agama', width: 14 },
+            { header: 'Asal Sekolah SD/MI', width: 28 },
+            { header: 'Jalur Pendaftaran', width: 18 },
+            { header: 'Nama Orang Tua / Wali', width: 26 },
+            { header: 'No. WhatsApp / HP', width: 18 },
+            { header: 'Alamat Domisili', width: 36 },
+            { header: 'Status Seleksi', width: 22 },
+            { header: 'Kelengkapan Berkas', width: 24 },
+            { header: 'Catatan Panitia', width: 30 }
+        ];
+
+        worksheet.getRow(5).values = headers.map(h => h.header);
+        worksheet.getRow(5).height = 26;
+        worksheet.getRow(5).font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+        worksheet.getRow(5).alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+        // Beri warna latar Header (Navy Blue) & border
+        for (let col = 1; col <= headers.length; col++) {
+            const cell = worksheet.getRow(5).getCell(col);
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF1E3A8A' } // Blue 900
+            };
+            cell.border = {
+                top: { style: 'medium', color: { argb: 'FF0F172A' } },
+                bottom: { style: 'medium', color: { argb: 'FF0F172A' } },
+                left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+            };
+        }
+
+        // Atur Lebar Kolom
+        headers.forEach((h, index) => {
+            worksheet.getColumn(index + 1).width = h.width;
+        });
+
+        // 3. Masukkan Baris Data
+        rows.forEach((p, index) => {
+            const tglDaftar = p.tanggal_daftar ? new Date(p.tanggal_daftar).toLocaleDateString('id-ID') : '-';
+            const ttl = (p.tempat_lahir || '') + (p.tanggal_lahir ? `, ${new Date(p.tanggal_lahir).toLocaleDateString('id-ID')}` : '');
+            
+            const berkasArr = [];
+            if (p.berkas_foto) berkasArr.push('Foto');
+            if (p.berkas_kk) berkasArr.push('KK');
+            if (p.berkas_akta) berkasArr.push('Akta');
+            if (p.berkas_ijazah) berkasArr.push('Ijazah/SKL');
+            const berkasStr = berkasArr.length > 0 ? berkasArr.join(', ') : 'Belum Upload';
+
+            const row = worksheet.addRow([
+                index + 1,
+                p.no_pendaftaran || '-',
+                tglDaftar,
+                p.nama_siswa || '-',
+                p.nisn || '-',
+                (p.jenis_kelamin === 'Perempuan') ? 'P' : 'L',
+                ttl || '-',
+                p.agama || '-',
+                p.asal_sekolah || '-',
+                p.jalur_pendaftaran || '-',
+                p.nama_ortu || p.nama_ayah || '-',
+                p.no_hp || p.no_wa || '-',
+                p.alamat_domisili || '-',
+                p.status_seleksi || 'Menunggu Verifikasi',
+                berkasStr,
+                p.catatan || '-'
+            ]);
+
+            row.height = 22;
+            row.font = { name: 'Calibri', size: 10 };
+            row.alignment = { vertical: 'middle' };
+
+            // Penjajaran isi cell
+            row.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(2).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(3).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(5).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(6).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(8).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(10).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(12).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(14).alignment = { horizontal: 'center', vertical: 'middle' };
+            row.getCell(15).alignment = { horizontal: 'center', vertical: 'middle' };
+
+            // Zebra Striping latar baris berselang-seling
+            if (index % 2 === 1) {
+                for (let col = 1; col <= headers.length; col++) {
+                    row.getCell(col).fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFF8FAFC' } // Slate 50
+                    };
+                }
+            }
+
+            // Garis pembatas sel (border)
+            for (let col = 1; col <= headers.length; col++) {
+                row.getCell(col).border = {
+                    top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+                };
+            }
+
+            // Warna status seleksi
+            const statusCell = row.getCell(14);
+            if (p.status_seleksi === 'Diterima') {
+                statusCell.font = { bold: true, color: { argb: 'FF047857' } }; // Emerald
+            } else if (p.status_seleksi === 'Berkas Terverifikasi') {
+                statusCell.font = { bold: true, color: { argb: 'FF1D4ED8' } }; // Blue
+            } else if (p.status_seleksi === 'Tidak Diterima') {
+                statusCell.font = { bold: true, color: { argb: 'FFB91C1C' } }; // Red
+            } else {
+                statusCell.font = { bold: true, color: { argb: 'FFB45309' } }; // Amber
+            }
+        });
+
+        // 4. Baris Rekapitulasi Total di Akhir Tabel
+        worksheet.addRow([]);
+        const summaryRow = worksheet.addRow([
+            '', 'Total Pendaftar Terdata:', `${rows.length} Siswa`, '', '', '', '', '', '', '', '', '', '', '', '', ''
+        ]);
+        summaryRow.height = 24;
+        summaryRow.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF0F172A' } };
+        summaryRow.getCell(2).alignment = { horizontal: 'right', vertical: 'middle' };
+        summaryRow.getCell(3).alignment = { horizontal: 'left', vertical: 'middle' };
+
+        // Nama file saat diunduh
+        const dateStr = new Date().toISOString().split('T')[0];
+        const jalurSlug = jalur ? `_${jalur.replace(/\s+/g, '_')}` : '';
+        const filename = `PPDB_SMPN1_Rantepao${jalurSlug}_${dateStr}.xlsx`;
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error export PPDB Excel:', error);
+        res.status(500).send('Gagal mengekspor data PPDB ke Excel: ' + error.message);
+    }
+});
+
+// ==========================================
+// ROUTE API & CRUD HALAMAN STATIS / PROFIL SEKOLAH (MODAL POPUP)
+// ==========================================
+
+// 1. API Publik Ambil Konten Halaman Statis (/api/halaman/:slug)
+app.get('/api/halaman/:slug', async (req, res) => {
+    try {
+        const slug = req.params.slug.trim().toLowerCase();
+        const [rows] = await db.query('SELECT * FROM halaman_statis WHERE slug = ?', [slug]);
+        if (rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `Halaman profil dengan slug '${slug}' tidak ditemukan.`
+            });
+        }
+
+        // Khusus slug 'kondisi-siswa': Tarik data real-time dari database & integrasikan dengan catatan admin
+        if (slug === 'kondisi-siswa') {
+            const [profilRows] = await db.query('SELECT nama_sekolah, akreditasi, npsn, jumlah_siswa, jumlah_rombel, updated_at FROM profil_sekolah WHERE id_profil = 1');
+            const profil = profilRows[0] || {};
+
+            const [statsCount] = await db.query(`
+                SELECT 
+                    (SELECT COUNT(*) FROM guru_staf WHERE status_aktif = 'Aktif') AS totalGuru,
+                    (SELECT COUNT(*) FROM ekstrakurikuler) AS totalEskul,
+                    (SELECT COUNT(*) FROM komite_sekolah) AS totalKomite,
+                    (SELECT COUNT(*) FROM ppdb_pendaftar) AS totalPpdb
+            `);
+            const liveStats = statsCount[0] || { totalGuru: 54, totalEskul: 12, totalKomite: 8, totalPpdb: 0 };
+            
+            const siswaAktif = Number(profil.jumlah_siswa) || 886;
+            const rombel = Number(profil.jumlah_rombel) || 24;
+            const avgPerRombel = rombel > 0 ? Math.round(siswaAktif / rombel) : 32;
+            const adminCatatan = (rows[0] && rows[0].konten) ? rows[0].konten : '';
+
+            const renderedHtml = `
+                <!-- Lencana Status Real-Time -->
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-2 bg-emerald-50/90 border border-emerald-200 px-3.5 py-2 rounded-2xl text-xs">
+                    <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Data Statistik Real-Time Sinkron Database
+                    </span>
+                    <span class="text-emerald-700 font-semibold text-[11px]">NPSN ${profil.npsn || '40306512'} • Akreditasi ${profil.akreditasi || 'A'}</span>
+                </div>
+
+                <!-- 4 KPI Card Statistik Real-Time -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                    <!-- Stat 1: Siswa Aktif -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50/50 p-4 rounded-2xl text-center border border-blue-100 shadow-sm hover:shadow transition">
+                        <div class="w-8 h-8 mx-auto rounded-xl bg-blue-900 text-white flex items-center justify-center text-sm mb-2 shadow-xs">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">${siswaAktif.toLocaleString('id-ID')}</div>
+                        <div class="text-[11px] font-black uppercase tracking-wider text-blue-900 mt-0.5">Siswa Aktif</div>
+                        <span class="inline-block mt-1 text-[10px] font-bold text-blue-700 bg-blue-100/70 px-2 py-0.5 rounded-full">Terdaftar Resmi</span>
+                    </div>
+
+                    <!-- Stat 2: Guru & Staf -->
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50/50 p-4 rounded-2xl text-center border border-amber-100 shadow-sm hover:shadow transition">
+                        <div class="w-8 h-8 mx-auto rounded-xl bg-amber-500 text-blue-950 flex items-center justify-center text-sm mb-2 shadow-xs font-bold">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <div class="text-2xl sm:text-3xl font-black text-amber-700 tracking-tight">${liveStats.totalGuru}</div>
+                        <div class="text-[11px] font-black uppercase tracking-wider text-amber-900 mt-0.5">Guru & Staf</div>
+                        <span class="inline-block mt-1 text-[10px] font-bold text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded-full">Aktif Mengajar</span>
+                    </div>
+
+                    <!-- Stat 3: Rombel -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50/50 p-4 rounded-2xl text-center border border-emerald-100 shadow-sm hover:shadow transition">
+                        <div class="w-8 h-8 mx-auto rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm mb-2 shadow-xs">
+                            <i class="fa-solid fa-school"></i>
+                        </div>
+                        <div class="text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">${rombel}</div>
+                        <div class="text-[11px] font-black uppercase tracking-wider text-emerald-900 mt-0.5">Rombel</div>
+                        <span class="inline-block mt-1 text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">Kelas VII - IX</span>
+                    </div>
+
+                    <!-- Stat 4: Eskul -->
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50/50 p-4 rounded-2xl text-center border border-purple-100 shadow-sm hover:shadow transition">
+                        <div class="w-8 h-8 mx-auto rounded-xl bg-purple-600 text-white flex items-center justify-center text-sm mb-2 shadow-xs">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div class="text-2xl sm:text-3xl font-black text-purple-700 tracking-tight">${liveStats.totalEskul}</div>
+                        <div class="text-[11px] font-black uppercase tracking-wider text-purple-900 mt-0.5">Eskul Aktif</div>
+                        <span class="inline-block mt-1 text-[10px] font-bold text-purple-700 bg-purple-100/70 px-2 py-0.5 rounded-full">Cabang Prestasi</span>
+                    </div>
+                </div>
+
+                <!-- Indikator Rasio & Kemitraan Tambahan -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-5 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center text-sm shrink-0">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-500 font-semibold block">Rata-rata Kelas</span>
+                            <span class="font-extrabold text-slate-800 text-xs">± ${avgPerRombel} Siswa / Rombel</span>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm shrink-0">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-500 font-semibold block">Mitra Komite</span>
+                            <span class="font-extrabold text-slate-800 text-xs">${liveStats.totalKomite} Pengurus Sinergis</span>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm shrink-0">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-500 font-semibold block">Pendaftar PPDB</span>
+                            <span class="font-extrabold text-slate-800 text-xs">${liveStats.totalPpdb} Calon Siswa Terdata</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Uraian & Keterangan Tambahan Dari Admin Panel -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs text-xs text-slate-700 leading-relaxed space-y-2">
+                    <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                        <i class="fa-solid fa-circle-info text-blue-900 text-xs"></i>
+                        <span class="font-bold text-blue-950 uppercase tracking-wide text-[11px]">Keterangan Kondisi & Kebijakan Siswa:</span>
+                    </div>
+                    <div class="prose prose-sm max-w-none text-slate-700">
+                        ${adminCatatan}
+                    </div>
+                </div>
+
+                <!-- Footer Sync Status -->
+                <div class="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate text-emerald-500"></i>
+                        Data tersinkronisasi otomatis dengan panel admin & database
+                    </span>
+                    <span class="font-semibold text-slate-500">${profil.nama_sekolah || 'UPT SMPN 1 Rantepao'}</span>
+                </div>
+            `;
+
+            return res.json({
+                success: true,
+                data: {
+                    id: rows[0].id,
+                    slug: rows[0].slug,
+                    judul: rows[0].judul || 'Kondisi Siswa & Statistik Sekolah Real-Time',
+                    ikon: rows[0].ikon || 'fa-solid fa-chart-pie',
+                    ringkasan: rows[0].ringkasan,
+                    warna_badge: rows[0].warna_badge || 'rose',
+                    konten: renderedHtml,
+                    updated_at: rows[0].updated_at || profil.updated_at
+                }
+            });
+        }
+
+        res.json({
+            success: true,
+            data: rows[0]
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan sistem: ' + error.message
+        });
+    }
+});
+
+// 2. Admin: Edit Konten Halaman Statis (/admin/halaman-statis/edit/:id)
+app.post('/admin/halaman-statis/edit/:id', isAuthenticated, async (req, res) => {
+    try {
+        const { judul, konten, ikon, ringkasan, warna_badge, items_json, paragraf_pembuka, paragraf_penutup } = req.body;
+        const id = req.params.id;
+
+        if (!judul || !konten) {
+            if (req.xhr || (req.headers.accept && req.headers.accept.includes('application/json'))) {
+                return res.status(400).json({ success: false, message: 'Judul dan konten tidak boleh kosong!' });
+            }
+            return res.redirect('/admin?tab=halaman-statis&status=error&msg=' + encodeURIComponent('Judul dan isi konten tidak boleh kosong!'));
+        }
+
+        const cleanIkon = (ikon && ikon.trim()) ? ikon.trim() : 'fa-solid fa-file-lines';
+        const cleanRingkasan = (ringkasan && ringkasan.trim()) ? ringkasan.trim() : null;
+        const cleanWarna = (warna_badge && warna_badge.trim()) ? warna_badge.trim() : 'blue';
+        const cleanItems = (items_json && items_json.trim()) ? items_json.trim() : null;
+        const cleanPembuka = (paragraf_pembuka && paragraf_pembuka.trim()) ? paragraf_pembuka.trim() : null;
+        const cleanPenutup = (paragraf_penutup && paragraf_penutup.trim()) ? paragraf_penutup.trim() : null;
+
+        await db.query(
+            'UPDATE halaman_statis SET judul = ?, konten = ?, ikon = ?, ringkasan = ?, warna_badge = ?, items_json = ?, paragraf_pembuka = ?, paragraf_penutup = ? WHERE id = ?',
+            [judul.trim(), konten, cleanIkon, cleanRingkasan, cleanWarna, cleanItems, cleanPembuka, cleanPenutup, id]
+        );
+
+        if (req.xhr || (req.headers.accept && req.headers.accept.includes('application/json'))) {
+            return res.json({ success: true, message: 'Konten, ikon, slip kartu, dan item halaman profil berhasil diperbarui!' });
+        }
+
+        res.redirect('/admin?tab=halaman-statis&status=success&msg=' + encodeURIComponent('Konten, ikon, slip kartu, dan item halaman profil berhasil diperbarui!'));
+    } catch (error) {
+        if (req.xhr || (req.headers.accept && req.headers.accept.includes('application/json'))) {
+            return res.status(500).json({ success: false, message: 'Gagal memperbarui: ' + error.message });
+        }
+        res.redirect('/admin?tab=halaman-statis&status=error&msg=' + encodeURIComponent('Gagal memperbarui halaman: ' + error.message));
+    }
+});
+
+// ==========================================
+// GLOBAL ERROR HANDLER (MULTER & SISTEM)
+// ==========================================
+app.use((err, req, res, next) => {
+    if (err) {
+        console.error('⚠️ [Error Handler Catch]:', err.message);
+
+        let errorMessage = err.message || 'Terjadi kesalahan sistem.';
+
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                errorMessage = 'Ukuran file foto terlalu besar! Maksimal ukuran file adalah 25MB.';
+            } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+                errorMessage = 'Field file tidak sesuai atau melebihi batas yang diizinkan.';
+            } else {
+                errorMessage = 'Gagal mengunggah file: ' + err.message;
+            }
+        }
+
+        // Jika request dari Admin Panel (seperti tambah berita, eskul, guru, galeri, dll)
+        if (req.originalUrl && req.originalUrl.startsWith('/admin')) {
+            const referer = req.get('Referer') || '/admin?tab=berita';
+            const separator = referer.includes('?') ? '&' : '?';
+            return res.redirect(referer + separator + 'status=error&msg=' + encodeURIComponent(errorMessage));
+        }
+
+        // Jika request dari PPDB
+        if (req.originalUrl && req.originalUrl.startsWith('/ppdb')) {
+            const referer = req.get('Referer') || '/ppdb/formulir';
+            const separator = referer.includes('?') ? '&' : '?';
+            return res.redirect(referer + separator + 'status=error&msg=' + encodeURIComponent(errorMessage));
+        }
+
+        if (req.xhr || (req.headers.accept && req.headers.accept.includes('application/json'))) {
+            return res.status(400).json({ success: false, message: errorMessage });
+        }
+
+        return res.status(400).send(`
+            <div style="font-family: system-ui, sans-serif; padding: 2.5rem; max-width: 600px; margin: 40px auto; border-radius: 16px; background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239;">
+                <h3 style="margin-top: 0; font-size: 1.25rem;">⚠️ Gagal Mengunggah Berkas</h3>
+                <p style="font-size: 0.95rem; line-height: 1.6;">${errorMessage}</p>
+                <a href="javascript:history.back()" style="display: inline-block; margin-top: 1rem; padding: 10px 20px; background: #e11d48; color: #fff; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 0.875rem;">← Kembali dan Coba Lagi</a>
+            </div>
+        `);
+    }
+    next();
 });
 
 app.listen(PORT, '0.0.0.0', () => {

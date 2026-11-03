@@ -189,111 +189,8 @@
             setInterval(nextSlide, 5000);
         </script>
 
-        <!-- ============================================================== -->
-        <!-- 5. ANIMATED COUNTER STATISTIK (FLOATING CARDS) -->
-        <!-- ============================================================== -->
-        <section class="relative z-20 -mt-12 lg:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-
-                <!-- Stat 1: Siswa Aktif -->
-                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
-                    data-aos="zoom-in" data-aos-delay="100">
-                    <div class="flex items-center justify-between mb-3">
-                        <div
-                            class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-900 group-hover:bg-blue-900 group-hover:text-amber-400 transition-colors flex items-center justify-center text-xl shadow-sm">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                        </div>
-                        <span
-                            class="text-[10px] font-black uppercase tracking-wider text-blue-900/60 bg-blue-50 px-2.5 py-1 rounded-full">
-                            Aktif
-                        </span>
-                    </div>
-                    <div
-                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
-                        <span class="counter-number" data-target="850">0</span>
-                        <span class="text-amber-500 font-extrabold">+</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
-                        Siswa-Siswi Aktif
-                    </p>
-                </div>
-
-                <!-- Stat 2: Guru & Staf -->
-                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
-                    data-aos="zoom-in" data-aos-delay="200">
-                    <div class="flex items-center justify-between mb-3">
-                        <div
-                            class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 group-hover:bg-amber-500 group-hover:text-blue-950 transition-colors flex items-center justify-center text-xl shadow-sm">
-                            <i class="fa-solid fa-chalkboard-user"></i>
-                        </div>
-                        <span
-                            class="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">
-                            Profesional
-                        </span>
-                    </div>
-                    <div
-                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
-                        <span class="counter-number"
-                            data-target="<%= (guru && guru.length > 0) ? guru.length : 42 %>">0</span>
-                        <span class="text-blue-900 font-extrabold">+</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
-                        Guru & Tenaga Staf
-                    </p>
-                </div>
-
-                <!-- Stat 3: Rombongan Belajar -->
-                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
-                    data-aos="zoom-in" data-aos-delay="300">
-                    <div class="flex items-center justify-between mb-3">
-                        <div
-                            class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors flex items-center justify-center text-xl shadow-sm">
-                            <i class="fa-solid fa-school"></i>
-                        </div>
-                        <span
-                            class="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
-                            Kelas VII - IX
-                        </span>
-                    </div>
-                    <div
-                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
-                        <span class="counter-number" data-target="24">0</span>
-                        <span class="text-emerald-500 font-extrabold">Rombel</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
-                        Ruang Kelas Belajar
-                    </p>
-                </div>
-
-                <!-- Stat 4: Ekstrakurikuler -->
-                <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200/80 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group"
-                    data-aos="zoom-in" data-aos-delay="400">
-                    <div class="flex items-center justify-between mb-3">
-                        <div
-                            class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors flex items-center justify-center text-xl shadow-sm">
-                            <i class="fa-solid fa-trophy"></i>
-                        </div>
-                        <span
-                            class="text-[10px] font-black uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">
-                            Prestasi
-                        </span>
-                    </div>
-                    <div
-                        class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-baseline gap-1">
-                        <span class="counter-number"
-                            data-target="<%= (eskul && eskul.length > 0) ? eskul.length : 12 %>">0</span>
-                        <span class="text-purple-500 font-extrabold">Cabang</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
-                        Ekstrakurikuler Aktif
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
         <!-- PPDB 2026 CALLOUT RIBBON -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12" data-aos="fade-up">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20" data-aos="fade-up">
             <div
                 class="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-blue-950 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-amber-300">
                 <div class="flex items-center gap-4 text-center md:text-left flex-1">
@@ -343,48 +240,86 @@
 
                     <!-- Foto / Profil Kepala Sekolah (4 Cols) -->
                     <div class="lg:col-span-4" data-aos="fade-right">
-                        <div class="relative mx-auto max-w-sm">
-                            <!-- Glow outline ring -->
+                        <div class="relative mx-auto max-w-sm group">
+
+                            <!-- Ambient Dynamic Glow Aura (Soft, Natural, Non-Boxy) -->
                             <div
-                                class="absolute -inset-3 rounded-3xl bg-gradient-to-tr from-blue-950 via-blue-900 to-amber-500 opacity-20 blur-xl transform -rotate-2">
+                                class="absolute -top-6 -left-6 w-60 h-60 bg-gradient-to-br from-amber-400/20 to-blue-600/20 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700">
+                            </div>
+                            <div
+                                class="absolute -bottom-6 -right-6 w-60 h-60 bg-gradient-to-tr from-blue-950/25 to-amber-500/15 rounded-full blur-3xl pointer-events-none">
                             </div>
 
+                            <!-- Modern Organic Profile Card (Bersih, Elegan & Memberikan Space Khusus untuk Teks) -->
                             <div
-                                class="relative bg-gradient-to-br from-blue-950 to-slate-900 rounded-3xl p-7 sm:p-8 text-center text-white border-2 border-amber-400/30 shadow-2xl overflow-hidden group">
+                                class="relative z-10 bg-white rounded-[2.5rem] p-4 sm:p-5 shadow-xl shadow-slate-200/60 border border-slate-200/80 transition-all duration-500 group-hover:shadow-2xl group-hover:border-amber-400/40">
 
-                                <!-- Ambient corner glow -->
+                                <!-- Frame Foto Khusus: Arched Dome Top with Smooth Corners -->
                                 <div
-                                    class="absolute top-0 right-0 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl pointer-events-none">
+                                    class="relative rounded-t-[2.2rem] rounded-b-2xl overflow-hidden bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 aspect-[4/4.8] shadow-md border-2 border-slate-100">
+
+                                    <!-- Floating Top Pill Badge: Pimpinan Sekolah -->
+                                    <div class="absolute top-3.5 inset-x-3 z-10 flex justify-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white shadow-md text-[10px] font-black uppercase tracking-wider">
+                                            <i class="fa-solid fa-award text-amber-400"></i>
+                                            <span>Kepala Satuan Pendidikan</span>
+                                        </span>
+                                    </div>
+
+                                    <!-- Photo Element -->
+                                    <% const fotoAda=profil.foto_kepsek && profil.foto_kepsek !=='kepsek.jpg' ; %>
+                                        <% if (fotoAda) { %>
+                                            <img src="/uploads/profil/<%= profil.foto_kepsek %>"
+                                                alt="<%= profil.nama_kepsek || 'Kepala Sekolah' %>"
+                                                class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                                                onerror="this.onerror=null; this.parentElement.querySelector('.fallback-kepsek').classList.remove('hidden'); this.classList.add('hidden');">
+                                            <% } %>
+
+                                                <!-- Fallback Silhouette / Graphic if photo not yet uploaded -->
+                                                <div
+                                                    class="fallback-kepsek <%= fotoAda ? 'hidden' : '' %> w-full h-full flex flex-col items-center justify-center p-6 text-center text-white bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900">
+                                                    <div
+                                                        class="w-24 h-24 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-blue-950 flex items-center justify-center text-4xl font-black shadow-xl border-4 border-white/20 mb-3 group-hover:scale-110 transition-transform duration-500">
+                                                        <%= profil.nama_kepsek ? profil.nama_kepsek.charAt(0) : 'K' %>
+                                                    </div>
+                                                    <span class="text-xs font-bold text-amber-300">UPT SMPN 1
+                                                        Rantepao</span>
+                                                    <span class="text-[10px] text-slate-300 mt-1">Foto pimpinan dapat
+                                                        diunggah melalui Panel Admin</span>
+                                                </div>
                                 </div>
 
-                                <!-- Avatar Kepala Sekolah -->
-                                <div
-                                    class="w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-blue-950 font-black text-4xl sm:text-5xl flex items-center justify-center shadow-xl border-4 border-white/20 mb-5 transform group-hover:scale-105 group-hover:rotate-2 transition-all duration-500">
-                                    <%= profil.nama_kepsek ? profil.nama_kepsek.charAt(0) : 'K' %>
+                                <!-- Dedicated Info Section (Memberikan Space Bersih & Terpisah untuk Nama & Identitas) -->
+                                <div class="pt-5 pb-2 px-2 text-center">
+                                    <span
+                                        class="inline-block px-3 py-0.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-700 font-extrabold text-[10px] uppercase tracking-wider mb-1.5">
+                                        Pimpinan Sekolah
+                                    </span>
+
+                                    <h3 class="font-black text-blue-950 text-lg sm:text-xl tracking-tight leading-snug">
+                                        <%= profil.nama_kepsek || 'Drs. Kepala Sekolah, M.Pd.' %>
+                                    </h3>
+
+                                    <p class="text-xs font-bold text-slate-500 mt-0.5">
+                                        Kepala UPT SMPN 1 Rantepao
+                                    </p>
+
+                                    <!-- NIP & Location Footer -->
+                                    <div
+                                        class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                                        <span
+                                            class="inline-flex items-center gap-1 font-mono text-[11px] text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full">
+                                            NIP. <%= profil.nip_kepsek || '-' %>
+                                        </span>
+                                        <span
+                                            class="inline-flex items-center gap-1.5 text-[11px] text-amber-600 font-bold uppercase tracking-wider">
+                                            <i class="fa-solid fa-location-dot text-amber-500"></i>
+                                            <span>Toraja Utara</span>
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <span
-                                    class="inline-block px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-extrabold text-[11px] uppercase tracking-wider mb-2">
-                                    Pimpinan Sekolah
-                                </span>
-
-                                <h3 class="font-black text-lg sm:text-xl text-white tracking-tight leading-snug">
-                                    <%= profil.nama_kepsek || 'Kepala Sekolah' %>
-                                </h3>
-
-                                <p class="text-xs text-amber-400 font-bold mt-1">
-                                    Kepala UPT SMPN 1 Rantepao
-                                </p>
-
-                                <p class="text-[11px] text-slate-300 mt-1 font-mono">
-                                    NIP. <%= profil.nip_kepsek || '-' %>
-                                </p>
-
-                                <div
-                                    class="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-2 text-xs text-slate-300">
-                                    <i class="fa-solid fa-building-columns text-amber-400"></i>
-                                    <span>Kabupaten Toraja Utara</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -431,22 +366,19 @@
         </section>
 
         <!-- ============================================================== -->
-        <!-- 6. VISI & MISI SEKOLAH (ANIMASI AOS DINAMIS) -->
+        <!-- 6. SEJARAH, PROFIL, VISI & MISI SEKOLAH -->
         <!-- ============================================================== -->
-        <section id="profil" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+        <div id="sejarah" class="scroll-mt-28"></div>
+        <div id="visi-misi" class="scroll-mt-28"></div>
+        <section id="profil" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+            <div class="text-center max-w-2xl mx-auto mb-12" data-aos="fade-up">
                 <span
                     class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
-                    Landasan Pendidikan
+                    Profil & Landasan Pendidikan
                 </span>
                 <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
                     Visi & Misi Sekolah
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-500 mt-2">
-                    Arah kebijakan dan komitmen seluruh civitas akademika <%= profil.nama_sekolah %> dalam mendidik
-                        tunas
-                        bangsa.
-                </p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8 items-stretch">
@@ -476,7 +408,8 @@
                 </div>
 
                 <!-- Misi Card (data-aos fade-left) -->
-                <div class="bg-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-amber-400/20 hover:border-amber-400 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group flex flex-col justify-between"
+                <div id="program"
+                    class="bg-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-amber-400/20 hover:border-amber-400 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group flex flex-col justify-between scroll-mt-28"
                     data-aos="fade-left" data-aos-delay="200">
                     <div
                         class="absolute -top-10 -right-10 w-36 h-36 bg-amber-50 rounded-full group-hover:scale-125 transition-transform duration-500">
@@ -487,8 +420,8 @@
                             <i class="fa-solid fa-rocket"></i>
                         </div>
                         <span class="text-xs font-black text-amber-600 uppercase tracking-wider">Langkah
-                            Strategis</span>
-                        <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Misi Sekolah</h3>
+                            Strategis & Program Kerja</span>
+                        <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Misi & Program Kerja Sekolah</h3>
                         <div
                             class="text-slate-600 text-xs sm:text-sm whitespace-pre-line leading-relaxed font-normal text-justify">
                             <%= profil.misi
@@ -598,47 +531,139 @@
                         </div>
                     </div>
 
-                    <!-- Kolom Pengumuman Resmi (4 Cols) -->
-                    <div class="lg:col-span-4" data-aos="fade-left">
-                        <div class="mb-8">
-                            <span
-                                class="text-xs font-black text-rose-600 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">
-                                Pemberitahuan
-                            </span>
-                            <h2 class="text-2xl sm:text-3xl font-black text-blue-950 mt-2">
-                                Pengumuman Resmi
-                            </h2>
+                    <!-- Kolom Pengumuman Resmi & Kalender Akademik (4 Cols) -->
+                    <div id="pengumuman" class="lg:col-span-4 scroll-mt-24 space-y-8" data-aos="fade-left">
+                        
+                        <!-- 1. Bagian Pengumuman Resmi -->
+                        <div>
+                            <div class="mb-5 flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] font-black text-rose-600 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">
+                                        Pemberitahuan
+                                    </span>
+                                    <h2 class="text-2xl font-black text-blue-950 mt-1.5">
+                                        Pengumuman Resmi
+                                    </h2>
+                                </div>
+                                <span class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xs shadow-sm">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                </span>
+                            </div>
+
+                            <div class="space-y-3.5">
+                                <% if (pengumuman && pengumuman.length > 0) { %>
+                                    <% pengumuman.slice(0, 3).forEach((info, idx) => { %>
+                                        <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 border-l-4 border-l-rose-500 group"
+                                            data-aos="fade-left" data-aos-delay="<%= (idx % 3) * 100 %>">
+                                            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
+                                                <span class="flex items-center gap-1.5 text-rose-600 font-bold">
+                                                    <i class="fa-solid fa-thumbtack text-xs"></i>
+                                                    <span>Terbit Resmi</span>
+                                                </span>
+                                                <span class="font-mono text-[10px]">
+                                                    <%= new Date(info.tanggal_terbit).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                                </span>
+                                            </div>
+                                            <h4 class="font-extrabold text-xs sm:text-sm text-slate-900 group-hover:text-blue-900 transition-colors leading-snug">
+                                                <%= info.judul_pengumuman %>
+                                            </h4>
+                                            <p class="text-xs text-slate-600 mt-1.5 line-clamp-2 leading-relaxed">
+                                                <%= info.isi_pengumuman %>
+                                            </p>
+                                        </div>
+                                    <% }) %>
+                                <% } else { %>
+                                    <div class="p-6 bg-white rounded-2xl text-center text-slate-500 text-xs border border-dashed border-slate-200">
+                                        Tidak ada pengumuman terbaru saat ini.
+                                    </div>
+                                <% } %>
+                            </div>
                         </div>
 
-                        <div class="space-y-4">
-                            <% if (pengumuman && pengumuman.length> 0) { %>
-                                <% pengumuman.forEach((info, idx)=> { %>
-                                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/80 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-rose-500 group"
-                                        data-aos="fade-left" data-aos-delay="<%= (idx % 4) * 100 %>">
-                                        <div
-                                            class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
-                                            <span class="flex items-center gap-1.5"><i
-                                                    class="fa-solid fa-thumbtack text-rose-500"></i><span>Terbit
-                                                    Resmi</span></span>
-                                            <span>
-                                                <%= new Date(info.tanggal_terbit).toLocaleDateString('id-ID') %>
-                                            </span>
-                                        </div>
-                                        <h4
-                                            class="font-extrabold text-sm text-slate-900 group-hover:text-blue-900 transition-colors leading-snug">
-                                            <%= info.judul_pengumuman %>
-                                        </h4>
-                                        <p class="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">
-                                            <%= info.isi_pengumuman %>
-                                        </p>
-                                    </div>
-                                    <% }) %>
-                                        <% } else { %>
-                                            <div class="p-6 bg-white rounded-3xl text-center text-slate-500 text-xs">
-                                                Tidak ada pengumuman terbaru.
+                        <!-- 2. Bagian Kalender Akademik & Agenda Sekolah -->
+                        <div id="kalender-akademik" class="scroll-mt-24 pt-2">
+                            <div class="mb-4 flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full">
+                                        Agenda Sekolah
+                                    </span>
+                                    <h3 class="text-xl font-black text-blue-950 mt-1">
+                                        Kalender Akademik
+                                    </h3>
+                                </div>
+                                <button type="button" onclick="openAllKalenderModal()" 
+                                    class="text-xs font-bold text-blue-900 hover:text-amber-600 flex items-center gap-1 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition">
+                                    <span>Lihat Semua</span>
+                                    <i class="fa-solid fa-calendar-week text-[11px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- List Agenda / Kalender Akademik -->
+                            <div class="space-y-3">
+                                <% if (typeof kalenderAkademik !== 'undefined' && kalenderAkademik && kalenderAkademik.length > 0) { %>
+                                    <% kalenderAkademik.slice(0, 4).forEach((agenda) => { %>
+                                        <% 
+                                            const dMulai = new Date(agenda.tanggal_mulai);
+                                            const dSelesai = agenda.tanggal_selesai ? new Date(agenda.tanggal_selesai) : null;
+                                            const tglStr = dMulai.getDate();
+                                            const blnStr = dMulai.toLocaleDateString('id-ID', { month: 'short' });
+                                            
+                                            let badgeBg = 'bg-blue-50 text-blue-800 border-blue-200';
+                                            let dateBg = 'bg-blue-950 text-white';
+                                            if (agenda.warna_badge === 'rose') {
+                                                badgeBg = 'bg-rose-50 text-rose-800 border-rose-200';
+                                                dateBg = 'bg-rose-700 text-white';
+                                            } else if (agenda.warna_badge === 'emerald') {
+                                                badgeBg = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+                                                dateBg = 'bg-emerald-700 text-white';
+                                            } else if (agenda.warna_badge === 'amber') {
+                                                badgeBg = 'bg-amber-50 text-amber-900 border-amber-200';
+                                                dateBg = 'bg-amber-600 text-white';
+                                            } else if (agenda.warna_badge === 'purple') {
+                                                badgeBg = 'bg-purple-50 text-purple-800 border-purple-200';
+                                                dateBg = 'bg-purple-700 text-white';
+                                            }
+                                        %>
+                                        <div class="bg-white p-3.5 sm:p-4 rounded-2xl shadow-sm border border-slate-200/80 hover:shadow-md transition flex items-start gap-3.5 group">
+                                            <!-- Date Badge (Day + Month) -->
+                                            <div class="<%= dateBg %> w-12 sm:w-14 rounded-xl py-2 px-1 text-center shrink-0 shadow-sm flex flex-col justify-center items-center">
+                                                <span class="text-[10px] uppercase font-bold tracking-wider leading-none opacity-90"><%= blnStr %></span>
+                                                <span class="text-base sm:text-lg font-black leading-tight mt-0.5"><%= tglStr %></span>
                                             </div>
-                                            <% } %>
+
+                                            <!-- Agenda Detail -->
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center gap-2 mb-1">
+                                                    <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border <%= badgeBg %>">
+                                                        <%= agenda.kategori %>
+                                                    </span>
+                                                    <span class="text-[10px] text-slate-400 font-medium truncate">
+                                                        <% if (dSelesai && dSelesai.getTime() !== dMulai.getTime()) { %>
+                                                            <%= dMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) %> - <%= dSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                                        <% } else { %>
+                                                            <%= dMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                                        <% } %>
+                                                    </span>
+                                                </div>
+                                                <h4 class="font-black text-xs sm:text-sm text-slate-900 group-hover:text-blue-900 transition-colors line-clamp-1 leading-snug">
+                                                    <%= agenda.judul_kegiatan %>
+                                                </h4>
+                                                <% if (agenda.deskripsi) { %>
+                                                    <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                                                        <%= agenda.deskripsi %>
+                                                    </p>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                <% } else { %>
+                                    <div class="p-5 bg-white rounded-2xl text-center text-slate-400 text-xs border border-dashed border-slate-200">
+                                        Belum ada agenda akademik yang dijadwalkan.
+                                    </div>
+                                <% } %>
+                            </div>
                         </div>
+
                     </div>
 
                 </div>
@@ -673,7 +698,9 @@
             }
         </style>
 
-        <section id="guru" class="py-20 bg-slate-50 border-t border-slate-200 overflow-hidden">
+        <!-- Anchor Civitas & Seksi Guru & Pegawai -->
+        <div id="civitas" class="scroll-mt-28"></div>
+        <section id="guru" class="py-20 bg-slate-50 border-t border-slate-200 overflow-hidden scroll-mt-28">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Header: Kiri Atas (Badge CIVITAS & Judul Guru & Pegawai), Kanan Atas (Link Lihat Semua →) -->
@@ -691,8 +718,7 @@
                                 || 'SMPN 1 Rantepao' %>.
                         </p>
                     </div>
-                    <div class="shrink-0">
-                    </div>
+
                 </div>
 
                 <!-- Slider Wrapper with Side Navigation Arrows -->
@@ -789,8 +815,8 @@
             /* Komite Center-Focus Carousel Styles (Royal Navy & Gold Theme) */
             .komite-center-slider .swiper-slide {
                 transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                            filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
                 transform: scale(0.90);
                 opacity: 0.50;
                 filter: blur(1.5px);
@@ -824,6 +850,7 @@
                 color: rgba(255, 255, 255, 0.90);
                 transition: color 0.4s ease;
             }
+
             .komite-center-slider .swiper-slide-active .komite-slider-card .komite-nama {
                 color: #0b132b;
             }
@@ -834,6 +861,7 @@
                 color: #e2e8f0;
                 transition: all 0.4s ease;
             }
+
             .komite-center-slider .swiper-slide-active .komite-slider-card .komite-unsur-box {
                 background: #f8fafc;
                 border: 1px solid #e2e8f0;
@@ -845,6 +873,7 @@
                 color: #fcd34d;
                 transition: all 0.4s ease;
             }
+
             .komite-center-slider .swiper-slide-active .komite-slider-card .komite-footer {
                 border-top: 1px solid #f1f5f9;
                 color: #d97706;
@@ -869,7 +898,7 @@
         </style>
 
         <section id="komite"
-            class="py-20 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white relative overflow-hidden border-t border-blue-800/50">
+            class="py-20 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white relative overflow-hidden border-t border-blue-800/50 scroll-mt-24">
             <!-- Glow Light Effect Background (Gold & Blue) -->
             <div class="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
@@ -1097,67 +1126,103 @@
         </section>
 
         <!-- ============================================================== -->
-        <!-- PREVIEW GALERI KEGIATAN & FASILITAS -->
+        <!-- PREVIEW GALERI KEGIATAN & FASILITAS / SARANA PRASARANA -->
         <!-- ============================================================== -->
+        <div id="sarana" class="scroll-mt-28"></div>
         <% const listGaleri=(typeof galeri !=='undefined' && Array.isArray(galeri) && galeri.length> 0) ? galeri :
             ((typeof galeriPreview !== 'undefined' && Array.isArray(galeriPreview)) ? galeriPreview : []); %>
             <% if (listGaleri && listGaleri.length> 0) { %>
-                <section id="galeri" class="py-20 bg-white px-4 sm:px-6 lg:px-8 border-t border-slate-200">
+                <section id="galeri" class="py-20 bg-white px-4 sm:px-6 lg:px-8 border-t border-slate-200 scroll-mt-28">
                     <div class="max-w-7xl mx-auto">
-                        <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                        <div class="text-center max-w-2xl mx-auto mb-10" data-aos="fade-up">
                             <span
                                 class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
-                                Dokumentasi & Aktivitas
+                                Sarana, Fasilitas & Dokumentasi
                             </span>
                             <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
-                                Galeri Kegiatan & Fasilitas
+                                Sarana Prasarana & Galeri Fasilitas
                             </h2>
                             <p class="text-xs sm:text-sm text-slate-500 mt-2">
-                                Momen-momen inspiratif, ragam aktivitas siswa, fasilitas unggulan, dan kebersamaan di
+                                Fasilitas unggulan, sarana prasarana penunjang pembelajaran, dan ragam dokumentasi di
                                 lingkungan <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>.
                             </p>
                         </div>
 
-                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                            <% listGaleri.slice(0, 6).forEach((foto, idx)=> { %>
-                                <a href="/galeri"
-                                    class="group bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
+                        <!-- 1. Interactive Category Filter Tabs (Beranda) -->
+                        <div data-aos="fade-up" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
+                            <button type="button" onclick="filterHomeGaleri('Semua', this)"
+                                class="home-galeri-filter-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 bg-blue-950 text-white shadow-md shadow-blue-950/20 active-tab">
+                                <span>Semua Foto</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-blue-950">
+                                    <%= listGaleri.length %>
+                                </span>
+                            </button>
+                            <button type="button" onclick="filterHomeGaleri('Kegiatan', this)"
+                                class="home-galeri-filter-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                                <i class="fa-solid fa-camera text-blue-600 text-xs"></i>
+                                <span>Kegiatan Sekolah</span>
+                            </button>
+                            <button type="button" onclick="filterHomeGaleri('Fasilitas', this)"
+                                class="home-galeri-filter-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                                <i class="fa-solid fa-building-columns text-emerald-600 text-xs"></i>
+                                <span>Sarana & Fasilitas</span>
+                            </button>
+                            <button type="button" onclick="filterHomeGaleri('Prestasi', this)"
+                                class="home-galeri-filter-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                                <i class="fa-solid fa-trophy text-amber-500 text-xs"></i>
+                                <span>Prestasi Siswa</span>
+                            </button>
+                        </div>
+
+                        <!-- 2. Gallery Cards Grid with Lightbox Preview -->
+                        <div id="home-galeri-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                            <% listGaleri.forEach((foto, idx)=> { %>
+                                <div class="home-galeri-item group bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col cursor-pointer"
+                                    data-category="<%= foto.kategori_galeri %>"
+                                    data-src="/uploads/galeri/<%= foto.file_foto %>"
+                                    data-judul="<%= foto.judul_foto %>"
+                                    data-deskripsi="<%= foto.deskripsi_singkat || '' %>"
+                                    data-tgl="<%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>"
+                                    data-kategori="<%= foto.kategori_galeri %>"
                                     data-aos="zoom-in" data-aos-delay="<%= (idx % 3) * 100 %>">
+
                                     <div class="relative aspect-[4/3] overflow-hidden bg-blue-950">
                                         <img src="/uploads/galeri/<%= foto.file_foto %>" alt="<%= foto.judul_foto %>"
                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                                             loading="lazy"
                                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80';">
-                                        <div
-                                            class="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                                            <span
-                                                class="text-white text-xs font-bold flex items-center gap-2 drop-shadow">
-                                                <i class="fa-solid fa-arrow-up-right-from-square text-amber-400"></i>
-                                                <span>Buka di Halaman Galeri</span>
+
+                                        <!-- Hover Overlay with Magnifying Glass -->
+                                        <div class="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-blue-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-5 gap-2">
+                                            <span class="w-12 h-12 rounded-2xl bg-amber-500 text-blue-950 flex items-center justify-center text-lg shadow-lg group-hover:scale-110 transition-transform">
+                                                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                            </span>
+                                            <span class="text-white text-xs font-bold drop-shadow tracking-wide">
+                                                Klik untuk Perbesar
                                             </span>
                                         </div>
+
+                                        <!-- Category Tag Badge -->
                                         <div class="absolute top-3.5 left-3.5 z-10">
-                                            <% if (foto.kategori_galeri==='Prestasi' ) { %>
-                                                <span
-                                                    class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-md flex items-center gap-1.5">
+                                            <% if (foto.kategori_galeri === 'Prestasi') { %>
+                                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-md flex items-center gap-1.5">
                                                     <i class="fa-solid fa-trophy text-[9px]"></i>
                                                     <span>Prestasi</span>
                                                 </span>
-                                                <% } else if (foto.kategori_galeri==='Fasilitas' ) { %>
-                                                    <span
-                                                        class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
-                                                        <i class="fa-solid fa-building-columns text-[9px]"></i>
-                                                        <span>Fasilitas</span>
-                                                    </span>
-                                                    <% } else { %>
-                                                        <span
-                                                            class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-md flex items-center gap-1.5">
-                                                            <i class="fa-solid fa-camera text-[9px]"></i>
-                                                            <span>Kegiatan</span>
-                                                        </span>
-                                                        <% } %>
+                                            <% } else if (foto.kategori_galeri === 'Fasilitas') { %>
+                                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-building-columns text-[9px]"></i>
+                                                    <span>Fasilitas</span>
+                                                </span>
+                                            <% } else { %>
+                                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-md flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-camera text-[9px]"></i>
+                                                    <span>Kegiatan</span>
+                                                </span>
+                                            <% } %>
                                         </div>
                                     </div>
+
                                     <div class="p-6 flex-1 flex flex-col justify-between">
                                         <div>
                                             <div class="flex items-center text-[11px] text-slate-400 font-medium">
@@ -1169,39 +1234,112 @@
                                                     </span>
                                                 </span>
                                             </div>
-                                            <h3
-                                                class="font-bold text-slate-900 text-base mt-2 line-clamp-2 group-hover:text-blue-950 transition-colors leading-snug">
+                                            <h3 class="font-bold text-slate-900 text-base mt-2 line-clamp-2 group-hover:text-blue-950 transition-colors leading-snug">
                                                 <%= foto.judul_foto %>
                                             </h3>
                                             <% if (foto.deskripsi_singkat) { %>
                                                 <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
                                                     <%= foto.deskripsi_singkat %>
                                                 </p>
-                                                <% } %>
+                                            <% } %>
                                         </div>
-                                        <div
-                                            class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-950 font-bold group-hover:text-amber-600 transition-colors">
-                                            <span>Lihat Dokumentasi</span>
-                                            <span
-                                                class="text-amber-500 group-hover:translate-x-1 transition-transform">→</span>
+                                        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-950 font-bold group-hover:text-amber-600 transition-colors">
+                                            <span class="flex items-center gap-1.5">
+                                                <i class="fa-regular fa-image text-amber-500"></i>
+                                                <span>Lihat Pratinjau Foto</span>
+                                            </span>
+                                            <span class="text-amber-500 group-hover:translate-x-1 transition-transform">→</span>
                                         </div>
                                     </div>
-                                </a>
-                                <% }) %>
+                                </div>
+                            <% }) %>
+                        </div>
+
+                        <!-- Empty State if no photos match category -->
+                        <div id="home-galeri-empty" class="hidden py-16 text-center bg-slate-50 rounded-3xl border border-slate-200 mt-4">
+                            <div class="w-14 h-14 bg-blue-100 text-blue-950 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">
+                                <i class="fa-solid fa-images"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base">Belum Ada Dokumentasi pada Kategori Ini</h4>
+                            <p class="text-xs text-slate-500 mt-1">Silakan pilih kategori lainnya untuk melihat dokumentasi sekolah.</p>
                         </div>
 
                         <!-- Tombol CTA Lihat Galeri Selengkapnya -->
                         <div class="mt-14 text-center" data-aos="fade-up">
                             <a href="/galeri"
                                 class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-950 via-blue-900 to-blue-950 hover:from-blue-900 hover:to-blue-800 text-white font-extrabold text-sm sm:text-base shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-blue-800/50 group">
-                                <span>Lihat Galeri Selengkapnya</span>
-                                <span
-                                    class="text-amber-400 font-black group-hover:translate-x-1.5 transition-transform duration-300 text-lg leading-none">→</span>
+                                <span>Buka Halaman Galeri Selengkapnya</span>
+                                <span class="text-amber-400 font-black group-hover:translate-x-1.5 transition-transform duration-300 text-lg leading-none">→</span>
                             </a>
                         </div>
                     </div>
                 </section>
-                <% } %>
+
+                <!-- Modal Lightbox / Viewer Foto Fullscreen di Beranda -->
+                <div id="home-lightbox-modal"
+                    class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6 transition-all duration-300">
+                    <div class="relative max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col max-h-[92vh]">
+
+                        <!-- Header Modal -->
+                        <div class="px-5 py-3.5 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-2 overflow-hidden pr-4">
+                                <span id="home-lb-badge"
+                                    class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white">
+                                    Kegiatan
+                                </span>
+                                <span class="text-xs text-slate-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-day text-slate-500"></i>
+                                    <span id="home-lb-tgl">Tanggal</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="/galeri" class="text-[11px] text-amber-400 hover:underline flex items-center gap-1 hidden sm:inline-flex mr-2">
+                                    <span>Halaman Galeri</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                </a>
+                                <button type="button" id="home-lb-close-btn"
+                                    class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Image Display with Nav Buttons -->
+                        <div class="relative bg-black flex items-center justify-center overflow-hidden flex-1 min-h-[280px] max-h-[60vh] select-none">
+                            <img id="home-lb-img" src="" alt="Preview Foto" class="max-h-full max-w-full object-contain transition-all duration-300">
+                            
+                            <!-- Prev & Next Arrows -->
+                            <button type="button" id="home-lb-prev-btn"
+                                class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-amber-500 hover:text-blue-950 text-white flex items-center justify-center transition shadow-lg border border-white/10 z-10">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button type="button" id="home-lb-next-btn"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-amber-500 hover:text-blue-950 text-white flex items-center justify-center transition shadow-lg border border-white/10 z-10">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Caption Footer -->
+                        <div class="p-5 bg-slate-950 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-slate-800/80">
+                            <div class="space-y-1 max-w-2xl">
+                                <h3 id="home-lb-judul" class="text-base sm:text-lg font-bold leading-snug text-white">
+                                    Judul Foto
+                                </h3>
+                                <p id="home-lb-deskripsi" class="text-xs text-slate-300 leading-relaxed font-normal">
+                                    Deskripsi foto
+                                </p>
+                            </div>
+                            <div class="shrink-0 flex items-center gap-2">
+                                <a href="/galeri" class="px-4 py-2 bg-blue-950 hover:bg-blue-900 text-amber-300 border border-amber-400/40 text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+                                    <span>Buka Galeri</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            <% } %>
 
                     <!-- ============================================================== -->
                     <!-- HUBUNGI KAMI & PETA SEKOLAH -->
@@ -1239,120 +1377,238 @@
                                 </div>
                             </div>
 
-                            <div class="grid lg:grid-cols-2 gap-10 items-start">
+                            <div class="grid lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
 
                                 <!-- Formulir Kontak Pengunjung -->
-                                <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-slate-200/80"
+                                <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200/80 flex flex-col justify-between"
                                     data-aos="fade-right" data-aos-delay="100">
-                                    <h3 class="font-black text-xl text-blue-950 mb-1">Kirimkan Pesan Anda</h3>
-                                    <p class="text-xs text-slate-500 mb-6">Isi data formulir berikut secara lengkap dan
-                                        jelas.
-                                    </p>
+                                    <div>
+                                        <div class="flex items-center gap-2.5 mb-1.5">
+                                            <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-900 flex items-center justify-center text-sm font-bold shadow-sm">
+                                                <i class="fa-solid fa-envelope-open-text"></i>
+                                            </div>
+                                            <h3 class="font-black text-lg sm:text-xl text-blue-950">Kirimkan Pesan Anda</h3>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mb-5">Isi data formulir berikut secara lengkap dan jelas.</p>
 
-                                    <form action="/kontak" method="POST" class="space-y-4">
-                                        <div>
-                                            <label
-                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Nama
-                                                Lengkap</label>
-                                            <input type="text" name="nama_pengirim" required
-                                                placeholder="Contoh: Bpk. Marthen Rantetoding"
-                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
-                                        </div>
-                                        <div>
-                                            <label
-                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Email
-                                                / No. WhatsApp</label>
-                                            <input type="text" name="email_atau_wa" required
-                                                placeholder="Contoh: 08123456789 atau marthen@gmail.com"
-                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
-                                        </div>
-                                        <div>
-                                            <label
-                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Subjek
-                                                Pesan</label>
-                                            <input type="text" name="subjek" required
-                                                placeholder="Contoh: Pertanyaan PPDB 2026/2027"
-                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
-                                        </div>
-                                        <div>
-                                            <label
-                                                class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5 tracking-wider">Isi
-                                                Pesan</label>
-                                            <textarea name="isi_pesan" rows="4" required
-                                                placeholder="Tuliskan pertanyaan atau informasi yang ingin Anda sampaikan..."
-                                                class="w-full text-xs sm:text-sm border border-slate-300 rounded-2xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition"></textarea>
-                                        </div>
-                                        <button type="submit"
-                                            class="w-full py-4 bg-gradient-to-r from-blue-950 to-blue-900 hover:from-blue-900 hover:to-blue-800 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
-                                            <span>Kirim Pesan Sekarang</span>
-                                            <i class="fa-solid fa-paper-plane text-xs"></i>
-                                        </button>
-                                    </form>
+                                        <form action="/kontak" method="POST" class="space-y-3.5">
+                                            <div>
+                                                <label class="block text-[11px] font-extrabold uppercase text-slate-700 mb-1 tracking-wider">Nama Lengkap</label>
+                                                <input type="text" name="nama_pengirim" required
+                                                    placeholder="Contoh: Bpk. Marthen Rantetoding"
+                                                    class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[11px] font-extrabold uppercase text-slate-700 mb-1 tracking-wider">Email / No. WhatsApp</label>
+                                                <input type="text" name="email_atau_wa" required
+                                                    placeholder="Contoh: 08123456789 atau marthen@gmail.com"
+                                                    class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[11px] font-extrabold uppercase text-slate-700 mb-1 tracking-wider">Subjek Pesan</label>
+                                                <input type="text" name="subjek" required
+                                                    placeholder="Contoh: Pertanyaan PPDB 2026/2027"
+                                                    class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-blue-900 transition">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[11px] font-extrabold uppercase text-slate-700 mb-1 tracking-wider">Isi Pesan</label>
+                                                <textarea name="isi_pesan" rows="3" required
+                                                    placeholder="Tuliskan pertanyaan atau informasi yang ingin Anda sampaikan..."
+                                                    class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition"></textarea>
+                                            </div>
+                                            <button type="submit"
+                                                class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-blue-950 to-blue-900 hover:from-blue-900 hover:to-blue-800 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2">
+                                                <span>Kirim Pesan Sekarang</span>
+                                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
 
-                                <!-- Info Kontak & Lokasi Peta -->
-                                <div class="space-y-6" data-aos="fade-left" data-aos-delay="200">
-                                    <div
-                                        class="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white p-8 sm:p-10 rounded-3xl shadow-xl border border-white/10 relative overflow-hidden">
-                                        <h3 class="text-xl sm:text-2xl font-black text-amber-400 mb-5">
-                                            <%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %>
-                                        </h3>
-                                        <div class="space-y-4 text-xs sm:text-sm text-slate-300">
-                                            <p class="flex items-start gap-3">
-                                                <i
-                                                    class="fa-solid fa-location-dot text-amber-400 text-base mt-0.5 shrink-0"></i>
-                                                <span>
-                                                    <%= profil.alamat
-                                                        || 'Jl. Sam Ratulangi No. 1, Rantepao, Toraja Utara, Sulawesi Selatan'
-                                                        %>
+                                <!-- Kolom Kanan: Kontak & Lokasi Berdampingan + Statistik Real-Time -->
+                                <div class="lg:col-span-7 flex flex-col justify-between gap-4">
+
+                                    <!-- Kontak & Lokasi Berdampingan -->
+                                    <div class="grid sm:grid-cols-2 gap-4">
+
+                                        <!-- Card Info Kontak -->
+                                        <div class="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white p-5 sm:p-6 rounded-2xl shadow-xl border border-white/10 relative overflow-hidden flex flex-col justify-between"
+                                            data-aos="fade-left" data-aos-delay="150">
+                                            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+                                            <div>
+                                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-400/20 text-amber-300 text-[10px] font-black uppercase tracking-wider mb-2.5">
+                                                    <i class="fa-solid fa-address-book text-[9px]"></i> Info Kontak
+                                                </div>
+                                                <h3 class="text-base sm:text-lg font-black text-amber-400 leading-snug">
+                                                    <%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %>
+                                                </h3>
+                                                <div class="space-y-2.5 text-xs text-slate-300 mt-3">
+                                                    <p class="flex items-start gap-2.5">
+                                                        <i class="fa-solid fa-location-dot text-amber-400 text-xs mt-1 shrink-0"></i>
+                                                        <span class="leading-relaxed">
+                                                            <%= profil.alamat || 'Jl. Budi Utomo No. 10, Rantepao, Kec. Rantepao, Toraja Utara, Sulawesi Selatan' %>
+                                                        </span>
+                                                    </p>
+                                                    <p class="flex items-center gap-2.5">
+                                                        <i class="fa-solid fa-phone text-amber-400 text-xs shrink-0"></i>
+                                                        <span><%= profil.telepon || '(0423) 21123' %></span>
+                                                    </p>
+                                                    <p class="flex items-center gap-2.5">
+                                                        <i class="fa-solid fa-envelope text-amber-400 text-xs shrink-0"></i>
+                                                        <span class="truncate"><%= profil.email_sekolah || 'info@smpn1rantepao.sch.id' %></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-amber-300">
+                                                <span>NPSN: <%= profil.npsn || '40306512' %></span>
+                                                <span class="px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">Akreditasi: <%= profil.akreditasi || 'A' %></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Card Lokasi Kampus Sekolah -->
+                                        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-md flex flex-col justify-between"
+                                            data-aos="fade-left" data-aos-delay="200">
+                                            <div>
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <h4 class="font-extrabold text-[10px] text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                                        <i class="fa-solid fa-map-location-dot text-blue-900 text-xs"></i>
+                                                        Lokasi Kampus Sekolah
+                                                    </h4>
+                                                    <a href="https://maps.google.com/?q=<%= encodeURIComponent((profil.nama_sekolah || 'SMP Negeri 1 Rantepao') + ' ' + (profil.alamat || 'Rantepao Toraja Utara')) %>"
+                                                       target="_blank" rel="noopener noreferrer"
+                                                       class="text-[10px] font-bold text-blue-900 hover:text-amber-600 hover:underline flex items-center gap-1 transition">
+                                                        <span>Peta Penuh</span>
+                                                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="rounded-xl overflow-hidden shadow-inner border border-slate-200/80 h-36 sm:h-40 bg-slate-100 relative">
+                                                    <% if (profil.maps_embed && profil.maps_embed.includes('iframe')) { %>
+                                                        <div class="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0">
+                                                            <%- profil.maps_embed %>
+                                                        </div>
+                                                    <% } else { %>
+                                                        <div class="w-full h-full flex flex-col items-center justify-center text-center p-3">
+                                                            <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-900 flex items-center justify-center mb-1.5 shadow-sm">
+                                                                <i class="fa-solid fa-map-pin text-sm text-blue-900"></i>
+                                                            </div>
+                                                            <p class="text-xs font-black text-slate-800 line-clamp-1">
+                                                                <%= profil.nama_sekolah || 'UPT SMP Negeri 1 Rantepao' %>
+                                                            </p>
+                                                            <p class="text-[10px] text-slate-500 mt-0.5 line-clamp-2 px-1">
+                                                                <%= profil.alamat || 'Jl. Budi Utomo No. 10, Rantepao, Kabupaten Toraja Utara' %>
+                                                            </p>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <div class="pt-2.5 mt-1 border-t border-slate-100 text-[10px] text-slate-500 flex items-center justify-between">
+                                                <span>Kec. Rantepao, Toraja Utara</span>
+                                                <span class="text-emerald-700 font-semibold flex items-center gap-1">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Kampus Utama
                                                 </span>
-                                            </p>
-                                            <p class="flex items-center gap-3">
-                                                <i class="fa-solid fa-phone text-amber-400 text-sm shrink-0"></i>
-                                                <span>
-                                                    <%= profil.telepon || '(0423) 21123' %>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Widget Statistik Kunjungan Web Real-Time -->
+                                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-md"
+                                        data-aos="fade-up" data-aos-delay="250">
+                                        <div class="flex items-center justify-between mb-3 pb-2.5 border-b border-slate-100">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center text-xs shadow-sm">
+                                                    <i class="fa-solid fa-chart-line"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-black text-xs sm:text-sm text-slate-900">Statistik Kunjungan Web Real-Time</h4>
+                                                    <p class="text-[10px] text-slate-500">Pelacak lalu lintas pengunjung terdata otomatis</p>
+                                                </div>
+                                            </div>
+                                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+                                                <span class="relative flex h-2 w-2">
+                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                                                 </span>
-                                            </p>
-                                            <p class="flex items-center gap-3">
-                                                <i class="fa-solid fa-envelope text-amber-400 text-sm shrink-0"></i>
-                                                <span>
-                                                    <%= profil.email_sekolah || 'info@smpn1rantepao.sch.id' %>
-                                                </span>
-                                            </p>
-                                            <p
-                                                class="flex items-center gap-3 pt-2 border-t border-white/10 font-mono text-xs text-amber-300">
-                                                <i
-                                                    class="fa-solid fa-building-columns text-amber-400 text-sm shrink-0"></i>
-                                                <span>NPSN: <%= profil.npsn %> • Terakreditasi: <%= profil.akreditasi %>
-                                                </span>
-                                            </p>
+                                                <span>Live Tracking</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 6 Grid Metrik Pengunjung -->
+                                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
+                                            <!-- Online Sekarang -->
+                                            <div class="bg-gradient-to-b from-emerald-50 to-emerald-100/60 p-2 sm:p-2.5 rounded-xl border border-emerald-200/80">
+                                                <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-emerald-800 mb-0.5">
+                                                    <i class="fa-solid fa-circle-dot text-emerald-600 text-[9px] animate-pulse"></i>
+                                                    <span>Online</span>
+                                                </div>
+                                                <div id="stat-online" class="font-black text-base sm:text-lg text-emerald-950 font-mono tracking-tight">
+                                                    <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.online !== undefined) ? statistikPengunjung.online : 0 %>
+                                                </div>
+                                                <div class="text-[9px] text-emerald-700 font-medium">Aktif</div>
+                                            </div>
+
+                                            <!-- Hari Ini -->
+                                            <div class="bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/70">
+                                                <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-600 mb-0.5">
+                                                    <i class="fa-solid fa-calendar-day text-blue-600 text-[9px]"></i>
+                                                    <span>Hari Ini</span>
+                                                </div>
+                                                <div id="stat-hari-ini" class="font-black text-base sm:text-lg text-slate-900 font-mono tracking-tight">
+                                                    <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.hariIni !== undefined) ? Number(statistikPengunjung.hariIni).toLocaleString('id-ID') : 0 %>
+                                                </div>
+                                                <div class="text-[9px] text-slate-500 font-medium">User</div>
+                                            </div>
+
+                                            <!-- Kemarin -->
+                                            <div class="bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/70">
+                                                <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-600 mb-0.5">
+                                                    <i class="fa-solid fa-clock-rotate-left text-slate-500 text-[9px]"></i>
+                                                    <span>Kemarin</span>
+                                                </div>
+                                                <div id="stat-kemarin" class="font-black text-base sm:text-lg text-slate-900 font-mono tracking-tight">
+                                                    <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.kemarin !== undefined) ? Number(statistikPengunjung.kemarin).toLocaleString('id-ID') : 0 %>
+                                                </div>
+                                                <div class="text-[9px] text-slate-500 font-medium">User</div>
+                                            </div>
+
+                                            <!-- Bulan Ini -->
+                                            <div class="bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/70">
+                                                <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-600 mb-0.5">
+                                                    <i class="fa-solid fa-calendar-week text-indigo-600 text-[9px]"></i>
+                                                    <span>Bulan Ini</span>
+                                                </div>
+                                                <div id="stat-bulan-ini" class="font-black text-base sm:text-lg text-slate-900 font-mono tracking-tight">
+                                                    <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.bulanIni !== undefined) ? Number(statistikPengunjung.bulanIni).toLocaleString('id-ID') : 0 %>
+                                                </div>
+                                                <div class="text-[9px] text-slate-500 font-medium">User</div>
+                                            </div>
+
+                                            <!-- Total Kunjungan -->
+                                            <div class="bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/70">
+                                                <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-600 mb-0.5">
+                                                    <i class="fa-solid fa-globe text-amber-600 text-[9px]"></i>
+                                                    <span>Total</span>
+                                                </div>
+                                                <div id="stat-total" class="font-black text-base sm:text-lg text-slate-900 font-mono tracking-tight">
+                                                    <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.totalPengunjung !== undefined) ? Number(statistikPengunjung.totalPengunjung).toLocaleString('id-ID') : 0 %>
+                                                </div>
+                                                <div class="text-[9px] text-slate-500 font-medium">Kunjungan</div>
+                                            </div>
+
+                                            <!-- Total Hits -->
+                                            <div class="bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200/70">
+                                                <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-600 mb-0.5">
+                                                    <i class="fa-solid fa-eye text-cyan-600 text-[9px]"></i>
+                                                    <span>Hits</span>
+                                                </div>
+                                                <div id="stat-hits" class="font-black text-base sm:text-lg text-slate-900 font-mono tracking-tight">
+                                                    <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.totalHits !== undefined) ? Number(statistikPengunjung.totalHits).toLocaleString('id-ID') : 0 %>
+                                                </div>
+                                                <div class="text-[9px] text-slate-500 font-medium">Tayangan</div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <!-- Maps Embed -->
-                                    <div
-                                        class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-md overflow-hidden">
-                                        <h4 class="font-black text-xs text-slate-800 uppercase tracking-wider mb-3">
-                                            Lokasi Kampus Sekolah
-                                        </h4>
-                                        <% if (profil.maps_embed && profil.maps_embed.includes('iframe')) { %>
-                                            <div class="rounded-2xl overflow-hidden aspect-video shadow-inner">
-                                                <%- profil.maps_embed %>
-                                            </div>
-                                            <% } else { %>
-                                                <div
-                                                    class="h-60 bg-slate-100 rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-dashed border-slate-300">
-                                                    <i
-                                                        class="fa-solid fa-map-location-dot text-4xl mb-2 text-slate-400"></i>
-                                                    <p class="text-xs font-bold text-slate-800">
-                                                        <%= profil.nama_sekolah %>
-                                                    </p>
-                                                    <p class="text-[11px] text-slate-500 mt-1">
-                                                        <%= profil.alamat %>
-                                                    </p>
-                                                </div>
-                                                <% } %>
-                                    </div>
                                 </div>
 
                             </div>
@@ -1381,49 +1637,7 @@
                             // Fallback: sembunyikan maksimal setelah 2.5 detik
                             setTimeout(hidePreloader, 2500);
 
-                            // 2. Counter Up Animation with IntersectionObserver
-                            const counters = document.querySelectorAll('.counter-number');
-                            let counterAnimated = false;
-
-                            function runCounters() {
-                                counters.forEach(counter => {
-                                    const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
-                                    let current = 0;
-                                    const increment = Math.max(1, Math.ceil(target / 40));
-                                    const stepTime = Math.max(20, Math.floor(1500 / (target / increment)));
-
-                                    const timer = setInterval(() => {
-                                        current += increment;
-                                        if (current >= target) {
-                                            counter.textContent = target.toLocaleString('id-ID');
-                                            clearInterval(timer);
-                                        } else {
-                                            counter.textContent = current.toLocaleString('id-ID');
-                                        }
-                                    }, stepTime);
-                                });
-                            }
-
-                            if ('IntersectionObserver' in window) {
-                                const observer = new IntersectionObserver((entries, obs) => {
-                                    entries.forEach(entry => {
-                                        if (entry.isIntersecting && !counterAnimated) {
-                                            counterAnimated = true;
-                                            runCounters();
-                                            obs.disconnect();
-                                        }
-                                    });
-                                }, { threshold: 0.25 });
-
-                                const firstCounter = document.querySelector('.counter-number');
-                                if (firstCounter && firstCounter.closest('section')) {
-                                    observer.observe(firstCounter.closest('section'));
-                                }
-                            } else {
-                                runCounters();
-                            }
-
-                            // 3. Pesan Kontak Terkirim URL Query Handler
+                            // 2. Pesan Kontak Terkirim URL Query Handler
                             if (window.location.search.includes('pesan_terkirim=1')) {
                                 const alertBox = document.getElementById('kontak-sukses-alert');
                                 if (alertBox) alertBox.classList.remove('hidden');
@@ -1509,7 +1723,279 @@
                                     }
                                 });
                             }
+
+                            // ==========================================
+                            // 6. Interactive Category Filter & Lightbox untuk Galeri di Beranda
+                            // ==========================================
+                            function filterHomeGaleri(kategori, btnEl) {
+                                document.querySelectorAll('.home-galeri-filter-btn').forEach(btn => {
+                                    btn.classList.remove('bg-blue-950', 'text-white', 'shadow-md', 'shadow-blue-950/20', 'active-tab');
+                                    btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'border', 'border-slate-200');
+                                });
+                                if (btnEl) {
+                                    btnEl.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'border', 'border-slate-200');
+                                    btnEl.classList.add('bg-blue-950', 'text-white', 'shadow-md', 'shadow-blue-950/20', 'active-tab');
+                                }
+
+                                const items = document.querySelectorAll('.home-galeri-item');
+                                let visibleCount = 0;
+
+                                items.forEach(item => {
+                                    const itemCat = item.getAttribute('data-category');
+                                    if (kategori === 'Semua' || itemCat === kategori) {
+                                        item.classList.remove('hidden');
+                                        visibleCount++;
+                                    } else {
+                                        item.classList.add('hidden');
+                                    }
+                                });
+
+                                const emptyEl = document.getElementById('home-galeri-empty');
+                                if (emptyEl) {
+                                    if (visibleCount === 0) {
+                                        emptyEl.classList.remove('hidden');
+                                    } else {
+                                        emptyEl.classList.add('hidden');
+                                    }
+                                }
+                            }
+
+                            // Lightbox modal logic for Home Gallery
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const lightbox = document.getElementById('home-lightbox-modal');
+                                if (!lightbox) return;
+
+                                const lbImg = document.getElementById('home-lb-img');
+                                const lbJudul = document.getElementById('home-lb-judul');
+                                const lbDeskripsi = document.getElementById('home-lb-deskripsi');
+                                const lbTgl = document.getElementById('home-lb-tgl');
+                                const lbBadge = document.getElementById('home-lb-badge');
+                                const closeBtn = document.getElementById('home-lb-close-btn');
+                                const prevBtn = document.getElementById('home-lb-prev-btn');
+                                const nextBtn = document.getElementById('home-lb-next-btn');
+
+                                let currentItems = [];
+                                let currentIndex = 0;
+
+                                function updateLightboxContent(index) {
+                                    if (index < 0 || index >= currentItems.length) return;
+                                    currentIndex = index;
+                                    const item = currentItems[index];
+
+                                    const src = item.getAttribute('data-src');
+                                    const judul = item.getAttribute('data-judul');
+                                    const deskripsi = item.getAttribute('data-deskripsi');
+                                    const tgl = item.getAttribute('data-tgl');
+                                    const kategori = item.getAttribute('data-kategori');
+
+                                    lbImg.src = src;
+                                    lbJudul.textContent = judul;
+                                    lbDeskripsi.textContent = deskripsi || 'Dokumentasi kegiatan dan sarana UPT SMP Negeri 1 Rantepao.';
+                                    lbTgl.textContent = tgl;
+                                    lbBadge.textContent = kategori;
+
+                                    if (kategori === 'Prestasi') {
+                                        lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-sm';
+                                    } else if (kategori === 'Fasilitas') {
+                                        lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-sm';
+                                    } else {
+                                        lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-sm';
+                                    }
+                                }
+
+                                // Click listener on gallery cards
+                                document.querySelectorAll('.home-galeri-item').forEach(card => {
+                                    card.addEventListener('click', () => {
+                                        currentItems = Array.from(document.querySelectorAll('.home-galeri-item:not(.hidden)'));
+                                        const idx = currentItems.indexOf(card);
+                                        if (idx !== -1) {
+                                            updateLightboxContent(idx);
+                                            lightbox.classList.remove('hidden');
+                                            document.body.style.overflow = 'hidden';
+                                        }
+                                    });
+                                });
+
+                                function closeLightbox() {
+                                    lightbox.classList.add('hidden');
+                                    lbImg.src = '';
+                                    document.body.style.overflow = '';
+                                }
+
+                                if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+                                if (prevBtn) prevBtn.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    if (currentItems.length > 0) {
+                                        const prevIdx = (currentIndex - 1 + currentItems.length) % currentItems.length;
+                                        updateLightboxContent(prevIdx);
+                                    }
+                                });
+                                if (nextBtn) nextBtn.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    if (currentItems.length > 0) {
+                                        const nextIdx = (currentIndex + 1) % currentItems.length;
+                                        updateLightboxContent(nextIdx);
+                                    }
+                                });
+
+                                lightbox.addEventListener('click', (e) => {
+                                    if (e.target === lightbox) closeLightbox();
+                                });
+
+                                document.addEventListener('keydown', (e) => {
+                                    if (lightbox.classList.contains('hidden')) return;
+                                    if (e.key === 'Escape') closeLightbox();
+                                    if (e.key === 'ArrowLeft' && currentItems.length > 0) {
+                                        const prevIdx = (currentIndex - 1 + currentItems.length) % currentItems.length;
+                                        updateLightboxContent(prevIdx);
+                                    }
+                                    if (e.key === 'ArrowRight' && currentItems.length > 0) {
+                                        const nextIdx = (currentIndex + 1) % currentItems.length;
+                                        updateLightboxContent(nextIdx);
+                                    }
+                                });
+                            });
+
+                            // 7. Auto-updater Statistik Pengunjung Real-Time
+                            (function () {
+                                function refreshLiveStats() {
+                                    fetch('/api/statistik-pengunjung')
+                                        .then(res => res.json())
+                                        .then(res => {
+                                            if (res && res.success && res.data) {
+                                                const d = res.data;
+                                                const elOnline = document.getElementById('stat-online');
+                                                const elHariIni = document.getElementById('stat-hari-ini');
+                                                const elKemarin = document.getElementById('stat-kemarin');
+                                                const elBulanIni = document.getElementById('stat-bulan-ini');
+                                                const elTotal = document.getElementById('stat-total');
+                                                const elHits = document.getElementById('stat-hits');
+
+                                                if (elOnline && d.online !== undefined) elOnline.textContent = Number(d.online).toLocaleString('id-ID');
+                                                if (elHariIni && d.hariIni !== undefined) elHariIni.textContent = Number(d.hariIni).toLocaleString('id-ID');
+                                                if (elKemarin && d.kemarin !== undefined) elKemarin.textContent = Number(d.kemarin).toLocaleString('id-ID');
+                                                if (elBulanIni && d.bulanIni !== undefined) elBulanIni.textContent = Number(d.bulanIni).toLocaleString('id-ID');
+                                                if (elTotal && d.totalPengunjung !== undefined) elTotal.textContent = Number(d.totalPengunjung).toLocaleString('id-ID');
+                                                if (elHits && d.totalHits !== undefined) elHits.textContent = Number(d.totalHits).toLocaleString('id-ID');
+                                            }
+                                        })
+                                        .catch(() => {});
+                                }
+                                // Polling setiap 30 detik untuk update data pengunjung real-time
+                                setInterval(refreshLiveStats, 30000);
+                            })();
+
+                            // 8. Modal Kalender Akademik Lengkap
+                            function openAllKalenderModal() {
+                                const modal = document.getElementById('modal-kalender-lengkap');
+                                if (modal) {
+                                    modal.classList.remove('hidden');
+                                    document.body.style.overflow = 'hidden';
+                                }
+                            }
+
+                            function closeAllKalenderModal() {
+                                const modal = document.getElementById('modal-kalender-lengkap');
+                                if (modal) {
+                                    modal.classList.add('hidden');
+                                    document.body.style.overflow = '';
+                                }
+                            }
                         </script>
+
+                        <!-- Modal Kalender Akademik Lengkap -->
+                        <div id="modal-kalender-lengkap" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+                            <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 max-h-[85vh] flex flex-col">
+                                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-950 flex items-center justify-center font-bold text-lg shadow-sm">
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-black text-lg text-blue-950">Kalender Akademik Sekolah</h3>
+                                            <p class="text-xs text-slate-500">Jadwal kegiatan, ujian, rapat, dan hari libur SMPN 1 Rantepao</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="closeAllKalenderModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+
+                                <!-- List of All Events -->
+                                <div class="overflow-y-auto py-4 space-y-3 flex-1 pr-1">
+                                    <% if (typeof kalenderAkademik !== 'undefined' && kalenderAkademik && kalenderAkademik.length > 0) { %>
+                                        <% kalenderAkademik.forEach((agenda) => { %>
+                                            <% 
+                                                const dMulai = new Date(agenda.tanggal_mulai);
+                                                const dSelesai = agenda.tanggal_selesai ? new Date(agenda.tanggal_selesai) : null;
+                                                const tglStr = dMulai.getDate();
+                                                const blnStr = dMulai.toLocaleDateString('id-ID', { month: 'short' });
+                                                let badgeBg = 'bg-blue-50 text-blue-800 border-blue-200';
+                                                let dateBg = 'bg-blue-950 text-white';
+                                                if (agenda.warna_badge === 'rose') {
+                                                    badgeBg = 'bg-rose-50 text-rose-800 border-rose-200';
+                                                    dateBg = 'bg-rose-700 text-white';
+                                                } else if (agenda.warna_badge === 'emerald') {
+                                                    badgeBg = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+                                                    dateBg = 'bg-emerald-700 text-white';
+                                                } else if (agenda.warna_badge === 'amber') {
+                                                    badgeBg = 'bg-amber-50 text-amber-900 border-amber-200';
+                                                    dateBg = 'bg-amber-600 text-white';
+                                                } else if (agenda.warna_badge === 'purple') {
+                                                    badgeBg = 'bg-purple-50 text-purple-800 border-purple-200';
+                                                    dateBg = 'bg-purple-700 text-white';
+                                                }
+                                            %>
+                                            <div class="p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 hover:border-blue-300 transition flex items-start gap-3.5 bg-slate-50/50">
+                                                <div class="<%= dateBg %> w-12 sm:w-14 rounded-xl py-2 text-center shrink-0 shadow-sm flex flex-col justify-center items-center">
+                                                    <span class="text-[10px] uppercase font-bold tracking-wider leading-none opacity-90"><%= blnStr %></span>
+                                                    <span class="text-base sm:text-lg font-black leading-tight mt-0.5"><%= tglStr %></span>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                                                        <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border <%= badgeBg %>">
+                                                            <%= agenda.kategori %>
+                                                        </span>
+                                                        <span class="text-[11px] text-slate-500 font-medium">
+                                                            <i class="fa-regular fa-clock text-[10px] mr-0.5 text-slate-400"></i>
+                                                            <% if (dSelesai && dSelesai.getTime() !== dMulai.getTime()) { %>
+                                                                <%= dMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %> - <%= dSelesai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                                                            <% } else { %>
+                                                                <%= dMulai.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                                                            <% } %>
+                                                        </span>
+                                                        <% if (agenda.lokasi) { %>
+                                                            <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                                                                <i class="fa-solid fa-location-dot text-[10px] text-amber-500"></i>
+                                                                <%= agenda.lokasi %>
+                                                            </span>
+                                                        <% } %>
+                                                    </div>
+                                                    <h4 class="font-black text-xs sm:text-sm text-slate-900 leading-snug">
+                                                        <%= agenda.judul_kegiatan %>
+                                                    </h4>
+                                                    <% if (agenda.deskripsi) { %>
+                                                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                                            <%= agenda.deskripsi %>
+                                                        </p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="text-center py-10 text-slate-400 text-xs">
+                                            Belum ada data kalender akademik.
+                                        </div>
+                                    <% } %>
+                                </div>
+
+                                <div class="pt-4 border-t border-slate-100 flex justify-end">
+                                    <button type="button" onclick="closeAllKalenderModal()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition">
+                                        Tutup
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 </body>
 
 </html>

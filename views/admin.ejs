@@ -90,6 +90,14 @@
                     <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= stats.totalPengumuman %></span>
                 </button>
 
+                <button type="button" onclick="switchTab('kalender')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="kalender">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-calendar-days w-5 text-center text-slate-400 group-hover:text-amber-400 transition text-sm"></i>
+                        <span>Kalender Akademik</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= (typeof stats !== 'undefined' && stats.totalKalender) ? stats.totalKalender : 0 %></span>
+                </button>
+
                 <button type="button" onclick="switchTab('guru')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="guru">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -367,6 +375,84 @@
                     </div>
                 </div>
 
+                <!-- Real-Time Website Visitor Statistics Panel -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 mb-8 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-extrabold text-slate-800 text-base">Statistik Pengunjung Website (Real-Time)</h3>
+                                <p class="text-xs text-slate-500">Pantau lalu lintas dan aktivitas pengunjung website UPT SMPN 1 Rantepao</p>
+                            </div>
+                        </div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold self-start sm:self-center">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            <span>Pelacakan Otomatis Aktif</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+                        <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
+                            <p class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-circle-dot text-emerald-500 text-[10px]"></i> Online
+                            </p>
+                            <h4 class="text-2xl font-black text-emerald-950 font-mono">
+                                <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.online !== undefined) ? statistikPengunjung.online : 0 %>
+                            </h4>
+                            <span class="text-[10px] text-emerald-600 font-medium">Sedang Aktif</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-calendar-day text-blue-500 text-[10px]"></i> Hari Ini
+                            </p>
+                            <h4 class="text-2xl font-black text-slate-800 font-mono">
+                                <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.hariIni !== undefined) ? Number(statistikPengunjung.hariIni).toLocaleString('id-ID') : 0 %>
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Pengunjung Unik</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-clock-rotate-left text-slate-500 text-[10px]"></i> Kemarin
+                            </p>
+                            <h4 class="text-2xl font-black text-slate-800 font-mono">
+                                <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.kemarin !== undefined) ? Number(statistikPengunjung.kemarin).toLocaleString('id-ID') : 0 %>
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Pengunjung</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-calendar-week text-indigo-500 text-[10px]"></i> Bulan Ini
+                            </p>
+                            <h4 class="text-2xl font-black text-slate-800 font-mono">
+                                <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.bulanIni !== undefined) ? Number(statistikPengunjung.bulanIni).toLocaleString('id-ID') : 0 %>
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Pengunjung</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-globe text-amber-500 text-[10px]"></i> Total
+                            </p>
+                            <h4 class="text-2xl font-black text-slate-800 font-mono">
+                                <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.totalPengunjung !== undefined) ? Number(statistikPengunjung.totalPengunjung).toLocaleString('id-ID') : 0 %>
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Kunjungan</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-eye text-cyan-500 text-[10px]"></i> Total Hits
+                            </p>
+                            <h4 class="text-2xl font-black text-slate-800 font-mono">
+                                <%= (typeof statistikPengunjung !== 'undefined' && statistikPengunjung.totalHits !== undefined) ? Number(statistikPengunjung.totalHits).toLocaleString('id-ID') : 0 %>
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Tayangan Halaman</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Quick Action Banners -->
                 <div class="bg-gradient-to-r from-blue-900 via-blue-950 to-slate-900 rounded-2xl p-6 text-white mb-8 shadow-sm">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -384,6 +470,9 @@
                             </button>
                             <button type="button" onclick="openModal('modal-tambah-pengumuman')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition">
                                 + Pengumuman
+                            </button>
+                            <button type="button" onclick="openModal('modal-tambah-kalender')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition">
+                                + Agenda Kalender
                             </button>
                             <button type="button" onclick="openModal('modal-tambah-guru')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border border-white/20 transition">
                                 + Guru/Staf
@@ -596,6 +685,117 @@
                                                 <form action="/admin/pengumuman/hapus/<%= p.id_pengumuman %>" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">
                                                     <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition" title="Hapus Pengumuman">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB: KELOLA KALENDER AKADEMIK & AGENDA -->
+            <!-- ============================================== -->
+            <div id="tab-kalender" class="tab-content">
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-amber-500"></i>
+                                <span>Kalender Akademik & Agenda Sekolah</span>
+                            </h3>
+                            <p class="text-xs text-slate-400">Kelola jadwal ujian, hari libur, kegiatan sekolah, dan agenda rapat</p>
+                        </div>
+                        <button type="button" onclick="openModal('modal-tambah-kalender')"
+                            class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-lg transition shadow flex items-center gap-1.5 self-start sm:self-auto">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            <span>Tambah Agenda Baru</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-100">
+                                    <th class="py-3 px-4">Tanggal Pelaksanaan</th>
+                                    <th class="py-3 px-4">Judul Kegiatan</th>
+                                    <th class="py-3 px-4">Kategori</th>
+                                    <th class="py-3 px-4">Lokasi</th>
+                                    <th class="py-3 px-4">Keterangan</th>
+                                    <th class="py-3 px-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% const kalenderList = (typeof kalender !== 'undefined' && kalender) ? kalender : []; %>
+                                <% if (kalenderList.length === 0) { %>
+                                    <tr>
+                                        <td colspan="6" class="py-8 text-center text-xs text-slate-400">Belum ada agenda kalender akademik yang dibuat.</td>
+                                    </tr>
+                                <% } %>
+                                <% kalenderList.forEach(k => { %>
+                                    <% 
+                                        const d1 = new Date(k.tanggal_mulai);
+                                        const d2 = k.tanggal_selesai ? new Date(k.tanggal_selesai) : null;
+                                        let badgeClass = 'bg-blue-50 text-blue-700 border-blue-200';
+                                        if (k.warna_badge === 'rose') badgeClass = 'bg-rose-50 text-rose-700 border-rose-200';
+                                        if (k.warna_badge === 'emerald') badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                                        if (k.warna_badge === 'amber') badgeClass = 'bg-amber-50 text-amber-800 border-amber-200';
+                                        if (k.warna_badge === 'purple') badgeClass = 'bg-purple-50 text-purple-700 border-purple-200';
+                                    %>
+                                    <tr class="hover:bg-slate-50/80 transition">
+                                        <td class="py-3 px-4 text-xs font-mono whitespace-nowrap text-slate-700">
+                                            <% if (d2 && d2.getTime() !== d1.getTime()) { %>
+                                                <span class="font-bold"><%= d1.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) %></span> - <span class="font-bold"><%= d2.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                                            <% } else { %>
+                                                <span class="font-bold"><%= d1.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                                            <% } %>
+                                        </td>
+                                        <td class="py-3 px-4 font-bold text-slate-800 text-xs">
+                                            <%= k.judul_kegiatan %>
+                                        </td>
+                                        <td class="py-3 px-4 whitespace-nowrap">
+                                            <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border <%= badgeClass %>">
+                                                <%= k.kategori %>
+                                            </span>
+                                        </td>
+                                        <td class="py-3 px-4 text-xs text-slate-500 whitespace-nowrap">
+                                            <%= k.lokasi || '-' %>
+                                        </td>
+                                        <td class="py-3 px-4 text-xs text-slate-500 max-w-xs">
+                                            <p class="line-clamp-2"><%= k.deskripsi || '-' %></p>
+                                        </td>
+                                        <td class="py-3 px-4 text-center whitespace-nowrap">
+                                            <div class="inline-flex items-center gap-1.5">
+                                                <button type="button"
+                                                    class="btn-edit-kalender p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition"
+                                                    title="Edit Agenda"
+                                                    data-id="<%= k.id %>"
+                                                    data-judul="<%= k.judul_kegiatan %>"
+                                                    data-deskripsi="<%= k.deskripsi || '' %>"
+                                                    data-mulai="<%= new Date(k.tanggal_mulai).toISOString().split('T')[0] %>"
+                                                    data-selesai="<%= k.tanggal_selesai ? new Date(k.tanggal_selesai).toISOString().split('T')[0] : '' %>"
+                                                    data-kategori="<%= k.kategori %>"
+                                                    data-warna="<%= k.warna_badge %>"
+                                                    data-lokasi="<%= k.lokasi || '' %>"
+                                                    data-urutan="<%= k.urutan || 0 %>">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                    </svg>
+                                                </button>
+                                                <form action="/admin/kalender/hapus/<%= k.id %>" method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus agenda kalender ini?')">
+                                                    <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition" title="Hapus Agenda">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                        </svg>
                                                     </button>
                                                 </form>
                                             </div>
@@ -1881,6 +2081,148 @@
         </div>
     </div>
 
+    <!-- MODAL TAMBAH KALENDER AKADEMIK -->
+    <div id="modal-tambah-kalender" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-plus text-amber-500"></i>
+                    <span>Tambah Agenda Kalender Akademik</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-kalender')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form action="/admin/kalender/tambah" method="POST" class="space-y-3.5 mt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Agenda Kegiatan <span class="text-red-500">*</span></label>
+                    <input type="text" name="judul_kegiatan" required placeholder="Contoh: Penilaian Akhir Semester (PAS) Ganjil" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Mulai <span class="text-red-500">*</span></label>
+                        <input type="date" name="tanggal_mulai" required value="<%= new Date().toISOString().split('T')[0] %>" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Selesai (Opsional)</label>
+                        <input type="date" name="tanggal_selesai" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
+                        <select name="kategori" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                            <option value="Akademik">Akademik</option>
+                            <option value="Ujian">Ujian</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Kegiatan">Kegiatan</option>
+                            <option value="Rapat">Rapat</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Warna Label / Badge</label>
+                        <select name="warna_badge" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                            <option value="blue">Biru (Akademik / Umum)</option>
+                            <option value="rose">Merah (Ujian / Krusial)</option>
+                            <option value="emerald">Hijau (Kegiatan / Lomba)</option>
+                            <option value="amber">Kuning / Oranye (Libur)</option>
+                            <option value="purple">Ungu (Rapat / Internal)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Pelaksanaan</label>
+                        <input type="text" name="lokasi" value="Kampus SMPN 1 Rantepao" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan Prioritas</label>
+                        <input type="number" name="urutan" value="0" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi / Keterangan Singkat</label>
+                    <textarea name="deskripsi" rows="3" placeholder="Informasi detail kegiatan untuk siswa, guru, atau orang tua..." class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-tambah-kalender')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg shadow">Simpan Agenda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT KALENDER AKADEMIK -->
+    <div id="modal-edit-kalender" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                    <span>Edit Agenda Kalender Akademik</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-kalender')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form id="form-edit-kalender" method="POST" class="space-y-3.5 mt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Agenda Kegiatan <span class="text-red-500">*</span></label>
+                    <input type="text" id="edit-kalender-judul" name="judul_kegiatan" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Mulai <span class="text-red-500">*</span></label>
+                        <input type="date" id="edit-kalender-mulai" name="tanggal_mulai" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Selesai (Opsional)</label>
+                        <input type="date" id="edit-kalender-selesai" name="tanggal_selesai" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
+                        <select id="edit-kalender-kategori" name="kategori" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                            <option value="Akademik">Akademik</option>
+                            <option value="Ujian">Ujian</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Kegiatan">Kegiatan</option>
+                            <option value="Rapat">Rapat</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Warna Label / Badge</label>
+                        <select id="edit-kalender-warna" name="warna_badge" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                            <option value="blue">Biru (Akademik / Umum)</option>
+                            <option value="rose">Merah (Ujian / Krusial)</option>
+                            <option value="emerald">Hijau (Kegiatan / Lomba)</option>
+                            <option value="amber">Kuning / Oranye (Libur)</option>
+                            <option value="purple">Ungu (Rapat / Internal)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Pelaksanaan</label>
+                        <input type="text" id="edit-kalender-lokasi" name="lokasi" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan</label>
+                        <input type="number" id="edit-kalender-urutan" name="urutan" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi / Keterangan Singkat</label>
+                    <textarea id="edit-kalender-deskripsi" name="deskripsi" rows="3" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-edit-kalender')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- 5. MODAL TAMBAH GURU & STAF -->
     <div id="modal-tambah-guru" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
@@ -2685,6 +3027,22 @@
                 document.getElementById('edit-pengumuman-isi').value = editPengumumanBtn.dataset.isi;
                 document.getElementById('edit-pengumuman-tanggal').value = editPengumumanBtn.dataset.tanggal;
                 openModal('modal-edit-pengumuman');
+                return;
+            }
+
+            // Edit Kalender Akademik
+            const editKalenderBtn = e.target.closest('.btn-edit-kalender');
+            if (editKalenderBtn) {
+                document.getElementById('form-edit-kalender').action = '/admin/kalender/edit/' + editKalenderBtn.dataset.id;
+                document.getElementById('edit-kalender-judul').value = editKalenderBtn.dataset.judul;
+                document.getElementById('edit-kalender-mulai').value = editKalenderBtn.dataset.mulai;
+                document.getElementById('edit-kalender-selesai').value = editKalenderBtn.dataset.selesai || '';
+                document.getElementById('edit-kalender-kategori').value = editKalenderBtn.dataset.kategori;
+                document.getElementById('edit-kalender-warna').value = editKalenderBtn.dataset.warna;
+                document.getElementById('edit-kalender-lokasi').value = editKalenderBtn.dataset.lokasi || '';
+                document.getElementById('edit-kalender-deskripsi').value = editKalenderBtn.dataset.deskripsi || '';
+                document.getElementById('edit-kalender-urutan').value = editKalenderBtn.dataset.urutan || 0;
+                openModal('modal-edit-kalender');
                 return;
             }
 

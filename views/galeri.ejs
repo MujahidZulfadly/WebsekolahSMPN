@@ -1,259 +1,286 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
+
 <head>
-    <%- include('partials/head', { title: 'Galeri Dokumentasi & Rekam Jejak - ' + (profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO') }) %>
+    <%- include('partials/head', { title: 'Galeri Dokumentasi & Rekam Jejak - ' + (profil.nama_sekolah
+        || 'UPT SMPN 1 RANTEPAO' ) }) %>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-blue-950">
+
+<body
+    class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-blue-950">
 
     <!-- Unified Navbar Component -->
     <%- include('partials/navbar', { activePage: 'galeri' }) %>
 
-    <!-- Sub-Hero Banner -->
-    <%- include('partials/subhero', {
-        badge: 'Dokumentasi Visual',
-        title: 'Galeri & Rekam Jejak Sekolah',
-        subtitle: 'Koleksi dokumentasi foto aktivitas belajar, upacara, budaya Toraja, fasilitas sarana, dan capaian prestasi ' + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao'),
-        breadcrumbs: [
-            { label: 'Beranda', url: '/' },
-            { label: 'Galeri Foto' }
-        ],
-        waveFill: 'text-slate-50'
-    }) %>
+        <!-- Sub-Hero Banner -->
+        <%- include('partials/subhero', { badge: 'Dokumentasi Visual' , title: 'Galeri' ,
+            subtitle: 'Koleksi dokumentasi foto aktivitas belajar, upacara, budaya Toraja, fasilitas sarana, dan capaian prestasi '
+            + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao' ), breadcrumbs: [ { label: 'Beranda' , url: '/' }, {
+            label: 'Galeri Foto' } ], waveFill: 'text-slate-50' }) %>
 
-    <!-- Main Content: Filter & Gallery Grid -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 w-full flex-1">
+            <!-- Main Content: Filter & Gallery Grid -->
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 w-full flex-1">
 
-        <!-- Filter Tab Buttons -->
-        <div data-aos="fade-up" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-10">
-            <a href="/galeri" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Semua') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
-                <span>Semua Foto</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Semua') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
-                    <%= statsGaleri.total || galeriList.length %>
-                </span>
-            </a>
-            <a href="/galeri?kategori=Kegiatan" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Kegiatan') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
-                <i class="fa-solid fa-masks-theater text-xs text-blue-400"></i>
-                <span>Kegiatan Sekolah</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Kegiatan') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
-                    <%= statsGaleri.kegiatan || 0 %>
-                </span>
-            </a>
-            <a href="/galeri?kategori=Fasilitas" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Fasilitas') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
-                <i class="fa-solid fa-building-columns text-xs text-emerald-500"></i>
-                <span>Sarana & Fasilitas</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Fasilitas') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
-                    <%= statsGaleri.fasilitas || 0 %>
-                </span>
-            </a>
-            <a href="/galeri?kategori=Prestasi" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Prestasi') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
-                <i class="fa-solid fa-trophy text-xs text-amber-500"></i>
-                <span>Prestasi Siswa</span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Prestasi') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
-                    <%= statsGaleri.prestasi || 0 %>
-                </span>
-            </a>
-        </div>
-
-        <!-- Gallery Grid -->
-        <% if (galeriList && galeriList.length > 0) { %>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                <% galeriList.forEach((foto, idx) => { %>
-                    <div data-aos="zoom-in" data-aos-delay="<%= (idx % 6) * 80 %>"
-                         class="gallery-card bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group cursor-pointer"
-                         data-idx="<%= idx %>"
-                         data-id="<%= foto.id_galeri %>"
-                         data-judul="<%= foto.judul_foto %>"
-                         data-kategori="<%= foto.kategori_galeri %>"
-                         data-deskripsi="<%= foto.deskripsi_singkat || '' %>"
-                         data-tgl="<%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>"
-                         data-src="/uploads/galeri/<%= foto.file_foto %>">
-                        
-                        <!-- Image Container with Zoom effect -->
-                        <div class="relative overflow-hidden aspect-[4/3] bg-blue-950">
-                            <img src="/uploads/galeri/<%= foto.file_foto %>" 
-                                 alt="<%= foto.judul_foto %>" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                                 loading="lazy"
-                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80';">
-                            
-                            <!-- Ambient Gradient Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-
-                            <!-- Category Badge -->
-                            <div class="absolute top-3.5 left-3.5 z-10">
-                                <% if (foto.kategori_galeri === 'Prestasi') { %>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-md flex items-center gap-1.5">
-                                        <i class="fa-solid fa-trophy text-[9px]"></i>
-                                        <span>Prestasi</span>
-                                    </span>
-                                <% } else if (foto.kategori_galeri === 'Fasilitas') { %>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
-                                        <i class="fa-solid fa-building-columns text-[9px]"></i>
-                                        <span>Fasilitas</span>
-                                    </span>
-                                <% } else { %>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-md flex items-center gap-1.5">
-                                        <i class="fa-solid fa-masks-theater text-[9px]"></i>
-                                        <span>Kegiatan</span>
-                                    </span>
-                                <% } %>
-                            </div>
-
-                            <!-- Click to enlarge hover overlay -->
-                            <div class="absolute inset-0 bg-blue-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <span class="bg-white/95 text-blue-950 text-xs font-black px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
-                                    <i class="fa-solid fa-magnifying-glass text-blue-950"></i>
-                                    <span>Perbesar Foto</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Card Content -->
-                        <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between">
-                            <div>
-                                <p class="text-[11px] font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-calendar-day text-slate-400"></i>
-                                    <span><%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %></span>
-                                </p>
-                                <h3 class="font-extrabold text-slate-900 text-base leading-snug group-hover:text-amber-600 transition-colors">
-                                    <%= foto.judul_foto %>
-                                </h3>
-                                <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed font-normal">
-                                    <%= foto.deskripsi_singkat %>
-                                </p>
-                            </div>
-                            <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-950 font-bold group-hover:text-amber-600 transition-colors">
-                                <span>Lihat Detail Foto</span>
-                                <span class="group-hover:translate-x-1 transition-transform">→</span>
-                            </div>
-                        </div>
-
-                    </div>
-                <% }) %>
-            </div>
-        <% } else { %>
-            <div data-aos="zoom-in" class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
-                <div class="w-16 h-16 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
-                    <i class="fa-solid fa-images text-blue-900 text-2xl"></i>
-                </div>
-                <h3 class="font-extrabold text-lg text-blue-950">Belum Ada Foto Dokumentasi</h3>
-                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
-                    Koleksi foto untuk kategori <span class="font-bold text-amber-600">"<%= kategoriAktif %>"</span> belum tersedia saat ini. Silakan periksa kembali di lain waktu.
-                </p>
-                <div class="mt-6 flex justify-center gap-3">
-                    <a href="/galeri" class="text-xs font-bold text-blue-950 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-layer-group text-slate-500"></i>
-                        <span>Lihat Semua Kategori</span>
+                <!-- Filter Tab Buttons -->
+                <div data-aos="fade-up" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-10">
+                    <a href="/galeri"
+                        class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Semua') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                        <span>Semua Foto</span>
+                        <span
+                            class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Semua') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+                            <%= statsGaleri.total || galeriList.length %>
+                        </span>
+                    </a>
+                    <a href="/galeri?kategori=Kegiatan"
+                        class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Kegiatan') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                        <i class="fa-solid fa-masks-theater text-xs text-blue-400"></i>
+                        <span>Kegiatan Sekolah</span>
+                        <span
+                            class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Kegiatan') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+                            <%= statsGaleri.kegiatan || 0 %>
+                        </span>
+                    </a>
+                    <a href="/galeri?kategori=Fasilitas"
+                        class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Fasilitas') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                        <i class="fa-solid fa-building-columns text-xs text-emerald-500"></i>
+                        <span>Sarana & Fasilitas</span>
+                        <span
+                            class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Fasilitas') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+                            <%= statsGaleri.fasilitas || 0 %>
+                        </span>
+                    </a>
+                    <a href="/galeri?kategori=Prestasi"
+                        class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5 <%= (kategoriAktif === 'Prestasi') ? 'bg-blue-950 text-white shadow-lg shadow-blue-950/20' : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-blue-950 border border-slate-200' %>">
+                        <i class="fa-solid fa-trophy text-xs text-amber-500"></i>
+                        <span>Prestasi Siswa</span>
+                        <span
+                            class="px-2 py-0.5 rounded-full text-[11px] font-black <%= (kategoriAktif === 'Prestasi') ? 'bg-amber-500 text-blue-950' : 'bg-slate-100 text-slate-600' %>">
+                            <%= statsGaleri.prestasi || 0 %>
+                        </span>
                     </a>
                 </div>
-            </div>
-        <% } %>
 
-    </main>
+                <!-- Gallery Grid -->
+                <% if (galeriList && galeriList.length> 0) { %>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <% galeriList.forEach((foto, idx)=> { %>
+                            <div data-aos="zoom-in" data-aos-delay="<%= (idx % 6) * 80 %>"
+                                class="gallery-card bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group cursor-pointer"
+                                data-idx="<%= idx %>" data-id="<%= foto.id_galeri %>"
+                                data-judul="<%= foto.judul_foto %>" data-kategori="<%= foto.kategori_galeri %>"
+                                data-deskripsi="<%= foto.deskripsi_singkat || '' %>"
+                                data-tgl="<%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>"
+                                data-src="/uploads/galeri/<%= foto.file_foto %>">
 
-    <!-- Modal Lightbox / Viewer Foto Fullscreen -->
-    <div id="modal-lightbox" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="relative max-w-4xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col max-h-[92vh]">
-            
-            <!-- Modal Header -->
-            <div class="px-5 py-3.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-2 overflow-hidden pr-4">
-                    <span id="lb-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white">
-                        Kegiatan
-                    </span>
-                    <span id="lb-tgl" class="text-xs text-slate-400 flex items-center gap-1">
-                        <i class="fa-solid fa-calendar-day text-slate-400"></i>
-                        <span id="lb-tgl-val">Tanggal</span>
-                    </span>
+                                <!-- Image Container with Zoom effect -->
+                                <div class="relative overflow-hidden aspect-[4/3] bg-blue-950">
+                                    <img src="/uploads/galeri/<%= foto.file_foto %>" alt="<%= foto.judul_foto %>"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                                        loading="lazy"
+                                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80';">
+
+                                    <!-- Ambient Gradient Overlay -->
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity">
+                                    </div>
+
+                                    <!-- Category Badge -->
+                                    <div class="absolute top-3.5 left-3.5 z-10">
+                                        <% if (foto.kategori_galeri==='Prestasi' ) { %>
+                                            <span
+                                                class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-blue-950 shadow-md flex items-center gap-1.5">
+                                                <i class="fa-solid fa-trophy text-[9px]"></i>
+                                                <span>Prestasi</span>
+                                            </span>
+                                            <% } else if (foto.kategori_galeri==='Fasilitas' ) { %>
+                                                <span
+                                                    class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-building-columns text-[9px]"></i>
+                                                    <span>Fasilitas</span>
+                                                </span>
+                                                <% } else { %>
+                                                    <span
+                                                        class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-md flex items-center gap-1.5">
+                                                        <i class="fa-solid fa-masks-theater text-[9px]"></i>
+                                                        <span>Kegiatan</span>
+                                                    </span>
+                                                    <% } %>
+                                    </div>
+
+                                    <!-- Click to enlarge hover overlay -->
+                                    <div
+                                        class="absolute inset-0 bg-blue-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <span
+                                            class="bg-white/95 text-blue-950 text-xs font-black px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
+                                            <i class="fa-solid fa-magnifying-glass text-blue-950"></i>
+                                            <span>Perbesar Foto</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Card Content -->
+                                <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <p
+                                            class="text-[11px] font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                                            <span>
+                                                <%= new Date(foto.tanggal_upload).toLocaleDateString('id-ID', {
+                                                    day: 'numeric' , month: 'long' , year: 'numeric' }) %>
+                                            </span>
+                                        </p>
+                                        <h3
+                                            class="font-extrabold text-slate-900 text-base leading-snug group-hover:text-amber-600 transition-colors">
+                                            <%= foto.judul_foto %>
+                                        </h3>
+                                        <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed font-normal">
+                                            <%= foto.deskripsi_singkat %>
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-blue-950 font-bold group-hover:text-amber-600 transition-colors">
+                                        <span>Lihat Detail Foto</span>
+                                        <span class="group-hover:translate-x-1 transition-transform">→</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <div data-aos="zoom-in"
+                            class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
+                            <div
+                                class="w-16 h-16 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+                                <i class="fa-solid fa-images text-blue-900 text-2xl"></i>
+                            </div>
+                            <h3 class="font-extrabold text-lg text-blue-950">Belum Ada Foto Dokumentasi</h3>
+                            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                                Koleksi foto untuk kategori <span class="font-bold text-amber-600">"<%= kategoriAktif %>
+                                        "</span> belum tersedia saat ini. Silakan periksa kembali di lain waktu.
+                            </p>
+                            <div class="mt-6 flex justify-center gap-3">
+                                <a href="/galeri"
+                                    class="text-xs font-bold text-blue-950 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-slate-500"></i>
+                                    <span>Lihat Semua Kategori</span>
+                                </a>
+                            </div>
+                        </div>
+                        <% } %>
+
+            </main>
+
+            <!-- Modal Lightbox / Viewer Foto Fullscreen -->
+            <div id="modal-lightbox"
+                class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+                <div
+                    class="relative max-w-4xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col max-h-[92vh]">
+
+                    <!-- Modal Header -->
+                    <div
+                        class="px-5 py-3.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                        <div class="flex items-center gap-2 overflow-hidden pr-4">
+                            <span id="lb-badge"
+                                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white">
+                                Kegiatan
+                            </span>
+                            <span id="lb-tgl" class="text-xs text-slate-400 flex items-center gap-1">
+                                <i class="fa-solid fa-calendar-day text-slate-400"></i>
+                                <span id="lb-tgl-val">Tanggal</span>
+                            </span>
+                        </div>
+                        <button type="button" id="lb-close-btn"
+                            class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modal Image Preview -->
+                    <div
+                        class="relative bg-black flex items-center justify-center overflow-hidden flex-1 min-h-[300px] max-h-[60vh]">
+                        <img id="lb-img" src="" alt="Preview Foto" class="max-h-full max-w-full object-contain">
+                    </div>
+
+                    <!-- Modal Caption Footer -->
+                    <div class="p-5 bg-slate-950 text-white">
+                        <h2 id="lb-judul" class="text-base sm:text-lg font-bold leading-snug text-white">
+                            Judul Foto
+                        </h2>
+                        <p id="lb-deskripsi" class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
+                            Deskripsi foto
+                        </p>
+                    </div>
+
                 </div>
-                <button type="button" id="lb-close-btn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
             </div>
 
-            <!-- Modal Image Preview -->
-            <div class="relative bg-black flex items-center justify-center overflow-hidden flex-1 min-h-[300px] max-h-[60vh]">
-                <img id="lb-img" src="" alt="Preview Foto" class="max-h-full max-w-full object-contain">
-            </div>
+            <!-- Unified Footer Component -->
+            <%- include('partials/footer') %>
 
-            <!-- Modal Caption Footer -->
-            <div class="p-5 bg-slate-950 text-white">
-                <h2 id="lb-judul" class="text-base sm:text-lg font-bold leading-snug text-white">
-                    Judul Foto
-                </h2>
-                <p id="lb-deskripsi" class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
-                    Deskripsi foto
-                </p>
-            </div>
+                <!-- Lightbox Interactive Script -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const lightbox = document.getElementById('modal-lightbox');
+                        const lbImg = document.getElementById('lb-img');
+                        const lbJudul = document.getElementById('lb-judul');
+                        const lbDeskripsi = document.getElementById('lb-deskripsi');
+                        const lbTgl = document.getElementById('lb-tgl');
+                        const lbBadge = document.getElementById('lb-badge');
+                        const closeBtn = document.getElementById('lb-close-btn');
 
-        </div>
-    </div>
+                        // Open Lightbox on card click
+                        document.querySelectorAll('.gallery-card').forEach(card => {
+                            card.addEventListener('click', () => {
+                                const src = card.getAttribute('data-src');
+                                const judul = card.getAttribute('data-judul');
+                                const deskripsi = card.getAttribute('data-deskripsi');
+                                const tgl = card.getAttribute('data-tgl');
+                                const kategori = card.getAttribute('data-kategori');
 
-    <!-- Unified Footer Component -->
-    <%- include('partials/footer') %>
+                                lbImg.src = src;
+                                lbJudul.textContent = judul;
+                                lbDeskripsi.textContent = deskripsi || '-';
+                                const tglValEl = document.getElementById('lb-tgl-val');
+                                if (tglValEl) {
+                                    tglValEl.textContent = tgl;
+                                } else {
+                                    lbTgl.innerHTML = '<i class="fa-solid fa-calendar-day mr-1 text-slate-400"></i>' + tgl;
+                                }
+                                lbBadge.textContent = kategori;
 
-    <!-- Lightbox Interactive Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const lightbox = document.getElementById('modal-lightbox');
-            const lbImg = document.getElementById('lb-img');
-            const lbJudul = document.getElementById('lb-judul');
-            const lbDeskripsi = document.getElementById('lb-deskripsi');
-            const lbTgl = document.getElementById('lb-tgl');
-            const lbBadge = document.getElementById('lb-badge');
-            const closeBtn = document.getElementById('lb-close-btn');
+                                if (kategori === 'Prestasi') {
+                                    lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-blue-950';
+                                } else if (kategori === 'Fasilitas') {
+                                    lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white';
+                                } else {
+                                    lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white';
+                                }
 
-            // Open Lightbox on card click
-            document.querySelectorAll('.gallery-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const src = card.getAttribute('data-src');
-                    const judul = card.getAttribute('data-judul');
-                    const deskripsi = card.getAttribute('data-deskripsi');
-                    const tgl = card.getAttribute('data-tgl');
-                    const kategori = card.getAttribute('data-kategori');
+                                lightbox.classList.remove('hidden');
+                                document.body.style.overflow = 'hidden';
+                            });
+                        });
 
-                    lbImg.src = src;
-                    lbJudul.textContent = judul;
-                    lbDeskripsi.textContent = deskripsi || '-';
-                    const tglValEl = document.getElementById('lb-tgl-val');
-                    if (tglValEl) {
-                        tglValEl.textContent = tgl;
-                    } else {
-                        lbTgl.innerHTML = '<i class="fa-solid fa-calendar-day mr-1 text-slate-400"></i>' + tgl;
-                    }
-                    lbBadge.textContent = kategori;
+                        function closeLightbox() {
+                            lightbox.classList.add('hidden');
+                            lbImg.src = '';
+                            document.body.style.overflow = '';
+                        }
 
-                    if (kategori === 'Prestasi') {
-                        lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-blue-950';
-                    } else if (kategori === 'Fasilitas') {
-                        lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white';
-                    } else {
-                        lbBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white';
-                    }
+                        if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
 
-                    lightbox.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
+                        lightbox.addEventListener('click', (e) => {
+                            if (e.target === lightbox) closeLightbox();
+                        });
 
-            function closeLightbox() {
-                lightbox.classList.add('hidden');
-                lbImg.src = '';
-                document.body.style.overflow = '';
-            }
-
-            if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-
-            lightbox.addEventListener('click', (e) => {
-                if (e.target === lightbox) closeLightbox();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-                    closeLightbox();
-                }
-            });
-        });
-    </script>
+                        document.addEventListener('keydown', (e) => {
+                            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                                closeLightbox();
+                            }
+                        });
+                    });
+                </script>
 </body>
+
 </html>

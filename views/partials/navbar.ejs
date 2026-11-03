@@ -94,7 +94,7 @@
                 </a>
 
                 <!-- Desktop Navigation Links with animated hover indicators -->
-                <nav class="hidden lg:flex items-center space-x-5 text-xs font-semibold">
+                <nav class="hidden lg:flex items-center space-x-4 xl:space-x-5 text-xs font-semibold">
                     <a href="/"
                         class="<%= currentActive === 'beranda' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
                         Beranda
@@ -103,20 +103,105 @@
                             <% } %>
                     </a>
 
-                    <a href="/#sambutan"
-                        class="text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group">
-                        Sambutan
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
-                    </a>
+                    <!-- Dropdown Profil (Multi-Level) -->
+                    <div class="relative group/profil py-4">
+                        <button type="button" class="flex items-center gap-1.5 <%= (currentActive === 'profil' || currentActive === 'civitas' || currentActive === 'komite') ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-400' %> transition-colors py-1.5 relative focus:outline-none cursor-pointer">
+                            <span>Profil</span>
+                            <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/profil:rotate-180 text-slate-400 group-hover/profil:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover/profil:w-full transition-all duration-300"></span>
+                        </button>
 
-                    <a href="/#profil"
-                        class="<%= currentActive === 'profil' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
-                        Visi & Misi
-                        <% if (currentActive !=='profil' ) { %><span
-                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
-                            <% } %>
-                    </a>
+                        <!-- Dropdown Level 1 (Profil) -->
+                        <div class="invisible opacity-0 translate-y-2 pointer-events-none group-hover/profil:visible group-hover/profil:opacity-100 group-hover/profil:translate-y-0 group-hover/profil:pointer-events-auto transition-all duration-300 ease-out absolute top-full left-0 pt-2 w-64 z-50">
+                            <div class="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 space-y-1">
+                                
+                                <!-- Sub-menu 1: Tentang Kami with nested flyout -->
+                                <div class="relative group/tentang">
+                                    <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group-hover/tentang:bg-amber-500 group-hover/tentang:text-blue-950 text-left">
+                                        <span class="flex items-center gap-2.5">
+                                            <i class="fa-solid fa-school text-amber-400 group-hover/tentang:text-blue-950 transition-colors w-4 text-center"></i>
+                                            <span>Tentang Kami</span>
+                                        </span>
+                                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover/tentang:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
+
+                                    <!-- Dropdown Level 2: Nested Flyout (Tentang Kami) -->
+                                    <div class="invisible opacity-0 translate-x-2 pointer-events-none group-hover/tentang:visible group-hover/tentang:opacity-100 group-hover/tentang:translate-x-0 group-hover/tentang:pointer-events-auto transition-all duration-300 ease-out absolute top-0 left-full pl-2 w-64 z-50">
+                                        <div class="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 space-y-1">
+                                            <!-- 1. Sambutan Kepala Sekolah (Scroll ke Beranda) -->
+                                            <a href="/#sambutan" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                                <i class="fa-solid fa-comment-dots text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center"></i>
+                                                <span>Sambutan Kepala Sekolah</span>
+                                            </a>
+                                            <!-- 2. Sejarah Singkat (Modal Popup) -->
+                                            <a href="javascript:void(0)" onclick="openHalamanModal('sejarah')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item cursor-pointer">
+                                                <i class="fa-solid fa-landmark text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center"></i>
+                                                <span>Sejarah Singkat</span>
+                                            </a>
+                                            <!-- 3. Visi Misi (Scroll ke Beranda) -->
+                                            <a href="/#visi-misi" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                                <i class="fa-solid fa-bullseye text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center"></i>
+                                                <span>Visi Misi</span>
+                                            </a>
+                                            <!-- 4. Sarana dan Prasarana (Modal Popup) -->
+                                            <a href="javascript:void(0)" onclick="openHalamanModal('sarana')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item cursor-pointer">
+                                                <i class="fa-solid fa-building-columns text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center"></i>
+                                                <span>Sarana dan Prasarana</span>
+                                            </a>
+                                            <!-- 5. Program Kerja (Modal Popup) -->
+                                            <a href="javascript:void(0)" onclick="openHalamanModal('program-kerja')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item cursor-pointer">
+                                                <i class="fa-solid fa-list-check text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center"></i>
+                                                <span>Program Kerja</span>
+                                            </a>
+                                            <!-- 6. Kondisi Siswa / Statistik (Modal Popup) -->
+                                            <a href="javascript:void(0)" onclick="openHalamanModal('kondisi-siswa')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item cursor-pointer">
+                                                <i class="fa-solid fa-chart-pie text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center"></i>
+                                                <span>Kondisi Siswa / Statistik</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sub-menu 2: Civitas Akademik (Scroll ke Slider Guru & Pegawai di Beranda) -->
+                                <a href="/#guru" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/civitas">
+                                    <span class="flex items-center gap-2.5">
+                                        <i class="fa-solid fa-chalkboard-user text-amber-400 group-hover/civitas:text-blue-950 transition-colors w-4 text-center"></i>
+                                        <span>Civitas Akademik</span>
+                                    </span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover/civitas:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+
+                                <!-- Sub-menu 3: Komite Sekolah (Scroll ke Bagian Komite di Beranda) -->
+                                <a href="/#komite" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/komite">
+                                    <span class="flex items-center gap-2.5">
+                                        <i class="fa-solid fa-users-gear text-amber-400 group-hover/komite:text-blue-950 transition-colors w-4 text-center"></i>
+                                        <span>Komite Sekolah</span>
+                                    </span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover/komite:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+
+                                <!-- Sub-menu 4: Kalender Akademik (Scroll ke Kalender Akademik di Beranda) -->
+                                <a href="/#kalender-akademik" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/kalender">
+                                    <span class="flex items-center gap-2.5">
+                                        <i class="fa-solid fa-calendar-days text-amber-400 group-hover/kalender:text-blue-950 transition-colors w-4 text-center"></i>
+                                        <span>Kalender Akademik</span>
+                                    </span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover/kalender:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
 
                     <a href="/#berita"
                         class="<%= currentActive === 'berita' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
@@ -126,18 +211,10 @@
                             <% } %>
                     </a>
 
-                    <a href="/#guru"
-                        class="<%= currentActive === 'guru' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
-                        Dewan Guru
-                        <% if (currentActive !=='guru' ) { %><span
-                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
-                            <% } %>
-                    </a>
-
-                    <a href="/#komite"
-                        class="<%= currentActive === 'komite' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
-                        Komite
-                        <% if (currentActive !=='komite' ) { %><span
+                    <a href="/#pengumuman"
+                        class="<%= currentActive === 'pengumuman' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        Pengumuman
+                        <% if (currentActive !=='pengumuman' ) { %><span
                                 class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
                             <% } %>
                     </a>
@@ -146,6 +223,14 @@
                         class="<%= currentActive === 'eskul' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
                         Ekstrakurikuler
                         <% if (currentActive !=='eskul' ) { %><span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
+                            <% } %>
+                    </a>
+
+                    <a href="/osis"
+                        class="<%= currentActive === 'osis' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
+                        OSIS
+                        <% if (currentActive !=='osis' ) { %><span
                                 class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300"></span>
                             <% } %>
                     </a>
@@ -198,23 +283,80 @@
             <div id="mobile-menu-pane" class="hidden lg:hidden py-4 border-t border-white/10 space-y-2 pb-6">
                 <a href="/"
                     class="block px-3 py-2 rounded-xl text-xs font-bold <%= currentActive === 'beranda' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Beranda</a>
-                <a href="/#sambutan"
-                    class="block px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:bg-white/10">Sambutan
-                    Kepala Sekolah</a>
-                <a href="/#profil"
-                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'profil' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Visi
-                    & Misi</a>
+                <!-- Mobile Profil Accordion -->
+                <div class="space-y-1">
+                    <button type="button" onclick="toggleMobileSubmenu('mobile-profil-sub', 'mobile-profil-arrow')"
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold <%= (currentActive === 'profil' || currentActive === 'civitas' || currentActive === 'komite') ? 'text-amber-400 bg-white/10' : 'text-slate-200 hover:bg-white/10' %> transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-id-card text-amber-400"></i>
+                            <span>Profil Sekolah</span>
+                        </span>
+                        <svg id="mobile-profil-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="mobile-profil-sub" class="hidden pl-3 space-y-1 border-l-2 border-amber-400/30 ml-3 mt-1">
+                        <!-- Sub 1: Tentang Kami accordion -->
+                        <div>
+                            <button type="button" onclick="toggleMobileSubmenu('mobile-tentang-sub', 'mobile-tentang-arrow')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:bg-white/10">
+                                <span class="flex items-center gap-2">
+                                    <i class="fa-solid fa-school text-amber-400/80"></i>
+                                    <span>Tentang Kami</span>
+                                </span>
+                                <svg id="mobile-tentang-arrow" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="mobile-tentang-sub" class="hidden pl-3 space-y-1 border-l border-white/10 ml-3 mt-1 text-[11px]">
+                                <a href="/#sambutan" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5">1. Sambutan Kepala Sekolah</a>
+                                <a href="javascript:void(0)" onclick="openHalamanModal('sejarah')" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5 cursor-pointer">2. Sejarah Singkat</a>
+                                <a href="/#visi-misi" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5">3. Visi Misi</a>
+                                <a href="javascript:void(0)" onclick="openHalamanModal('sarana')" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5 cursor-pointer">4. Sarana dan Prasarana</a>
+                                <a href="javascript:void(0)" onclick="openHalamanModal('program-kerja')" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5 cursor-pointer">5. Program Kerja</a>
+                                <a href="javascript:void(0)" onclick="openHalamanModal('kondisi-siswa')" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5 cursor-pointer">6. Kondisi Siswa / Statistik</a>
+                            </div>
+                        </div>
+                        <!-- Sub 2: Civitas Akademik (Scroll ke Slider Guru & Pegawai di Beranda) -->
+                        <a href="/#guru" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-amber-400 hover:bg-white/10 group/civitas-m">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-chalkboard-user text-amber-400/80"></i>
+                                <span>Civitas Akademik</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-slate-400 group-hover/civitas-m:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                        <!-- Sub 3: Komite Sekolah (Scroll ke Bagian Komite di Beranda) -->
+                        <a href="/#komite" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-amber-400 hover:bg-white/10 group/komite-m">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-users-gear text-amber-400/80"></i>
+                                <span>Komite Sekolah</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-slate-400 group-hover/komite-m:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                        <!-- Sub 4: Kalender Akademik (Scroll ke Kalender Akademik di Beranda) -->
+                        <a href="/#kalender-akademik" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-amber-400 hover:bg-white/10 group/kalender-m">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-amber-400/80"></i>
+                                <span>Kalender Akademik</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-slate-400 group-hover/kalender-m:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
                 <a href="/#berita"
-                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'berita' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Berita
-                    & Pengumuman</a>
-                <a href="/#guru"
-                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'guru' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Dewan
-                    Guru</a>
-                <a href="/#komite"
-                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'komite' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Komite
-                    Sekolah</a>
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'berita' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Berita</a>
+                <a href="/#pengumuman"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'pengumuman' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Pengumuman</a>
                 <a href="/#eskul"
                     class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'eskul' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Ekstrakurikuler</a>
+                <a href="/osis"
+                    class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'osis' ? 'bg-white/20 text-amber-400 font-bold' : 'text-slate-200 hover:bg-white/10' %>">OSIS</a>
                 <a href="/#galeri"
                     class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'galeri' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Galeri</a>
                 <a href="/ppdb"
@@ -228,3 +370,195 @@
             </div>
         </div>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- MODAL POPUP INTERAKTIF: TENTANG KAMI (HALAMAN STATIS) -->
+    <!-- ============================================================== -->
+    <div id="modal-halaman-statis" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6 overflow-y-auto" role="dialog" aria-modal="true">
+        <!-- Backdrop Gelap dengan Blur -->
+        <div class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm transition-opacity duration-300" onclick="closeHalamanModal()"></div>
+
+        <!-- Modal Box Container -->
+        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 z-10 overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[88vh]" id="modal-halaman-box">
+            
+            <!-- Header Modal Bergaris Tipis -->
+            <div class="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50/90 to-white">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-lg font-bold border border-amber-500/20 shadow-sm shrink-0" id="modal-halaman-icon-wrapper">
+                        <i class="fa-solid fa-school text-amber-600" id="modal-halaman-icon"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-black tracking-widest uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            Profil & Informasi
+                        </span>
+                        <h3 class="text-base sm:text-lg font-black text-blue-950 tracking-tight leading-tight mt-0.5" id="modal-halaman-title">
+                            Memuat Informasi...
+                        </h3>
+                    </div>
+                </div>
+                <!-- Tombol Tutup (×) -->
+                <button type="button" onclick="closeHalamanModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 flex items-center justify-center text-lg font-bold transition-colors focus:outline-none cursor-pointer" aria-label="Tutup Modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Body Area Konten dengan Scrollbar Halus -->
+            <div class="p-6 sm:p-7 overflow-y-auto space-y-4 text-slate-700 text-sm leading-relaxed" id="modal-halaman-body">
+                <!-- Loading Skeleton -->
+                <div class="space-y-3 py-6 animate-pulse" id="modal-halaman-loading">
+                    <div class="h-4 bg-slate-200 rounded-full w-3/4"></div>
+                    <div class="h-4 bg-slate-200 rounded-full w-full"></div>
+                    <div class="h-4 bg-slate-200 rounded-full w-5/6"></div>
+                    <div class="h-4 bg-slate-200 rounded-full w-2/3"></div>
+                </div>
+                <div id="modal-halaman-content" class="hidden"></div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="px-6 py-3.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span class="flex items-center gap-1.5 text-slate-400 text-[11px]" id="modal-halaman-meta">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Terakhir Diperbarui: <span id="modal-halaman-date">-</span>
+                </span>
+                <button type="button" onclick="closeHalamanModal()" class="px-4 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs transition shadow-sm cursor-pointer">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileSubmenu(menuId, arrowId) {
+            var menu = document.getElementById(menuId);
+            var arrow = document.getElementById(arrowId);
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+            if (arrow) {
+                arrow.classList.toggle('rotate-180');
+            }
+        }
+
+        // Modal Popup Halaman Statis / Profil Logic
+        const iconHalamanMap = {
+            'sejarah': 'fa-landmark',
+            'visi-misi': 'fa-bullseye',
+            'sarana': 'fa-building-columns',
+            'program-kerja': 'fa-list-check',
+            'kondisi-siswa': 'fa-chart-pie'
+        };
+
+        async function openHalamanModal(slug) {
+            const modal = document.getElementById('modal-halaman-statis');
+            const box = document.getElementById('modal-halaman-box');
+            const titleEl = document.getElementById('modal-halaman-title');
+            const loadingEl = document.getElementById('modal-halaman-loading');
+            const contentEl = document.getElementById('modal-halaman-content');
+            const dateEl = document.getElementById('modal-halaman-date');
+            const iconEl = document.getElementById('modal-halaman-icon');
+
+            if (!modal) return;
+
+            // Close mobile menu drawer if open
+            const mobilePane = document.getElementById('mobile-menu-pane');
+            if (mobilePane && !mobilePane.classList.contains('hidden')) {
+                mobilePane.classList.add('hidden');
+            }
+
+            // Update icon
+            if (iconEl && iconHalamanMap[slug]) {
+                iconEl.className = `fa-solid ${iconHalamanMap[slug]} text-amber-600`;
+            }
+
+            // Reset modal state
+            titleEl.textContent = 'Memuat Informasi...';
+            loadingEl.classList.remove('hidden');
+            contentEl.classList.add('hidden');
+            contentEl.innerHTML = '';
+            dateEl.textContent = '-';
+
+            // Show modal backdrop
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            try {
+                const res = await fetch('/api/halaman/' + encodeURIComponent(slug));
+                const result = await res.json();
+                if (result && result.success && result.data) {
+                    titleEl.textContent = result.data.judul;
+                    contentEl.innerHTML = result.data.konten;
+                    if (iconEl && result.data.ikon) {
+                        iconEl.className = `${result.data.ikon} text-amber-600`;
+                    }
+                    if (result.data.updated_at) {
+                        const d = new Date(result.data.updated_at);
+                        dateEl.textContent = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                    } else {
+                        dateEl.textContent = 'Terkini';
+                    }
+                    loadingEl.classList.add('hidden');
+                    contentEl.classList.remove('hidden');
+                } else {
+                    titleEl.textContent = 'Informasi Belum Tersedia';
+                    contentEl.innerHTML = `<p class="text-rose-500 font-medium">Halaman informasi "${slug}" sedang dipersiapkan oleh pihak sekolah.</p>`;
+                    loadingEl.classList.add('hidden');
+                    contentEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                titleEl.textContent = 'Koneksi Terputus';
+                contentEl.innerHTML = `<p class="text-rose-500 font-medium">Gagal memuat data: ${err.message}</p>`;
+                loadingEl.classList.add('hidden');
+                contentEl.classList.remove('hidden');
+            }
+        }
+
+        function closeHalamanModal() {
+            const modal = document.getElementById('modal-halaman-statis');
+            const box = document.getElementById('modal-halaman-box');
+            if (!modal) return;
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            document.body.classList.remove('overflow-hidden');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeHalamanModal();
+            }
+        });
+
+        // Smooth scroll & auto-close mobile drawer for internal anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            const anchorLinks = document.querySelectorAll('a[href^="/#"], a[href^="#"]');
+            anchorLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    const hashIndex = href.indexOf('#');
+                    if (hashIndex !== -1) {
+                        const targetId = href.substring(hashIndex + 1);
+                        if (window.location.pathname === '/' || window.location.pathname === '') {
+                            const targetEl = document.getElementById(targetId);
+                            if (targetEl) {
+                                e.preventDefault();
+                                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                history.pushState(null, null, '#' + targetId);
+
+                                // Close mobile menu drawer if open
+                                const mobilePane = document.getElementById('mobile-menu-pane');
+                                if (mobilePane && !mobilePane.classList.contains('hidden')) {
+                                    mobilePane.classList.add('hidden');
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>

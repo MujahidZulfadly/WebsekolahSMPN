@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <%- include('partials/head', { title: 'OSIS UPT SMP Negeri 1 Rantepao - Organisasi Siswa Intra Sekolah' }) %>
+    <style>
+        .osis-gradient-text {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fef08a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen selection:bg-amber-500 selection:text-blue-950">
+
+    <!-- Navbar Global -->
+    <%- include('partials/navbar', { activePage: 'osis' }) %>
+
+    <!-- ============================================================== -->
+    <!-- 1. HERO BANNER: OSIS UPT SMP NEGERI 1 RANTEPAO -->
+    <!-- ============================================================== -->
+    <header class="relative bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white pt-16 pb-24 sm:pt-20 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Ambient Glow Circles -->
+        <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-blue-600/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 -right-28 w-96 h-96 rounded-full bg-amber-500/15 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[38rem] h-[38rem] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10 text-center">
+
+            <!-- Breadcrumbs Navigation -->
+            <nav class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-slate-300 mb-6" data-aos="fade-down">
+                <a href="/" class="hover:text-amber-400 transition-colors font-medium">Beranda</a>
+                <span class="text-slate-500 text-[10px]">/</span>
+                <span class="text-slate-300">Kesiswaan</span>
+                <span class="text-slate-500 text-[10px]">/</span>
+                <span class="text-amber-400 font-bold">OSIS</span>
+            </nav>
+
+            <!-- Lencana Resmi OSIS -->
+            <div data-aos="fade-up" data-aos-duration="600">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-black uppercase tracking-wider backdrop-blur-md mb-4 shadow-sm shadow-amber-500/10">
+                    <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+                    <span>Organisasi Siswa Intra Sekolah • Masa Bakti 2025/2026</span>
+                </span>
+            </div>
+
+            <!-- Judul Utama -->
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight" data-aos="fade-up" data-aos-duration="700">
+                OSIS UPT SMP Negeri 1 Rantepao
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mt-4 text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-duration="800">
+                Wadah kepemimpinan, integritas, dan kreativitas tunas bangsa berkarakter Profil Pelajar Pancasila yang berakar kuat pada nilai keluhuran budaya Toraja: <em class="text-amber-300 font-serif">"Misa' Kada Dipotuo, Pantan Kada Dipomate"</em>.
+            </p>
+
+            <!-- Quick Action Buttons -->
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3" data-aos="fade-up" data-aos-duration="900">
+                <a href="#sambutan" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-blue-950 font-extrabold text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-amber-500/20 flex items-center gap-2">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>Sambutan Ketua</span>
+                </a>
+                <a href="#struktur" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 backdrop-blur-md transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Pengurus OSIS</span>
+                </a>
+                <a href="#proker" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 backdrop-blur-md transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Program Kerja</span>
+                </a>
+                <a href="#mading" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 backdrop-blur-md transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-newspaper text-amber-400"></i>
+                    <span>Mading Online</span>
+                </a>
+                <a href="#aspirasi" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm transition-all duration-300 shadow-md flex items-center gap-2 border border-blue-400/30">
+                    <i class="fa-solid fa-comment-dots text-amber-300"></i>
+                    <span>Kotak Aspirasi</span>
+                </a>
+            </div>
+
+            <!-- Stats Highlight Bar -->
+            <div class="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="900">
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">32</div>
+                    <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Pengurus Aktif</div>
+                </div>
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">6</div>
+                    <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Seksi Bidang (Sekbid)</div>
+                </div>
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">24+</div>
+                    <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Proker Terencana</div>
+                </div>
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">920+</div>
+                    <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Siswa Ternaungi</div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Alert Notifikasi Flash -->
+    <% if (typeof alert !== 'undefined' && alert) { %>
+        <div class="max-w-4xl mx-auto px-4 -mt-8 relative z-30">
+            <div class="p-4 rounded-2xl border flex items-center justify-between <%= alert.status === 'success' ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : 'bg-red-50 border-red-300 text-red-800' %> shadow-xl" id="alert-box">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full <%= alert.status === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white' %> flex items-center justify-center font-bold text-xs">
+                        <i class="fa-solid <%= alert.status === 'success' ? 'fa-check' : 'fa-xmark' %>"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider"><%= alert.status === 'success' ? 'Berhasil Terkirim' : 'Pemberitahuan' %></p>
+                        <p class="text-sm font-medium"><%= alert.message %></p>
+                    </div>
+                </div>
+                <button type="button" onclick="document.getElementById('alert-box').remove()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- ============================================================== -->
+    <!-- 2. SAMBUTAN KETUA OSIS -->
+    <!-- ============================================================== -->
+    <section id="sambutan" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xl overflow-hidden" data-aos="fade-up">
+            <div class="grid lg:grid-cols-12 gap-0 items-stretch">
+                
+                <!-- Kolom Kiri: Profil Ketua OSIS -->
+                <div class="lg:col-span-5 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 p-8 sm:p-10 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -top-20 -left-20 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="relative z-10 text-center">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[11px] font-extrabold uppercase tracking-wider mb-6">
+                            <i class="fa-solid fa-crown text-amber-400"></i>
+                            <span>Pucuk Pimpinan OSIS</span>
+                        </span>
+
+                        <!-- Frame Foto Ketua -->
+                        <div class="relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-6">
+                            <div class="w-full h-full rounded-3xl overflow-hidden border-4 border-amber-400 shadow-2xl bg-slate-800 flex items-center justify-center">
+                                <% if (sambutanKetua.foto && sambutanKetua.foto !== 'default-osis.jpg' && sambutanKetua.foto !== 'ketua-osis.jpg') { %>
+                                    <img src="/uploads/osis/<%= sambutanKetua.foto %>" alt="<%= sambutanKetua.nama %>" class="w-full h-full object-cover">
+                                <% } else { %>
+                                    <div class="w-full h-full bg-gradient-to-tr from-blue-950 via-slate-800 to-blue-900 flex flex-col items-center justify-center text-amber-400">
+                                        <i class="fa-solid fa-user-graduate text-6xl"></i>
+                                        <span class="text-xs font-bold text-slate-300 mt-2">Ketua OSIS</span>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-blue-950 font-black text-[11px] uppercase tracking-wider shadow-md whitespace-nowrap">
+                                Masa Bakti <%= sambutanKetua.periode %>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-black text-white mt-4"><%= sambutanKetua.nama %></h3>
+                        <p class="text-xs text-amber-400 font-semibold"><%= sambutanKetua.kelas %> • UPT SMPN 1 Rantepao</p>
+                    </div>
+
+                    <!-- Visi Box -->
+                    <div class="relative z-10 mt-8 pt-6 border-t border-white/10">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bullseye text-amber-400"></i> VISI UTAMA KEPENGURUSAN
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-200 italic font-medium leading-relaxed">
+                            "<%= sambutanKetua.visi %>"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Teks Sambutan Lengkap -->
+                <div class="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 text-lg font-bold shadow-xs">
+                                <i class="fa-solid fa-quote-left"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-black text-amber-600 uppercase tracking-wider">Amanat & Sapaan</span>
+                                <h2 class="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">Sambutan Ketua OSIS</h2>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-slate-600 text-sm leading-relaxed text-justify mt-6">
+                            <% const paragrafSambutan = sambutanKetua.teks.split('\n\n'); %>
+                            <% paragrafSambutan.forEach((p) => { %>
+                                <p><%= p.trim() %></p>
+                            <% }) %>
+                        </div>
+                    </div>
+
+                    <!-- Signature Block -->
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400">Rantepao, Toraja Utara</p>
+                            <p class="text-sm font-black text-blue-950"><%= sambutanKetua.nama %></p>
+                            <p class="text-[11px] text-slate-500 font-semibold">Ketua OSIS SMPN 1 Rantepao</p>
+                        </div>
+                        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center font-black text-xl shadow-inner">
+                            S1
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. STRUKTUR PENGURUS OSIS (INTI & SEKBID) -->
+    <!-- ============================================================== -->
+    <section id="struktur" class="py-20 bg-slate-100/70 border-t border-slate-200 scroll-mt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-2xl mx-auto mb-12" data-aos="fade-up">
+                <span class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                    Struktur Kepengurusan
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                    Pengurus OSIS Masa Bakti 2025/2026
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                    Siswa-siswi terpilih yang mendedikasikan waktu dan gagasan untuk kemajuan almamater UPT SMP Negeri 1 Rantepao.
+                </p>
+
+                <!-- Filter Tabs: Semua / Inti / Sekbid -->
+                <div class="mt-8 inline-flex p-1.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm gap-1">
+                    <button type="button" onclick="filterOsis('all')" id="btn-filter-all" class="filter-osis-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-950 text-white shadow-sm">
+                        Semua Pengurus (<%= pengurusList.length %>)
+                    </button>
+                    <button type="button" onclick="filterOsis('Pengurus Inti')" id="btn-filter-inti" class="filter-osis-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-blue-950 transition-all">
+                        Pengurus Inti
+                    </button>
+                    <button type="button" onclick="filterOsis('Seksi Bidang')" id="btn-filter-sekbid" class="filter-osis-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-blue-950 transition-all">
+                        Seksi Bidang (Sekbid)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid Pengurus OSIS -->
+            <div id="grid-pengurus-osis" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <% pengurusList.forEach((p, idx) => { %>
+                    <div class="pengurus-card bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group"
+                         data-kategori="<%= p.kategori %>" data-aos="fade-up" data-aos-delay="<%= (idx % 4) * 80 %>">
+                        
+                        <div>
+                            <!-- Avatar Foto Bulat Cincin Emas -->
+                            <div class="relative w-24 h-24 mx-auto mb-4">
+                                <div class="w-full h-full rounded-full p-1 border-2 border-amber-400 shadow-md group-hover:scale-105 transition-transform duration-300 overflow-hidden bg-slate-900 flex items-center justify-center text-amber-400 font-bold">
+                                    <% if (p.foto && !p.foto.startsWith('default') && !p.foto.endsWith('-osis.jpg')) { %>
+                                        <img src="/uploads/osis/<%= p.foto %>" alt="<%= p.nama_lengkap %>" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                                        <i class="fa-solid fa-user-graduate text-3xl hidden"></i>
+                                    <% } else { %>
+                                        <i class="fa-solid fa-user-graduate text-3xl"></i>
+                                    <% } %>
+                                </div>
+                                <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider shadow-sm <%= p.kategori === 'Pengurus Inti' ? 'bg-amber-500 text-blue-950' : 'bg-blue-900 text-white' %> whitespace-nowrap">
+                                    <%= p.kelas %>
+                                </span>
+                            </div>
+
+                            <!-- Nama & Jabatan -->
+                            <div class="text-center mt-3">
+                                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide bg-amber-50 text-amber-800 border border-amber-200">
+                                    <%= p.jabatan %>
+                                </span>
+                                <h4 class="text-base font-black text-blue-950 mt-2 leading-snug group-hover:text-blue-900 transition-colors">
+                                    <%= p.nama_lengkap %>
+                                </h4>
+                            </div>
+
+                            <!-- Motto Siswa -->
+                            <div class="mt-4 p-3 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                                <p class="text-[11px] text-slate-600 italic line-clamp-3">
+                                    "<%= p.motto || 'Berbakti untuk almamater, berprestasi untuk negeri.' %>"
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1 font-medium">
+                                <i class="fa-solid fa-shield-halved text-amber-500"></i> <%= p.kategori %>
+                            </span>
+                            <span class="font-bold text-blue-950">SMPN 1 Rantepao</span>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. PROGRAM KERJA UNGGULAN (PROKER) -->
+    <!-- ============================================================== -->
+    <section id="proker" class="py-20 bg-white border-t border-slate-200 scroll-mt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                <span class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                    Aksi Nyata & Kegiatan
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                    Program Kerja Unggulan OSIS
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                    Inisiatif strategis yang dirancang untuk memperkaya pengalaman belajar, mempererat persahabatan, dan mengasah potensi siswa.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% prokerList.forEach((proker, idx) => { %>
+                    <div class="bg-slate-50 rounded-3xl p-7 border border-slate-200/80 hover:border-amber-400 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-aos="fade-up" data-aos-delay="<%= idx * 80 %>">
+                        <div>
+                            <!-- Header Proker: Icon & Status -->
+                            <div class="flex items-start justify-between gap-3 mb-5">
+                                <div class="w-12 h-12 rounded-2xl bg-blue-950 text-amber-400 flex items-center justify-center text-xl shadow-md group-hover:bg-amber-500 group-hover:text-blue-950 transition-colors duration-300">
+                                    <i class="fa-solid <%= proker.icon %>"></i>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider border <%= proker.statusClass || (proker.status === 'Terlaksana' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : (proker.status === 'Sedang Berjalan' ? 'bg-blue-50 text-blue-700 border-blue-200' : (proker.status === 'Aktif Rutin' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-purple-50 text-purple-700 border-purple-200'))) %>">
+                                    ● <%= proker.status %>
+                                </span>
+                            </div>
+
+                            <!-- Judul & Kategori -->
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-white px-2 py-0.5 rounded border border-slate-200">
+                                <%= proker.kategori %>
+                            </span>
+                            <h3 class="text-lg font-black text-blue-950 mt-2 leading-snug group-hover:text-blue-900 transition-colors">
+                                <%= proker.judul %>
+                            </h3>
+
+                            <!-- Deskripsi -->
+                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mt-3">
+                                <%= proker.deskripsi %>
+                            </p>
+                        </div>
+
+                        <!-- Info Meta Jadwal & Target -->
+                        <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col gap-1.5 text-xs text-slate-500">
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-1.5 text-slate-400">
+                                    <i class="fa-regular fa-calendar text-amber-500"></i> Waktu:
+                                </span>
+                                <span class="font-bold text-slate-700"><%= proker.jadwal %></span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-1.5 text-slate-400">
+                                    <i class="fa-solid fa-bullseye text-blue-600"></i> Sasaran:
+                                </span>
+                                <span class="font-bold text-slate-700"><%= proker.target %></span>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 5. MADING ONLINE (KARYA & LITERASI SISWA) -->
+    <!-- ============================================================== -->
+    <section id="mading" class="py-20 bg-gradient-to-br from-blue-950 via-slate-900 to-blue-950 text-white relative overflow-hidden border-t border-blue-900/50 scroll-mt-24">
+        <!-- Ambient Glow -->
+        <div class="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14" data-aos="fade-up">
+                <div>
+                    <span class="text-xs font-black text-amber-300 uppercase tracking-widest bg-amber-500/20 px-3.5 py-1.5 rounded-full border border-amber-400/30">
+                        <i class="fa-solid fa-pen-nib mr-1.5"></i> Pojok Kreasi Pelajar
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">
+                        Mading Online SMPN 1 Rantepao
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl">
+                        Karya tulis, puisi, cerita inspiratif, dan opini generasi muda UPT SMP Negeri 1 Rantepao yang dipublikasikan secara digital oleh Sekbid Literasi OSIS.
+                    </p>
+                </div>
+                <a href="#aspirasi" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-blue-950 font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 shrink-0 self-start md:self-auto">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Kirim Karyamu ke Mading</span>
+                </a>
+            </div>
+
+            <!-- Grid Kartu Mading -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <% madingList.forEach((mading, idx) => { %>
+                    <div class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-6 border border-white/10 hover:border-amber-400/60 shadow-xl transition-all duration-300 flex flex-col justify-between group" data-aos="fade-up" data-aos-delay="<%= idx * 80 %>">
+                        <div>
+                            <!-- Header: Badge Kategori & Likes -->
+                            <div class="flex items-center justify-between gap-2 mb-3">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider <%= mading.badgeClass || ((mading.kategori || '').includes('Puisi') ? 'bg-rose-50 text-rose-700 border border-rose-200' : ((mading.kategori || '').includes('Esai') ? 'bg-blue-50 text-blue-700 border border-blue-200' : ((mading.kategori || '').includes('Warta') ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'))) %>">
+                                    <%= mading.kategori %>
+                                </span>
+                                <button type="button" onclick="likeMading(this, <%= mading.likes %>)" class="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 transition-colors focus:outline-none">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span class="font-bold text-[11px]"><%= mading.likes %></span>
+                                </button>
+                            </div>
+
+                            <h3 class="text-base font-black text-white group-hover:text-amber-400 transition-colors line-clamp-2 mt-2 leading-snug">
+                                <%= mading.judul %>
+                            </h3>
+
+                            <!-- Author Info -->
+                            <p class="text-[11px] text-amber-300/90 font-medium mt-1">
+                                Oleh: <span class="text-white font-bold"><%= mading.penulis %></span> (<%= mading.kelas %>)
+                            </p>
+
+                            <!-- Cuplikan Teks -->
+                            <p class="text-xs text-slate-300 leading-relaxed mt-3 line-clamp-4 text-justify font-sans">
+                                "<%= mading.cuplikan %>"
+                            </p>
+                        </div>
+
+                        <!-- Read More Action -->
+                        <div class="mt-6 pt-3 border-t border-white/10 flex items-center justify-between">
+                            <span class="text-[10px] text-slate-400 font-mono">
+                                <%= mading.tanggal %>
+                            </span>
+                            <button type="button" 
+                                onclick="readMading('<%= mading.judul %>', '<%= mading.penulis %>', '<%= mading.kelas %>', '<%= mading.kategori %>', '<%= encodeURIComponent(mading.cuplikan) %>')"
+                                class="text-xs font-bold text-amber-400 hover:text-amber-300 transition flex items-center gap-1">
+                                <span>Baca Utuh</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 6. GALERI KEGIATAN OSIS -->
+    <!-- ============================================================== -->
+    <section id="galeri-osis" class="py-20 bg-white border-t border-slate-200 scroll-mt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                <span class="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                    Dokumentasi Aktivitas
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
+                    Galeri Dokumentasi Kegiatan OSIS
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                    Momen-momen kebersamaan, semangat kepemimpinan, dan keceriaan siswa dalam berbagai perhelatan sekolah.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% galeriOsis.forEach((item, idx) => { %>
+                    <div class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="<%= idx * 80 %>">
+                        <div class="relative h-56 overflow-hidden bg-slate-900">
+                            <img src="<%= item.foto %>" alt="<%= item.judul %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                <span class="text-xs text-amber-300 font-bold flex items-center gap-1">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i> Dokumentasi Resmi OSIS
+                                </span>
+                            </div>
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-950/80 text-amber-400 backdrop-blur-md border border-white/10">
+                                <%= item.kategori %>
+                            </span>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 mb-1">
+                                <i class="fa-regular fa-calendar text-amber-500"></i> <%= item.tanggal %>
+                            </p>
+                            <h4 class="font-extrabold text-blue-950 text-sm leading-snug group-hover:text-blue-900 transition-colors">
+                                <%= item.judul %>
+                            </h4>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 7. KOTAK ASPIRASI & SUARA SISWA -->
+    <!-- ============================================================== -->
+    <section id="aspirasi" class="py-20 bg-slate-100 border-t border-slate-200 scroll-mt-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl" data-aos="fade-up">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-blue-950 flex items-center justify-center text-xl font-bold mx-auto mb-3 shadow-md">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <span class="text-xs font-black text-amber-600 uppercase tracking-widest">Suara & Gagasan Pelajar</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-blue-950 mt-1 tracking-tight">Kotak Aspirasi & Ide Siswa</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                        Punya usulan kegiatan baru, saran fasilitas, atau ide kreatif untuk memajukan sekolah? Sampaikan langsung kepada pengurus OSIS dan pihak sekolah di sini!
+                    </p>
+                </div>
+
+                <form action="/osis/aspirasi" method="POST" class="space-y-4">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Siswa / Pengirim *</label>
+                            <input type="text" name="nama_siswa" required placeholder="Contoh: Daniel Toding (atau 'Siswa Kelas VIII')" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Kelas / Kontak WhatsApp</label>
+                            <input type="text" name="kelas_kontak" placeholder="Contoh: Kelas IX-A / 0812xxxx" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Aspirasi *</label>
+                        <select name="kategori_aspirasi" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 bg-white font-medium">
+                            <option value="Kegiatan & Lomba Siswa">Kegiatan & Lomba Antar Kelas (Class Meeting, Porseni)</option>
+                            <option value="Fasilitas & Kebersihan Sekolah">Fasilitas, Sanitasi & Kebersihan Sekolah (Adiwiyata)</option>
+                            <option value="Program Kerja OSIS">Usulan Program Kerja Baru Pengurus OSIS</option>
+                            <option value="Karya Mading & Literasi">Pengajuan Naskah Tulisan / Puisi Mading</option>
+                            <option value="Lainnya">Lainnya / Masukan Umum</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Uraian Aspirasi / Saran / Ide Kreatif *</label>
+                        <textarea name="isi_aspirasi" rows="4" required placeholder="Tuliskan ide atau saranmu secara jelas dan sopan..." class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl p-3.5 focus:outline-blue-600 bg-slate-50/50 leading-relaxed"></textarea>
+                    </div>
+
+                    <div class="pt-2 flex items-center justify-between">
+                        <p class="text-[11px] text-slate-400">
+                            <i class="fa-solid fa-lock text-emerald-500 mr-1"></i> Data dan identitas terlindungi secara aman.
+                        </p>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-amber-400"></i>
+                            <span>Kirim Aspirasi Sekarang</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- MODAL BACA LENGKAP MADING ONLINE -->
+    <!-- ============================================================== -->
+    <div id="modal-read-mading" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <span id="read-mading-badge" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
+                    Karya Siswa
+                </span>
+                <button type="button" onclick="closeModal('modal-read-mading')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="mt-4">
+                <h3 id="read-mading-title" class="text-xl font-black text-blue-950 leading-snug">
+                    Judul Karya
+                </h3>
+                <p id="read-mading-author" class="text-xs text-slate-500 mt-1 font-semibold">
+                    Penulis: -
+                </p>
+                <div class="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line text-justify font-sans" id="read-mading-body">
+                </div>
+            </div>
+            <div class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-end">
+                <button type="button" onclick="closeModal('modal-read-mading')" class="px-5 py-2 rounded-xl bg-blue-950 text-white font-bold text-xs hover:bg-blue-900 transition shadow">
+                    Tutup Bacaan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Universal Footer -->
+    <%- include('partials/footer') %>
+
+    <!-- CLIENT JAVASCRIPT LOGIC -->
+    <script>
+        // Filter Pengurus OSIS
+        function filterOsis(kategori) {
+            const cards = document.querySelectorAll('.pengurus-card');
+            const btns = document.querySelectorAll('.filter-osis-btn');
+            
+            btns.forEach(b => {
+                b.classList.remove('bg-blue-950', 'text-white', 'shadow-sm');
+                b.classList.add('text-slate-600');
+            });
+
+            if (kategori === 'all') {
+                document.getElementById('btn-filter-all').classList.add('bg-blue-950', 'text-white', 'shadow-sm');
+                document.getElementById('btn-filter-all').classList.remove('text-slate-600');
+                cards.forEach(c => c.style.display = '');
+            } else if (kategori === 'Pengurus Inti') {
+                document.getElementById('btn-filter-inti').classList.add('bg-blue-950', 'text-white', 'shadow-sm');
+                document.getElementById('btn-filter-inti').classList.remove('text-slate-600');
+                cards.forEach(c => {
+                    c.style.display = (c.dataset.kategori === 'Pengurus Inti') ? '' : 'none';
+                });
+            } else if (kategori === 'Seksi Bidang') {
+                document.getElementById('btn-filter-sekbid').classList.add('bg-blue-950', 'text-white', 'shadow-sm');
+                document.getElementById('btn-filter-sekbid').classList.remove('text-slate-600');
+                cards.forEach(c => {
+                    c.style.display = (c.dataset.kategori === 'Seksi Bidang') ? '' : 'none';
+                });
+            }
+        }
+
+        // Like Interaction on Mading Cards
+        function likeMading(btn, initialCount) {
+            const icon = btn.querySelector('i');
+            const countEl = btn.querySelector('span');
+            if (icon.classList.contains('fa-regular')) {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid', 'text-rose-500', 'scale-125');
+                countEl.textContent = initialCount + 1;
+                countEl.classList.add('text-rose-400');
+            } else {
+                icon.classList.remove('fa-solid', 'text-rose-500', 'scale-125');
+                icon.classList.add('fa-regular');
+                countEl.textContent = initialCount;
+                countEl.classList.remove('text-rose-400');
+            }
+        }
+
+        // Read Mading Modal
+        function readMading(judul, penulis, kelas, kategori, cuplikanEncoded) {
+            document.getElementById('read-mading-title').textContent = judul;
+            document.getElementById('read-mading-author').textContent = 'Karya: ' + penulis + ' (' + kelas + ')';
+            document.getElementById('read-mading-badge').textContent = kategori;
+            document.getElementById('read-mading-body').textContent = decodeURIComponent(cuplikanEncoded);
+            openModal('modal-read-mading');
+        }
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
+

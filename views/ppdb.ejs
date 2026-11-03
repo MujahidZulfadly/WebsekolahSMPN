@@ -19,29 +19,53 @@
             <!-- Action & Highlight Info Bar: Sekretariat Pelayanan PPDB -->
             <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 relative z-20 w-full">
                 <div data-aos="fade-up"
-                    class="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-blue-800/60">
+                    class="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-blue-800/60 space-y-6">
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
                         <div class="flex items-center gap-3.5">
                             <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0 border border-amber-400/30 shadow-inner">
                                 <i class="fa-solid fa-building-columns"></i>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[11px] text-amber-400 font-extrabold uppercase tracking-wider">Sekretariat Pelayanan Resmi</span>
-                                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Loket Buka
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[11px] text-amber-400 font-extrabold uppercase tracking-wider">
+                                        <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.nama_gelombang) ? ppdbSetting.nama_gelombang : 'Gelombang 1' %> (T.A. <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.tahun_ajaran) ? ppdbSetting.tahun_ajaran : '2026/2027' %>)
                                     </span>
+                                    <% const statusLoket = (typeof ppdbSetting !== 'undefined' && ppdbSetting.status_loket) ? ppdbSetting.status_loket : 'Buka'; %>
+                                    <% if (statusLoket === 'Buka') { %>
+                                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Loket Buka (Pendaftaran Aktif)
+                                        </span>
+                                    <% } else if (statusLoket === 'Verifikasi') { %>
+                                        <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-list-check text-[10px]"></i> Tahap Verifikasi Berkas Fisik
+                                        </span>
+                                    <% } else if (statusLoket === 'Pengumuman') { %>
+                                        <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-bullhorn text-[10px]"></i> Pengumuman Kelulusan Terbit
+                                        </span>
+                                    <% } else if (statusLoket === 'Daftar Ulang') { %>
+                                        <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-id-card text-[10px]"></i> Masa Daftar Ulang Siswa Baru
+                                        </span>
+                                    <% } else { %>
+                                        <span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-black inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-lock text-[10px]"></i> Pendaftaran Ditutup
+                                        </span>
+                                    <% } %>
                                 </div>
-                                <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">Pusat Layanan PPDB Online & Offline</h3>
+                                <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">Pusat Layanan PPDB UPT SMPN 1 Rantepao</h3>
                             </div>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-3">
-                            <a href="#jalur-ppdb" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition border border-white/10 flex items-center gap-1.5">
-                                <span>4 Jalur & Kuota</span>
-                                <span>↓</span>
+                            <a href="#jadwal-ppdb" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition border border-white/10 flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-xs"></i>
+                                <span>Jadwal Seleksi</span>
                             </a>
-                            <a href="#cek-status" class="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition border border-amber-400/30 flex items-center gap-1.5">
+                            <a href="#jalur-ppdb" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition border border-white/10 flex items-center gap-1.5">
+                                <span>4 Jalur & Kuota (<%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_total) ? ppdbSetting.kuota_total : 320 %>)</span>
+                            </a>
+                            <a href="#cek-status" class="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition border border-amber-400/30 flex items-center gap-1.5 shadow-sm">
                                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
                                 <span>Cek Kelulusan</span>
                             </a>
@@ -52,8 +76,96 @@
                         </div>
                     </div>
 
+                    <!-- Dynamic Countdown Timer / Status Alert Card -->
+                    <% if (statusLoket === 'Buka' && typeof ppdbSetting !== 'undefined' && ppdbSetting.tgl_selesai_daftar) { %>
+                        <div class="p-4 sm:p-5 rounded-2xl bg-blue-950/70 border border-amber-400/30 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div class="space-y-1 text-center md:text-left">
+                                <span class="text-[11px] font-black text-amber-400 uppercase tracking-wider flex items-center justify-center md:justify-start gap-1.5">
+                                    <i class="fa-solid fa-hourglass-half animate-spin" style="animation-duration: 3s;"></i>
+                                    <span>Hitung Mundur Pendaftaran <%= ppdbSetting.nama_gelombang %></span>
+                                </span>
+                                <p class="text-xs text-slate-200">
+                                    Batas akhir pengisian formulir & penyerahan berkas: 
+                                    <strong class="text-white"><%= new Date(ppdbSetting.tgl_selesai_daftar).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></strong>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2 text-center" id="ppdb-countdown-timer" data-target="<%= new Date(ppdbSetting.tgl_selesai_daftar).toISOString().split('T')[0] %>">
+                                <div class="bg-slate-900/90 border border-amber-400/50 rounded-xl px-3 py-2 min-w-[56px] shadow-inner">
+                                    <span id="cd-days" class="text-xl sm:text-2xl font-black text-amber-400 block font-mono">00</span>
+                                    <span class="text-[9px] text-slate-300 uppercase font-bold tracking-wider">Hari</span>
+                                </div>
+                                <span class="text-amber-400 font-bold text-lg">:</span>
+                                <div class="bg-slate-900/90 border border-amber-400/50 rounded-xl px-3 py-2 min-w-[56px] shadow-inner">
+                                    <span id="cd-hours" class="text-xl sm:text-2xl font-black text-amber-400 block font-mono">00</span>
+                                    <span class="text-[9px] text-slate-300 uppercase font-bold tracking-wider">Jam</span>
+                                </div>
+                                <span class="text-amber-400 font-bold text-lg">:</span>
+                                <div class="bg-slate-900/90 border border-amber-400/50 rounded-xl px-3 py-2 min-w-[56px] shadow-inner">
+                                    <span id="cd-minutes" class="text-xl sm:text-2xl font-black text-amber-400 block font-mono">00</span>
+                                    <span class="text-[9px] text-slate-300 uppercase font-bold tracking-wider">Menit</span>
+                                </div>
+                                <span class="text-amber-400 font-bold text-lg">:</span>
+                                <div class="bg-slate-900/90 border border-amber-400/50 rounded-xl px-3 py-2 min-w-[56px] shadow-inner">
+                                    <span id="cd-seconds" class="text-xl sm:text-2xl font-black text-amber-400 block font-mono">00</span>
+                                    <span class="text-[9px] text-slate-300 uppercase font-bold tracking-wider">Detik</span>
+                                </div>
+                            </div>
+                        </div>
+                    <% } else if (statusLoket === 'Pengumuman') { %>
+                        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-purple-950/80 to-blue-950/80 border border-purple-400/40 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div class="flex items-center gap-3 text-center md:text-left">
+                                <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-xl shrink-0">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-white text-sm">Hasil Seleksi PPDB Telah Resmi Diumumkan!</h4>
+                                    <p class="text-xs text-purple-200 mt-0.5">Silakan cek status kelulusan calon siswa menggunakan Nomor Pendaftaran atau NISN.</p>
+                                </div>
+                            </div>
+                            <a href="#cek-status" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-blue-950 font-black text-xs rounded-xl shadow transition hover:scale-105 shrink-0 flex items-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Cek Kelulusan Sekarang ↓</span>
+                            </a>
+                        </div>
+                    <% } else if (statusLoket === 'Verifikasi') { %>
+                        <div class="p-4 sm:p-5 rounded-2xl bg-blue-950/80 border border-blue-400/40 backdrop-blur-md flex items-center gap-3 text-xs text-blue-100">
+                            <i class="fa-solid fa-clipboard-check text-blue-300 text-xl shrink-0"></i>
+                            <div>
+                                <strong class="text-white block text-sm">Tahap Verifikasi Dokumen & Berkas Fisik Sedang Berlangsung</strong>
+                                <p class="text-slate-300 mt-0.5">Pendaftaran online untuk periode ini telah ditutup. Panitia sedang memverifikasi keaslian dokumen fisik calon siswa di loket sekolah.</p>
+                            </div>
+                        </div>
+                    <% } else if (statusLoket === 'Daftar Ulang') { %>
+                        <div class="p-4 sm:p-5 rounded-2xl bg-amber-950/60 border border-amber-400/40 backdrop-blur-md flex items-center gap-3 text-xs text-amber-100">
+                            <i class="fa-solid fa-id-card text-amber-400 text-xl shrink-0"></i>
+                            <div>
+                                <strong class="text-white block text-sm">Masa Lapor Diri & Daftar Ulang Siswa Baru</strong>
+                                <p class="text-slate-300 mt-0.5">Bagi calon peserta didik yang dinyatakan DITERIMA, silakan membawa berkas asli dan fotokopi ke loket sekolah untuk registrasi ulang.</p>
+                            </div>
+                        </div>
+                    <% } else if (statusLoket === 'Tutup') { %>
+                        <div class="p-4 sm:p-5 rounded-2xl bg-rose-950/60 border border-rose-400/40 backdrop-blur-md flex items-center gap-3 text-xs text-rose-100">
+                            <i class="fa-solid fa-circle-exclamation text-rose-400 text-xl shrink-0"></i>
+                            <div>
+                                <strong class="text-white block text-sm">Pendaftaran PPDB Periode Ini Telah Ditutup</strong>
+                                <p class="text-slate-300 mt-0.5">Terima kasih atas antusiasme calon siswa dan orang tua. Pantau pengumuman lebih lanjut di portal ini atau hubungi panitia sekolah.</p>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <!-- Pesan Maklumat Panitia jika diisi -->
+                    <% if (typeof ppdbSetting !== 'undefined' && ppdbSetting.pesan_pengumuman && ppdbSetting.pesan_pengumuman.trim()) { %>
+                        <div class="p-3.5 sm:p-4 rounded-2xl bg-white/10 border border-white/15 text-xs text-slate-200 flex items-start gap-3">
+                            <i class="fa-solid fa-circle-info text-amber-400 text-base mt-0.5 shrink-0"></i>
+                            <div>
+                                <strong class="text-amber-300 block mb-0.5">Pengumuman Panitia PPDB:</strong>
+                                <p class="leading-relaxed whitespace-pre-wrap"><%= ppdbSetting.pesan_pengumuman %></p>
+                            </div>
+                        </div>
+                    <% } %>
+
                     <!-- 3 Info Items Grid -->
-                    <div class="grid sm:grid-cols-3 gap-6 pt-6 text-xs text-slate-300">
+                    <div class="grid sm:grid-cols-3 gap-6 pt-2 text-xs text-slate-300 border-t border-white/10">
                         <div class="flex items-start gap-3">
                             <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-amber-400 shrink-0">
                                 <i class="fa-solid fa-location-dot text-sm"></i>
@@ -69,7 +181,7 @@
                                 <i class="fa-solid fa-clock text-sm"></i>
                             </div>
                             <div>
-                                <strong class="text-white text-xs block">Waktu Layanan:</strong>
+                                <strong class="text-white text-xs block">Waktu Layanan Loket:</strong>
                                 <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">Senin – Sabtu, 08.00 – 14.00 WITA</p>
                             </div>
                         </div>
@@ -79,8 +191,10 @@
                                 <i class="fa-solid fa-phone text-sm"></i>
                             </div>
                             <div>
-                                <strong class="text-white text-xs block">Hotline & WhatsApp:</strong>
-                                <p class="text-[11px] text-amber-300 font-mono font-bold mt-0.5"><%= profil.telepon || '(0423) 21123' %> / 0812-3456-7890</p>
+                                <strong class="text-white text-xs block">Hotline & WhatsApp Panitia:</strong>
+                                <p class="text-[11px] text-amber-300 font-mono font-bold mt-0.5">
+                                    <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kontak_panitia) ? ppdbSetting.kontak_panitia : (profil.telepon || '0812-3456-7890') %>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -399,8 +513,9 @@
                         <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Kategori
                             Penerimaan</span>
                         <h2 class="text-3xl font-extrabold text-blue-950 mt-1">4 Jalur Pendaftaran Resmi</h2>
-                        <p class="text-sm text-slate-500 mt-2">Sesuai Permendikbudristek dan Petunjuk Teknis PPDB Dinas
-                            Pendidikan Kabupaten Toraja Utara.</p>
+                        <p class="text-sm text-slate-500 mt-2">
+                            Total Daya Tampung: <strong><%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_total) ? ppdbSetting.kuota_total : 320 %> Siswa Baru</strong> Sesuai Juknis PPDB Dinas Pendidikan Kabupaten Toraja Utara.
+                        </p>
                     </div>
 
                     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -414,7 +529,7 @@
                                 </div>
                                 <span
                                     class="text-[11px] font-extrabold px-3 py-1 rounded-full bg-blue-50 text-blue-900 border border-blue-200">
-                                    Kuota: 50%
+                                    Kuota: <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_zonasi) ? ppdbSetting.kuota_zonasi : 160 %> Siswa (50%)
                                 </span>
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Jalur Zonasi</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -437,7 +552,7 @@
                                 </div>
                                 <span
                                     class="text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200">
-                                    Kuota: 15%
+                                    Kuota: <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_afirmasi) ? ppdbSetting.kuota_afirmasi : 48 %> Siswa (15%)
                                 </span>
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Jalur Afirmasi</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -460,7 +575,7 @@
                                 </div>
                                 <span
                                     class="text-[11px] font-extrabold px-3 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200">
-                                    Kuota: 30%
+                                    Kuota: <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_prestasi) ? ppdbSetting.kuota_prestasi : 96 %> Siswa (30%)
                                 </span>
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Jalur Prestasi</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -483,7 +598,7 @@
                                 </div>
                                 <span
                                     class="text-[11px] font-extrabold px-3 py-1 rounded-full bg-purple-50 text-purple-900 border border-purple-200">
-                                    Kuota: 5%
+                                    Kuota: <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_mutasi) ? ppdbSetting.kuota_mutasi : 16 %> Siswa (5%)
                                 </span>
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Perpindahan Tugas</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -493,6 +608,113 @@
                             </div>
                             <div class="pt-4 mt-4 border-t border-slate-100 text-[11px] text-slate-400 font-medium">
                                 Dilengkapi surat tugas mutasi orang tua
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Jadwal & Agenda Resmi PPDB -->
+                <section id="jadwal-ppdb" data-aos="fade-up" class="scroll-mt-24">
+                    <div class="bg-gradient-to-br from-white to-slate-50 rounded-3xl p-8 sm:p-12 border border-slate-200/90 shadow-sm">
+                        <div class="text-center max-w-2xl mx-auto mb-10">
+                            <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Agenda Resmi</span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-blue-950 mt-1">Jadwal & Gelombang PPDB</h2>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                                Catat tanggal-tanggal penting penerimaan siswa baru <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.nama_gelombang) ? ppdbSetting.nama_gelombang : 'Gelombang 1' %> Tahun Ajaran <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.tahun_ajaran) ? ppdbSetting.tahun_ajaran : '2026/2027' %>.
+                            </p>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                            <!-- Agenda 1 -->
+                            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-blue-400 transition flex flex-col justify-between space-y-4">
+                                <div class="space-y-2">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-regular fa-calendar-plus"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-blue-700 block">Tahap 1</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">Pendaftaran & Unggah Berkas</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed">
+                                        Pendaftaran online akun calon siswa dan konsultasi data di loket panitia.
+                                    </p>
+                                </div>
+                                <div class="pt-3 border-t border-slate-100">
+                                    <span class="text-[11px] font-bold text-slate-800 block">
+                                        <% if (typeof ppdbSetting !== 'undefined' && ppdbSetting.tgl_mulai_daftar && ppdbSetting.tgl_selesai_daftar) { %>
+                                            <%= new Date(ppdbSetting.tgl_mulai_daftar).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) %> – <%= new Date(ppdbSetting.tgl_selesai_daftar).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                        <% } else { %>
+                                            15 Jun – 30 Jun 2026
+                                        <% } %>
+                                    </span>
+                                    <span class="text-[10px] text-emerald-600 font-semibold">Online & Loket Fisik</span>
+                                </div>
+                            </div>
+
+                            <!-- Agenda 2 -->
+                            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-blue-400 transition flex flex-col justify-between space-y-4">
+                                <div class="space-y-2">
+                                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-solid fa-list-check"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-amber-700 block">Tahap 2</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">Verifikasi Dokumen Fisik</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed">
+                                        Pengecekan keabsahan dokumen (KK, Akta, Rapor/Ijazah) langsung di loket sekolah.
+                                    </p>
+                                </div>
+                                <div class="pt-3 border-t border-slate-100">
+                                    <span class="text-[11px] font-bold text-slate-800 block">
+                                        08.00 – 14.00 WITA
+                                    </span>
+                                    <span class="text-[10px] text-amber-600 font-semibold">Sekretariat PPDB</span>
+                                </div>
+                            </div>
+
+                            <!-- Agenda 3 -->
+                            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-blue-400 transition flex flex-col justify-between space-y-4">
+                                <div class="space-y-2">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-solid fa-bullhorn"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-purple-700 block">Tahap 3</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">Pengumuman Kelulusan</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed">
+                                        Penetapan hasil seleksi penerimaan resmi melalui portal online dan papan sekolah.
+                                    </p>
+                                </div>
+                                <div class="pt-3 border-t border-slate-100">
+                                    <span class="text-[11px] font-bold text-slate-800 block">
+                                        <% if (typeof ppdbSetting !== 'undefined' && ppdbSetting.tgl_pengumuman) { %>
+                                            <%= new Date(ppdbSetting.tgl_pengumuman).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                                        <% } else { %>
+                                            04 Juli 2026
+                                        <% } %>
+                                    </span>
+                                    <span class="text-[10px] text-purple-600 font-semibold">Portal Web & Loket</span>
+                                </div>
+                            </div>
+
+                            <!-- Agenda 4 -->
+                            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-blue-400 transition flex flex-col justify-between space-y-4">
+                                <div class="space-y-2">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-solid fa-user-check"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700 block">Tahap 4</span>
+                                    <h4 class="font-bold text-slate-900 text-sm">Daftar Ulang & Lapor Diri</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed">
+                                        Registrasi ulang dan penyerahan berkas final bagi calon siswa yang dinyatakan Diterima.
+                                    </p>
+                                </div>
+                                <div class="pt-3 border-t border-slate-100">
+                                    <span class="text-[11px] font-bold text-slate-800 block">
+                                        <% if (typeof ppdbSetting !== 'undefined' && ppdbSetting.tgl_daftar_ulang) { %>
+                                            Mulai <%= new Date(ppdbSetting.tgl_daftar_ulang).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                                        <% } else { %>
+                                            Mulai 06 Juli 2026
+                                        <% } %>
+                                    </span>
+                                    <span class="text-[10px] text-emerald-600 font-semibold">Loket Sekolah</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1084,6 +1306,48 @@
                             document.getElementById('cek-status').scrollIntoView({ behavior: 'smooth' });
                         }
                     }
+
+                    // Live Realtime Countdown Timer for PPDB Batas Akhir
+                    (function initPpdbCountdown() {
+                        const timerEl = document.getElementById('ppdb-countdown-timer');
+                        if (!timerEl) return;
+                        const targetAttr = timerEl.getAttribute('data-target');
+                        if (!targetAttr) return;
+
+                        const targetDate = new Date(targetAttr + 'T23:59:59').getTime();
+                        if (isNaN(targetDate)) return;
+
+                        const daysEl = document.getElementById('cd-days');
+                        const hoursEl = document.getElementById('cd-hours');
+                        const minEl = document.getElementById('cd-minutes');
+                        const secEl = document.getElementById('cd-seconds');
+
+                        function updateTimer() {
+                            const now = new Date().getTime();
+                            const diff = targetDate - now;
+
+                            if (diff <= 0) {
+                                if (daysEl) daysEl.textContent = '00';
+                                if (hoursEl) hoursEl.textContent = '00';
+                                if (minEl) minEl.textContent = '00';
+                                if (secEl) secEl.textContent = '00';
+                                return;
+                            }
+
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+                            if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+                            if (minEl) minEl.textContent = String(minutes).padStart(2, '0');
+                            if (secEl) secEl.textContent = String(seconds).padStart(2, '0');
+                        }
+
+                        updateTimer();
+                        setInterval(updateTimer, 1000);
+                    })();
                 </script>
 
 </body>
