@@ -1,0 +1,25 @@
+                                            <div>
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                                                        slug: <%= hal.slug %>
+                                                    </span>
+                                                    <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md <%= theme.pill %> border <%= theme.border %>">
+                                                        ● <%= hal.warna_badge || 'blue' %>
+                                                    </span>
+                                                    <% 
+                                                        let cardItemsCount = 0;
+                                                        try {
+                                                            const parsed = JSON.parse(hal.items_json || '[]');
+                                                            if (Array.isArray(parsed)) cardItemsCount = parsed.length;
+                                                        } catch(e) {}
+                                                    %>
+                                                    <% if (cardItemsCount > 0) { %>
+                                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
+                                                            <i class="fa-solid fa-shapes text-blue-500"></i> <%= cardItemsCount %> Kartu Item
+                                                        </span>
+                                                    <% } %>
+                                                </div>
+                                                <h4 class="font-extrabold text-base text-slate-900 mt-1.5 leading-snug">
+                                                    <%= hal.judul %>
+                                                </h4>
+                                            </div>

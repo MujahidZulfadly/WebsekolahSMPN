@@ -44,11 +44,16 @@
         <div>
             <!-- School Brand Header -->
             <div class="h-20 px-6 flex items-center gap-3 border-b border-slate-800/80 bg-slate-950/40">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 font-black flex items-center justify-center text-lg shadow-md shadow-amber-500/20">
-                    S1
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 font-black flex items-center justify-center text-lg shadow-md shadow-amber-500/20 overflow-hidden border border-white/20 p-1 shrink-0">
+                    <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
+                        <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                        <span class="hidden">S1</span>
+                    <% } else { %>
+                        <span>S1</span>
+                    <% } %>
                 </div>
                 <div>
-                    <h1 class="font-bold text-sm text-white tracking-wide leading-tight">SMPN 1 RANTEPAO</h1>
+                    <h1 class="font-bold text-sm text-white tracking-wide leading-tight"><%= (typeof profil !== 'undefined' && profil && profil.nama_sekolah) ? profil.nama_sekolah : 'SMPN 1 RANTEPAO' %></h1>
                     <span class="text-[11px] font-medium text-amber-400">Control Panel Admin</span>
                 </div>
             </div>
@@ -114,6 +119,14 @@
                     <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= (typeof stats !== 'undefined' && stats.totalKomite) ? stats.totalKomite : 0 %></span>
                 </button>
 
+                <button type="button" onclick="switchTab('struktur')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="struktur">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-sitemap w-5 text-center text-slate-400 group-hover:text-amber-400 transition text-sm"></i>
+                        <span>Struktur Organisasi</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= (typeof stats !== 'undefined' && stats.totalStruktur) ? stats.totalStruktur : 0 %></span>
+                </button>
+
                 <button type="button" onclick="switchTab('ppdb')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="ppdb">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -145,6 +158,14 @@
                 <button type="button" onclick="switchTab('profil')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="profil">
                     <svg class="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                     <span>Profil Sekolah</span>
+                </button>
+
+                <button type="button" onclick="switchTab('halaman-statis')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="halaman-statis">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-file-lines w-5 text-center text-slate-400 group-hover:text-amber-400 transition text-sm"></i>
+                        <span>Info Sarana & Dokumen</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-bold"><%= (typeof stats !== 'undefined' && stats.totalHalamanStatis) ? stats.totalHalamanStatis : 0 %></span>
                 </button>
 
                 <button type="button" onclick="switchTab('pesan')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="pesan">
@@ -299,6 +320,23 @@
                         <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                             <span class="text-slate-500">Pengurus kemitraan</span>
                             <button type="button" onclick="switchTab('komite')" class="text-blue-600 font-semibold hover:underline">Kelola →</button>
+                        </div>
+                    </div>
+
+                    <!-- Stat Card: Struktur Organisasi -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Struktur Organisasi</p>
+                                <h3 class="text-3xl font-extrabold text-slate-800 mt-1"><%= (typeof stats !== 'undefined' && stats.totalStruktur) ? stats.totalStruktur : 0 %></h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i class="fa-solid fa-sitemap text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="text-slate-500"><%= (typeof strukturInfo !== 'undefined' && strukturInfo.foto_bagan) ? 'Bagan kustom aktif' : 'Bagan default aktif' %></span>
+                            <button type="button" onclick="switchTab('struktur')" class="text-amber-600 font-semibold hover:underline">Kelola →</button>
                         </div>
                     </div>
 
@@ -1007,10 +1045,181 @@
             </div>
 
             <!-- ============================================== -->
+            <!-- TAB: KELOLA STRUKTUR ORGANISASI SEKOLAH -->
+            <!-- ============================================== -->
+            <div id="tab-struktur" class="tab-content space-y-6">
+
+                <!-- 1. Form Pengaturan Bagan & Keterangan Struktur -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden p-6">
+                    <form action="/admin/struktur-organisasi/info" method="POST" enctype="multipart/form-data" class="space-y-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+                            <div>
+                                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-sitemap text-amber-500"></i>
+                                    <span>Pengaturan Bagan Gambar &amp; Informasi Struktur</span>
+                                </h3>
+                                <p class="text-xs text-slate-400">Upload bagan visual hierarki organisasi sekolah dan perbarui deskripsi keterangannya</p>
+                            </div>
+                            <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2 self-start sm:self-auto cursor-pointer">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Simpan Bagan &amp; Info</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Judul Bagian Struktur</label>
+                                <input type="text" name="judul" value="<%= (typeof strukturInfo !== 'undefined' && strukturInfo.judul) ? strukturInfo.judul : 'Struktur Organisasi UPT SMP Negeri 1 Rantepao' %>" required class="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Periode / Tahun Ajaran</label>
+                                <input type="text" name="periode" value="<%= (typeof strukturInfo !== 'undefined' && strukturInfo.periode) ? strukturInfo.periode : 'Tahun Ajaran 2025/2026' %>" required class="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-blue-600" placeholder="Contoh: Tahun Ajaran 2025/2026">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Keterangan / Penjelasan Tata Kelola</label>
+                            <textarea name="keterangan" rows="2" class="w-full text-xs border border-slate-200 rounded-xl p-3 focus:outline-blue-600" placeholder="Deskripsikan secara singkat alur garis komando, koordinasi, dan pembagian tugas..."><%= (typeof strukturInfo !== 'undefined' && strukturInfo.keterangan) ? strukturInfo.keterangan : '' %></textarea>
+                        </div>
+
+                        <!-- Upload & Current Preview Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 pt-3 border-t border-slate-100">
+                            <div class="md:col-span-6 space-y-2">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">Upload Gambar / Foto Bagan Baru</label>
+                                <input type="file" name="foto_bagan" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-200 rounded-xl cursor-pointer">
+                                <p class="text-[11px] text-slate-400">Mendukung format JPG, PNG, WEBP. Disarankan gambar berorientasi lanskap horizontal atau diagram tajam resolusi tinggi.</p>
+                            </div>
+                            <div class="md:col-span-6">
+                                <label class="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Pratinjau Bagan Aktif</label>
+                                <% 
+                                const curBagan = (typeof strukturInfo !== 'undefined' && strukturInfo.foto_bagan) 
+                                    ? ('/uploads/struktur/' + strukturInfo.foto_bagan) 
+                                    : '/img/default-bagan-struktur.svg'; 
+                                %>
+                                <div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 h-36 flex items-center justify-center group">
+                                    <img src="<%= curBagan %>" alt="Bagan Struktur Organisasi" class="h-full w-auto object-contain">
+                                    <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                        <a href="<%= curBagan %>" target="_blank" class="px-3 py-1.5 rounded-lg bg-white/20 text-white text-xs font-bold hover:bg-white/30 backdrop-blur-sm flex items-center gap-1">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            <span>Lihat Penuh</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. Tabel Personil / Pejabat Struktural -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-800">Daftar Pejabat &amp; Personil Struktural</h3>
+                            <p class="text-xs text-slate-400">Daftar pimpinan, wakil kepala sekolah, tata usaha, dan koordinator yang ditampilkan di website</p>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <input type="text" id="search-struktur" onkeyup="filterStrukturTable()" placeholder="Cari nama / jabatan..." class="text-xs border border-slate-200 rounded-lg px-3 py-2 w-48 focus:outline-blue-600">
+                            <button type="button" onclick="openModal('modal-tambah-struktur')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition shadow flex items-center gap-1.5 flex-shrink-0 cursor-pointer">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Tambah Pejabat</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse" id="table-struktur">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-100">
+                                    <th class="py-3 px-4 w-12 text-center">Urutan</th>
+                                    <th class="py-3 px-4">Foto &amp; Nama Lengkap</th>
+                                    <th class="py-3 px-4">NIP</th>
+                                    <th class="py-3 px-4">Jabatan Struktural</th>
+                                    <th class="py-3 px-4">Kategori Tingkat</th>
+                                    <th class="py-3 px-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% if (typeof strukturAnggota === 'undefined' || strukturAnggota.length === 0) { %>
+                                    <tr>
+                                        <td colspan="6" class="py-8 text-center text-slate-400 text-xs">
+                                            Belum ada data pejabat struktur organisasi. Klik "Tambah Pejabat" untuk menambahkan.
+                                        </td>
+                                    </tr>
+                                <% } else { %>
+                                    <% strukturAnggota.forEach((p) => { %>
+                                        <tr class="hover:bg-slate-50/80 transition">
+                                            <td class="py-3 px-4 text-center font-bold text-slate-600">
+                                                <span class="inline-flex w-7 h-7 rounded-full bg-slate-100 text-slate-700 items-center justify-center text-xs">
+                                                    <%= p.urutan || 1 %>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <div class="flex items-center gap-3">
+                                                    <% 
+                                                    let pFoto = '/img/default-avatar.svg';
+                                                    if (p.foto && p.foto.trim() !== '') {
+                                                        if (p.foto.startsWith('foto_kepsek')) {
+                                                            pFoto = '/uploads/profil/' + p.foto;
+                                                        } else if (p.foto.startsWith('foto_komite')) {
+                                                            pFoto = '/uploads/komite/' + p.foto;
+                                                        } else if (p.foto.startsWith('foto-')) {
+                                                            pFoto = '/uploads/guru/' + p.foto;
+                                                        } else {
+                                                            pFoto = '/uploads/struktur/' + p.foto;
+                                                        }
+                                                    }
+                                                    %>
+                                                    <img src="<%= pFoto %>" alt="<%= p.nama_lengkap %>" class="w-10 h-10 rounded-full object-cover border border-slate-200" onerror="this.onerror=null; this.src='/img/default-avatar.svg';">
+                                                    <span class="font-bold text-slate-800"><%= p.nama_lengkap %></span>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-4 text-xs font-mono text-slate-500">
+                                                <%= (p.nip && p.nip !== '-') ? p.nip : '-' %>
+                                            </td>
+                                            <td class="py-3 px-4 font-semibold text-xs text-blue-900">
+                                                <%= p.jabatan %>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide bg-blue-50 text-blue-700 border border-blue-200">
+                                                    <%= p.kategori || 'Pimpinan' %>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4 text-center">
+                                                <div class="flex items-center justify-center gap-2">
+                                                    <button type="button" 
+                                                            class="btn-edit-struktur px-2.5 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition flex items-center gap-1.5 shadow-xs cursor-pointer"
+                                                            data-id="<%= p.id %>"
+                                                            data-nama="<%= p.nama_lengkap %>"
+                                                            data-nip="<%= p.nip || '' %>"
+                                                            data-jabatan="<%= p.jabatan %>"
+                                                            data-kategori="<%= p.kategori || 'Pimpinan' %>"
+                                                            data-urutan="<%= p.urutan || 1 %>">
+                                                        <i class="fa-solid fa-pen-to-square text-xs pointer-events-none"></i>
+                                                        <span class="pointer-events-none">Edit</span>
+                                                    </button>
+                                                    <form action="/admin/struktur-organisasi/anggota/hapus/<%= p.id %>" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data <%= p.nama_lengkap %>?')">
+                                                        <button type="submit" class="px-2.5 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+                                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                                            <span>Hapus</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ============================================== -->
             <!-- TAB 5: EDIT PROFIL SEKOLAH -->
             <!-- ============================================== -->
             <div id="tab-profil" class="tab-content">
-                <form action="/admin/profil/update" method="POST" class="space-y-6">
+                <form action="/admin/profil/update" method="POST" enctype="multipart/form-data" class="space-y-6">
                     
                     <!-- Top Save Bar -->
                     <div class="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
@@ -1024,11 +1233,62 @@
                         </button>
                     </div>
 
+                    <!-- Section: Logo Resmi Sekolah (Kustomisasi Terpusat) -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+                            <h4 class="font-bold text-sm text-blue-950 flex items-center gap-2">
+                                <i class="fa-solid fa-certificate text-amber-500"></i>
+                                <span>Logo Resmi Sekolah (Kustomisasi Terpusat)</span>
+                            </h4>
+                            <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0 self-start sm:self-auto flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i>
+                                <span>Otomatis Sinkron ke Seluruh Halaman Website</span>
+                            </span>
+                        </div>
+
+                        <div class="grid md:grid-cols-12 gap-5 items-center bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                            <!-- Live Preview Box -->
+                            <div class="md:col-span-4 flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
+                                <span class="text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-wider">Pratinjau Logo</span>
+                                <div class="w-28 h-28 rounded-2xl bg-slate-900 border-2 border-amber-400/50 p-2.5 flex items-center justify-center shadow-lg relative group overflow-hidden">
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-950 to-slate-900 -z-0"></div>
+                                    <img id="logo-preview-img" src="<%= (profil && profil.logo_sekolah) ? ('/uploads/profil/' + profil.logo_sekolah) : '/uploads/profil/logo-smpn1-rantepao.svg' %>" alt="Logo Sekolah" class="w-full h-full object-contain relative z-10 transition-transform group-hover:scale-105" onerror="this.src='/uploads/profil/logo-smpn1-rantepao.svg'">
+                                </div>
+                                <p id="logo-preview-filename" class="text-[10px] text-slate-500 mt-2 text-center font-mono truncate max-w-full">
+                                    <%= (profil && profil.logo_sekolah) ? profil.logo_sekolah : 'logo-smpn1-rantepao.svg' %>
+                                </p>
+                            </div>
+
+                            <!-- Upload & Instructions Controls -->
+                            <div class="md:col-span-8 space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                                        <span>Pilih Berkas Logo Baru</span>
+                                        <span class="text-amber-600 text-[10px] font-medium">(PNG transparan, SVG, WEBP, atau JPG)</span>
+                                    </label>
+                                    <input type="file" name="logo_sekolah" id="input-logo-sekolah" accept="image/*,.svg" onchange="previewLogoSekolah(this)" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer bg-white border border-slate-300 rounded-xl p-1.5">
+                                </div>
+
+                                <div class="bg-blue-50/80 rounded-xl p-3 border border-blue-200/70 text-[11px] text-blue-900 space-y-1">
+                                    <div class="font-bold flex items-center gap-1.5 text-blue-950">
+                                        <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                                        <span>Panduan Logo Resmi:</span>
+                                    </div>
+                                    <ul class="list-disc list-inside space-y-0.5 text-slate-600 pl-1 text-[10.5px]">
+                                        <li>Logo yang diunggah di sini akan otomatis diterapkan pada: <strong>Navbar atas, Preloader, Favicon browser, Footer bawah, Lembar Bukti PPDB, Portal Calon Siswa, dan Sidebar Panel Admin</strong>.</li>
+                                        <li>Disarankan menggunakan gambar dengan latar belakang <strong>transparan (PNG / SVG)</strong> berasio 1:1 (persegi/bulat).</li>
+                                        <li>Biarkan isian file kosong jika ingin tetap menggunakan logo yang ada saat ini.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Section: Identitas & Kontak -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                         <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
                             <i class="fa-solid fa-school text-blue-900"></i>
-                            <span>Identitas Umum & Akreditasi</span>
+                            <span>Identitas Umum, Statistik Siswa & Akreditasi</span>
                         </h4>
                         <div class="grid md:grid-cols-3 gap-4">
                             <div>
@@ -1042,6 +1302,17 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Akreditasi</label>
                                 <input type="text" name="akreditasi" value="<%= profil.akreditasi || '' %>" required placeholder="Contoh: A" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4 pt-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Total Jumlah Siswa Aktif</label>
+                                <input type="number" name="jumlah_siswa" value="<%= profil.jumlah_siswa || 886 %>" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah Rombongan Belajar (Rombel)</label>
+                                <input type="number" name="jumlah_rombel" value="<%= profil.jumlah_rombel || 24 %>" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
                             </div>
                         </div>
 
@@ -1066,21 +1337,44 @@
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                         <h4 class="font-bold text-sm text-blue-950 pb-2 border-b border-slate-100 flex items-center gap-2">
                             <i class="fa-solid fa-user-tie text-blue-900"></i>
-                            <span>Data Kepala Sekolah & Sambutan</span>
+                            <span>Data Kepala Sekolah & Sambutan Resmi</span>
                         </h4>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Kepala Sekolah (beserta Gelar)</label>
-                                <input type="text" name="nama_kepsek" value="<%= profil.nama_kepsek || '' %>" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+
+                        <div class="grid md:grid-cols-12 gap-4 items-start">
+                            <div class="md:col-span-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <label class="block text-xs font-bold text-slate-700 mb-2">Foto Resmi Kepala Sekolah</label>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-20 h-24 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 flex-shrink-0 shadow-xs">
+                                        <% if (profil.foto_kepsek && profil.foto_kepsek !== 'kepsek.jpg') { %>
+                                            <img src="/uploads/profil/<%= profil.foto_kepsek %>" alt="Kepala Sekolah" class="w-full h-full object-cover">
+                                        <% } else { %>
+                                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100 text-xs">
+                                                <i class="fa-solid fa-user-tie text-2xl mb-1 text-slate-400"></i>
+                                                <span class="text-[9px]">Belum Ada</span>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <input type="file" name="foto_kepsek" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                        <p class="text-[10px] text-slate-400 mt-1.5 leading-snug">Format: JPG, PNG, WEBP (Maks 2MB). Kosongkan jika foto tidak diubah.</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">NIP Kepala Sekolah</label>
-                                <input type="text" name="nip_kepsek" value="<%= profil.nip_kepsek || '' %>" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+
+                            <div class="md:col-span-8 grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Kepala Sekolah (beserta Gelar) *</label>
+                                    <input type="text" name="nama_kepsek" value="<%= profil.nama_kepsek || '' %>" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">NIP Kepala Sekolah</label>
+                                    <input type="text" name="nip_kepsek" value="<%= profil.nip_kepsek || '' %>" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Teks Sambutan Kepala Sekolah</label>
+                                    <textarea name="sambutan_kepsek" rows="4" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:outline-blue-600"><%= profil.sambutan_kepsek || '' %></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Teks Sambutan Kepala Sekolah</label>
-                            <textarea name="sambutan_kepsek" rows="4" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:outline-blue-600"><%= profil.sambutan_kepsek || '' %></textarea>
                         </div>
                     </div>
 
@@ -1124,6 +1418,140 @@
                     </div>
 
                 </form>
+
+                
+                <!-- ============================================================== -->
+                <!-- SECTION: KELOLA BANNER SLIDER BERANDA (HERO SHOWCASE)          -->
+                <!-- ============================================================== -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm mt-8 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                                <i class="fa-solid fa-images"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-bold text-base text-blue-950 flex items-center gap-2">
+                                    <span>Banner Slider Beranda (Hero Showcase)</span>
+                                    <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/60">
+                                        <%= (typeof heroSliders !== 'undefined' && heroSliders) ? heroSliders.length : 0 %> Slide
+                                    </span>
+                                </h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Kelola gambar banner bergerak utama di halaman depan beranda website sekolah.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openModal('modal-tambah-slider')" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition hover:-translate-y-0.5">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Slide Banner</span>
+                        </button>
+                    </div>
+
+                    <!-- Grid Card Slider -->
+                    <% if (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0) { %>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <% heroSliders.forEach((slide, idx) => { %>
+                        <div class="group relative bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col justify-between">
+                            <div>
+                                <!-- Image Preview & Badges -->
+                                <div class="relative h-44 w-full bg-slate-900 overflow-hidden">
+                                    <img src="<%= slide.gambar.startsWith('http') ? slide.gambar : (slide.gambar.startsWith('/') ? slide.gambar : '/' + slide.gambar) %>" 
+                                         alt="<%= slide.judul %>" 
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-black/30"></div>
+                                    
+                                    <!-- Badges Urutan & Status -->
+                                    <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-white/95 text-slate-800 shadow-sm backdrop-blur-sm flex items-center gap-1">
+                                            <i class="fa-solid fa-arrow-down-1-9 text-slate-500 text-[10px]"></i>
+                                            Urutan: #<%= slide.urutan %>
+                                        </span>
+                                    </div>
+
+                                    <div class="absolute top-3 right-3">
+                                        <% if (slide.status_aktif === 'Aktif') { %>
+                                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-500 text-white shadow-sm flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                            Aktif
+                                        </span>
+                                        <% } else { %>
+                                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-600 text-slate-200 shadow-sm flex items-center gap-1">
+                                            <i class="fa-solid fa-eye-slash text-[10px]"></i>
+                                            Nonaktif
+                                        </span>
+                                        <% } %>
+                                    </div>
+
+                                    <div class="absolute bottom-3 left-3 right-3">
+                                        <h5 class="text-white font-bold text-sm leading-snug line-clamp-1 drop-shadow"><%= slide.judul %></h5>
+                                    </div>
+                                </div>
+
+                                <!-- Body Info -->
+                                <div class="p-4 space-y-2.5">
+                                    <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                        <%= slide.deskripsi || 'Tidak ada deskripsi tambahan.' %>
+                                    </p>
+
+                                    <div class="pt-2.5 border-t border-slate-200/70 text-[11px] text-slate-500 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-blue-500 text-[10px]"></i>
+                                        <span class="font-medium text-slate-700">Tombol:</span>
+                                        <span class="truncate bg-slate-200/70 px-2 py-0.5 rounded text-slate-700 font-mono text-[10px]" title="<%= slide.teks_tombol %> -> <%= slide.link_tombol %>">
+                                            <%= slide.teks_tombol || 'Selengkapnya' %> &rarr; <%= slide.link_tombol || '#' %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Actions -->
+                            <div class="px-4 py-3 bg-white border-t border-slate-200/70 flex items-center justify-between gap-2">
+                                <!-- Form Toggle Status -->
+                                <form action="/admin/slider/toggle/<%= slide.id %>" method="POST" class="inline">
+                                    <button type="submit" 
+                                            class="text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition <%= slide.status_aktif === 'Aktif' ? 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100' : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' %>"
+                                            title="Ubah Status Tampil">
+                                        <i class="fa-solid <%= slide.status_aktif === 'Aktif' ? 'fa-pause' : 'fa-play' %> mr-1"></i>
+                                        <%= slide.status_aktif === 'Aktif' ? 'Nonaktifkan' : 'Aktifkan' %>
+                                    </button>
+                                </form>
+
+                                <div class="flex items-center gap-1.5">
+                                    <!-- Edit Button -->
+                                    <button type="button" 
+                                            class="btn-edit-slider p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xs" 
+                                            title="Edit Slide Banner"
+                                            data-id="<%= slide.id %>"
+                                            data-judul="<%= slide.judul %>"
+                                            data-deskripsi="<%= slide.deskripsi || '' %>"
+                                            data-tekstombol="<%= slide.teks_tombol || '' %>"
+                                            data-linktombol="<%= slide.link_tombol || '' %>"
+                                            data-urutan="<%= slide.urutan %>"
+                                            data-status="<%= slide.status_aktif %>"
+                                            data-gambar="<%= slide.gambar %>">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+
+                                    <!-- Delete Button -->
+                                    <form action="/admin/slider/hapus/<%= slide.id %>" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus slide banner ini? Gambar file banner akan ikut terhapus dari server.');">
+                                        <button type="submit" class="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition text-xs" title="Hapus Slide Banner">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+                    <% } else { %>
+                    <div class="py-12 px-4 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl">
+                        <i class="fa-solid fa-images text-3xl text-slate-300 mb-3 block"></i>
+                        <h5 class="text-sm font-bold text-slate-700">Belum Ada Slide Banner Beranda</h5>
+                        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Tambahkan slide banner pertama untuk ditampilkan pada showcase beranda utama website.</p>
+                        <button type="button" onclick="openModal('modal-tambah-slider')" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Slide Baru</span>
+                        </button>
+                    </div>
+                    <% } %>
+                </div>
 
                 <!-- Section: Keamanan & Ganti Password Admin -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm mt-8 space-y-4">
@@ -1424,14 +1852,22 @@
                     <!-- Action Header Bar -->
                     <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase">Tahun Ajaran 2026/2027</span>
-                                <span class="text-xs text-slate-400">Total: <%= (typeof stats !== 'undefined' && stats.totalPPDB) ? stats.totalPPDB : 0 %> Calon Siswa</span>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase">T.A. <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.tahun_ajaran) ? ppdbSetting.tahun_ajaran : '2026/2027' %></span>
+                                <% const statusLoketBadge = (typeof ppdbSetting !== 'undefined' && ppdbSetting.status_loket) ? ppdbSetting.status_loket : 'Buka'; %>
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider <%= statusLoketBadge === 'Buka' ? 'bg-emerald-100 text-emerald-800' : (statusLoketBadge === 'Tutup' ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800') %>">
+                                    Loket: <%= statusLoketBadge %>
+                                </span>
+                                <span class="text-xs text-slate-400">Total: <%= (typeof stats !== 'undefined' && stats.totalPPDB) ? stats.totalPPDB : 0 %> Calon Siswa (Kuota: <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_total) ? ppdbSetting.kuota_total : 320 %>)</span>
                             </div>
                             <h3 class="font-bold text-lg text-slate-800 mt-1">Penerimaan Peserta Didik Baru (PPDB)</h3>
-                            <p class="text-xs text-slate-400">Verifikasi berkas, pantau 4 jalur seleksi, dan tetapkan kelulusan calon siswa baru</p>
+                            <p class="text-xs text-slate-400">Verifikasi berkas, pantau 4 jalur seleksi, atur kuota gelombang, dan tetapkan kelulusan calon siswa baru</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" onclick="openModal('modal-pengaturan-ppdb')" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-sliders text-xs"></i>
+                                <span>Pengaturan PPDB & Kuota</span>
+                            </button>
                             <button type="button" onclick="window.print()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-sm">
                                 <i class="fa-solid fa-print text-xs"></i>
                                 <span>Cetak Rekap</span>
@@ -1723,6 +2159,144 @@
                         <span id="ppdb-counter-text">Menampilkan semua calon siswa pendaftar PPDB</span>
                         <span>Panitia PPDB UPT SMPN 1 Rantepao</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 11: KELOLA HALAMAN PROFIL & SARANA (STATIS) -->
+            <!-- ============================================== -->
+                        <div id="tab-halaman-statis" class="tab-content space-y-6">
+                <!-- Header Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 text-xl font-bold shadow-sm shrink-0">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-lg text-slate-900 leading-tight">Kelola Konten Halaman Profil & Sarana</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    ● Modal Popup Aktif
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1 max-w-2xl">
+                                Kelola isi teks, slip kartu, dan struktur kartu informasi yang muncul secara instan saat pengunjung mengklik sub-menu <strong>Profil / Tentang Kami</strong> di website (Sejarah Singkat, Sarana Prasarana, Program Kerja, dan Kondisi Siswa).
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <a href="/" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500"></i>
+                            <span>Buka Web & Uji Modal</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cards Grid List Halaman Profil -->
+                <% const listHalaman = (typeof halamanStatis !== 'undefined' && Array.isArray(halamanStatis)) ? halamanStatis.filter(h => h.slug !== 'visi-misi') : []; %>
+                <div class="grid lg:grid-cols-2 gap-5">
+                    <% if (listHalaman.length > 0) { %>
+                        <% listHalaman.forEach((hal) => { %>
+                            <% 
+                                const themeMap = {
+                                    'amber': { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', pill: 'bg-amber-100 text-amber-800' },
+                                    'emerald': { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', pill: 'bg-emerald-100 text-emerald-800' },
+                                    'purple': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', pill: 'bg-purple-100 text-purple-800' },
+                                    'rose': { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', pill: 'bg-rose-100 text-rose-800' },
+                                    'cyan': { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200', pill: 'bg-cyan-100 text-cyan-800' },
+                                    'indigo': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', pill: 'bg-indigo-100 text-indigo-800' },
+                                    'teal': { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-200', pill: 'bg-teal-100 text-teal-800' },
+                                    'blue': { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', pill: 'bg-blue-100 text-blue-800' }
+                                };
+                                const theme = themeMap[hal.warna_badge] || themeMap['blue'];
+                                const safeIkon = hal.ikon || 'fa-solid fa-file-lines';
+                            %>
+                            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between group">
+                                <div>
+                                    <!-- Card Header -->
+                                    <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-11 h-11 rounded-2xl <%= theme.bg %> <%= theme.text %> border <%= theme.border %> flex items-center justify-center text-lg font-bold shadow-xs shrink-0 transition-colors">
+                                                <i class="<%= safeIkon %>"></i>
+                                            </div>
+                                            <div>
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                                                        slug: <%= hal.slug %>
+                                                    </span>
+                                                    <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md <%= theme.pill %> border <%= theme.border %>">
+                                                        ● <%= hal.warna_badge || 'blue' %>
+                                                    </span>
+                                                    <% 
+                                                        let cardItemsCount = 0;
+                                                        try {
+                                                            const parsed = JSON.parse(hal.items_json || '[]');
+                                                            if (Array.isArray(parsed)) cardItemsCount = parsed.length;
+                                                        } catch(e) {}
+                                                    %>
+                                                    <% if (cardItemsCount > 0) { %>
+                                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
+                                                            <i class="fa-solid fa-shapes text-blue-500"></i> <%= cardItemsCount %> Kartu Item
+                                                        </span>
+                                                    <% } %>
+                                                </div>
+                                                <h4 class="font-extrabold text-base text-slate-900 mt-1.5 leading-snug">
+                                                    <%= hal.judul %>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content Preview -->
+                                    <div class="py-3">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Deskripsi Slip Kartu:</p>
+                                        <div class="p-3 bg-slate-50/90 rounded-xl border border-slate-100 text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                            <%= hal.ringkasan || (hal.konten || '').replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim() %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card Footer Actions -->
+                                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                                    <span class="flex items-center gap-1.5 text-[11px]">
+                                        <i class="fa-solid fa-clock-rotate-left text-slate-300"></i>
+                                        <span>Update: <%= new Date(hal.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                                    </span>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" 
+                                            class="btn-preview-halaman px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition flex items-center gap-1.5 cursor-pointer"
+                                            data-slug="<%= hal.slug %>"
+                                            data-judul="<%= hal.judul %>"
+                                            data-konten="<%= encodeURIComponent(hal.konten || '') %>">
+                                            <i class="fa-solid fa-eye text-xs text-slate-500"></i>
+                                            <span>Pratinjau</span>
+                                        </button>
+                                        <button type="button" 
+                                            class="btn-edit-halaman px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                                            data-id="<%= hal.id %>"
+                                            data-slug="<%= hal.slug %>"
+                                            data-judul="<%= hal.judul %>"
+                                            data-ikon="<%= safeIkon %>"
+                                            data-ringkasan="<%= encodeURIComponent(hal.ringkasan || '') %>"
+                                            data-warna-badge="<%= hal.warna_badge || 'blue' %>"
+                                            data-pembuka="<%= encodeURIComponent(hal.paragraf_pembuka || '') %>"
+                                            data-penutup="<%= encodeURIComponent(hal.paragraf_penutup || '') %>"
+                                            data-items="<%= encodeURIComponent(hal.items_json || '[]') %>"
+                                            data-konten="<%= encodeURIComponent(hal.konten || '') %>">
+                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            <span>Edit Konten & Slip</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="col-span-full py-12 text-center bg-white rounded-2xl border border-slate-200">
+                            <i class="fa-solid fa-file-circle-exclamation text-4xl text-slate-300 mb-3"></i>
+                            <p class="font-bold text-slate-700">Belum ada halaman profil</p>
+                            <p class="text-xs text-slate-400 mt-1">Data awal sedang diinisialisasi oleh sistem.</p>
+                        </div>
+                    <% } %>
                 </div>
             </div>
 
@@ -2475,6 +3049,116 @@
         </div>
     </div>
 
+    <!-- MODAL TAMBAH PEJABAT STRUKTUR ORGANISASI -->
+    <div id="modal-tambah-struktur" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-sitemap text-blue-600"></i>
+                    <span>Tambah Pejabat Struktur Organisasi</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-tambah-struktur')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form action="/admin/struktur-organisasi/anggota/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap &amp; Gelar *</label>
+                    <input type="text" name="nama_lengkap" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600" placeholder="Contoh: Marthen Rantetoding, S.Pd., M.M.">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">NIP (Nomor Induk Pegawai)</label>
+                    <input type="text" name="nip" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 font-mono" placeholder="Contoh: 19680512 199412 1 002 (Boleh kosong / tanda -)">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan Struktural *</label>
+                    <input type="text" name="jabatan" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600" placeholder="Contoh: Kepala Sekolah / Wakasek Kurikulum / Ka. TU">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Tingkat</label>
+                        <select name="kategori" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white">
+                            <option value="Pimpinan">Pimpinan</option>
+                            <option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option>
+                            <option value="Tata Usaha">Tata Usaha</option>
+                            <option value="Komite">Komite</option>
+                            <option value="Koordinator">Koordinator</option>
+                            <option value="Guru">Guru &amp; Wali Kelas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan Tampil (Prioritas)</label>
+                        <input type="number" name="urutan" value="1" min="1" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto Formal (Opsional)</label>
+                    <input type="file" name="foto_struktur" accept="image/*" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:outline-blue-600">
+                    <p class="text-[10px] text-slate-400 mt-1">Kosongkan jika ingin menggunakan avatar default sistem</p>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-tambah-struktur')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow cursor-pointer">Simpan Pejabat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT PEJABAT STRUKTUR ORGANISASI -->
+    <div id="modal-edit-struktur" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-amber-600"></i>
+                    <span>Edit Pejabat Struktur Organisasi</span>
+                </h3>
+                <button type="button" onclick="closeModal('modal-edit-struktur')" class="text-slate-400 hover:text-slate-600 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form id="form-edit-struktur" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap &amp; Gelar *</label>
+                    <input type="text" id="edit-struktur-nama" name="nama_lengkap" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">NIP (Nomor Induk Pegawai)</label>
+                    <input type="text" id="edit-struktur-nip" name="nip" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan Struktural *</label>
+                    <input type="text" id="edit-struktur-jabatan" name="jabatan" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Tingkat</label>
+                        <select id="edit-struktur-kategori" name="kategori" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white">
+                            <option value="Pimpinan">Pimpinan</option>
+                            <option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option>
+                            <option value="Tata Usaha">Tata Usaha</option>
+                            <option value="Komite">Komite</option>
+                            <option value="Koordinator">Koordinator</option>
+                            <option value="Guru">Guru &amp; Wali Kelas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan Tampil (Prioritas)</label>
+                        <input type="number" id="edit-struktur-urutan" name="urutan" min="1" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ganti Foto Formal (Opsional)</label>
+                    <input type="file" name="foto_struktur" accept="image/*" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:outline-blue-600">
+                    <p class="text-[10px] text-slate-400 mt-1">Kosongkan jika tidak ingin mengubah foto</p>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-edit-struktur')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-blue-950 rounded-lg shadow cursor-pointer">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- 7. MODAL LIHAT PESAN PENGUNJUNG -->
     <div id="modal-lihat-pesan" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
@@ -2946,21 +3630,681 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODAL PENGATURAN PPDB & GELOMBANG -->
+    <!-- ============================================== -->
+    <div id="modal-pengaturan-ppdb" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-600"></i>
+                        <span>Pengaturan Loket & Kuota PPDB</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Atur status buka/tutup loket, daya tampung kuota jalur seleksi, dan tanggal pendaftaran</p>
+                </div>
+                <button type="button" onclick="closeModal('modal-pengaturan-ppdb')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form action="/admin/ppdb/pengaturan" method="POST" class="space-y-4 mt-4 text-xs">
+                <% 
+                   const pSetting = (typeof ppdbSetting !== 'undefined') ? ppdbSetting : {};
+                   const formatDate = (val) => {
+                       if (!val) return '';
+                       if (typeof val === 'string') return val.substring(0, 10);
+                       if (val instanceof Date) return val.toISOString().split('T')[0];
+                       return '';
+                   };
+                %>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Status Loket Pendaftaran *</label>
+                        <select name="status_loket" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white font-bold text-slate-800">
+                            <option value="Buka" <%= (pSetting.status_loket === 'Buka') ? 'selected' : '' %>>🟢 Buka (Pendaftaran Aktif)</option>
+                            <option value="Verifikasi" <%= (pSetting.status_loket === 'Verifikasi') ? 'selected' : '' %>>🟡 Verifikasi Berkas</option>
+                            <option value="Pengumuman" <%= (pSetting.status_loket === 'Pengumuman') ? 'selected' : '' %>>🔵 Pengumuman Hasil</option>
+                            <option value="Daftar Ulang" <%= (pSetting.status_loket === 'Daftar Ulang') ? 'selected' : '' %>>🟣 Daftar Ulang</option>
+                            <option value="Tutup" <%= (pSetting.status_loket === 'Tutup') ? 'selected' : '' %>>🔴 Tutup</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Tahun Ajaran *</label>
+                        <input type="text" name="tahun_ajaran" value="<%= pSetting.tahun_ajaran || '2026/2027' %>" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Nama Gelombang *</label>
+                        <input type="text" name="nama_gelombang" value="<%= pSetting.nama_gelombang || 'Gelombang 1 (Reguler & Zonasi)' %>" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+                    <h4 class="font-bold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-users-line text-blue-600"></i>
+                        <span>Daya Tampung / Kuota Jalur Seleksi (Jumlah Siswa)</span>
+                    </h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Kuota Total</label>
+                            <input type="number" name="kuota_total" value="<%= pSetting.kuota_total || 320 %>" required class="w-full border border-slate-300 rounded-lg px-2.5 py-2 font-bold text-blue-900 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Zonasi (50%)</label>
+                            <input type="number" name="kuota_zonasi" value="<%= pSetting.kuota_zonasi || 160 %>" required class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Prestasi (30%)</label>
+                            <input type="number" name="kuota_prestasi" value="<%= pSetting.kuota_prestasi || 96 %>" required class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Afirmasi (15%)</label>
+                            <input type="number" name="kuota_afirmasi" value="<%= pSetting.kuota_afirmasi || 48 %>" required class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Mutasi (5%)</label>
+                            <input type="number" name="kuota_mutasi" value="<%= pSetting.kuota_mutasi || 16 %>" required class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+                    <h4 class="font-bold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-amber-600"></i>
+                        <span>Jadwal Pelaksanaan PPDB</span>
+                    </h4>
+                    <div class="grid sm:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Mulai Pendaftaran</label>
+                            <input type="date" name="tgl_mulai_daftar" value="<%= formatDate(pSetting.tgl_mulai_daftar) %>" class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Batas Pendaftaran</label>
+                            <input type="date" name="tgl_selesai_daftar" value="<%= formatDate(pSetting.tgl_selesai_daftar) %>" class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pengumuman Hasil</label>
+                            <input type="date" name="tgl_pengumuman" value="<%= formatDate(pSetting.tgl_pengumuman) %>" class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Daftar Ulang</label>
+                            <input type="date" name="tgl_daftar_ulang" value="<%= formatDate(pSetting.tgl_daftar_ulang) %>" class="w-full border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-blue-600">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-1">
+                        <label class="block font-semibold text-slate-600 mb-1">Kontak WhatsApp Panitia PPDB</label>
+                        <input type="text" name="kontak_panitia" value="<%= pSetting.kontak_panitia || '0812-3456-7890' %>" placeholder="Contoh: 0812-3456-7890" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-semibold text-slate-600 mb-1">Teks Pengumuman untuk Calon Siswa</label>
+                        <textarea name="pesan_pengumuman" rows="2" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-blue-600" placeholder="Pesan resmi terkait tahapan atau instruksi pendaftaran..."><%= pSetting.pesan_pengumuman || '' %></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-pengaturan-ppdb')" class="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-5 py-2 font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm">Simpan Pengaturan PPDB</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT HALAMAN PROFIL (STATIS) & SLIP KARTU -->
+    <div id="modal-edit-halaman" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl border border-slate-200 overflow-y-auto max-h-[94vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div id="edit-halaman-modal-icon-badge" class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold border border-blue-100 transition-colors">
+                        <i id="edit-halaman-header-icon" class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-slate-900 leading-tight">Edit Konten, Ikon & Slip Kartu Profil</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Kode Identifikasi: <span id="edit-halaman-slug-label" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">slug</span></p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-edit-halaman')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-sm font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form id="form-edit-halaman" method="POST" class="space-y-4 mt-4">
+                <!-- Judul Halaman -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                        <span>Judul Halaman Profil *</span>
+                        <span class="text-[10px] text-slate-400 font-normal">Tampil sebagai judul utama modal & halaman</span>
+                    </label>
+                    <input type="text" id="edit-halaman-judul" name="judul" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 font-semibold text-slate-800 shadow-xs">
+                </div>
+
+                <!-- Card Slip & Icon Settings Panel -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50/80 border border-slate-200/90 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200/70 pb-2.5">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide">Pengaturan Ikon & Slip Kartu</span>
+                        </div>
+                        <span class="text-[11px] text-slate-400 hidden sm:inline">Ikon FontAwesome, tema warna, dan deskripsi ringkasan kartu</span>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <!-- Kolom 1: Ikon & Aksen Warna -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                                    <span>Pilihan Ikon FontAwesome *</span>
+                                    <span class="text-[10px] text-slate-400">fa-solid fa-[nama]</span>
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <!-- Live Icon Box -->
+                                    <div id="box-preview-ikon-input" class="w-11 h-11 rounded-xl bg-white border border-slate-200 text-blue-600 flex items-center justify-center text-xl shadow-xs shrink-0 transition-all">
+                                        <i id="preview-ikon-input-icon" class="fa-solid fa-file-lines"></i>
+                                    </div>
+                                    <input type="text" id="edit-halaman-ikon" name="ikon" required 
+                                        placeholder="Contoh: fa-solid fa-landmark" 
+                                        class="w-full text-xs font-mono font-bold border border-slate-300 rounded-xl px-3 py-2.5 bg-white text-slate-800 focus:outline-blue-600 shadow-xs">
+                                </div>
+                            </div>
+
+                            <!-- Preset Ikon Cepat -->
+                            <div>
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Preset Ikon Populer:</span>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-landmark')" class="px-2 py-1 rounded-lg bg-white hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Sejarah / Gedung Bersejarah">
+                                        <i class="fa-solid fa-landmark text-amber-500 text-xs"></i> <span>Landmark</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-building-columns')" class="px-2 py-1 rounded-lg bg-white hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Sarana & Fasilitas">
+                                        <i class="fa-solid fa-building-columns text-emerald-500 text-xs"></i> <span>Sarana</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-list-check')" class="px-2 py-1 rounded-lg bg-white hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Program Kerja">
+                                        <i class="fa-solid fa-list-check text-purple-500 text-xs"></i> <span>Proker</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-chart-pie')" class="px-2 py-1 rounded-lg bg-white hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Kondisi Siswa / Statistik">
+                                        <i class="fa-solid fa-chart-pie text-rose-500 text-xs"></i> <span>Statistik</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-award')" class="px-2 py-1 rounded-lg bg-white hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Prestasi">
+                                        <i class="fa-solid fa-award text-amber-500 text-xs"></i> <span>Prestasi</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-graduation-cap')" class="px-2 py-1 rounded-lg bg-white hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Akademik">
+                                        <i class="fa-solid fa-graduation-cap text-blue-500 text-xs"></i> <span>Akademik</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-book-open-reader')" class="px-2 py-1 rounded-lg bg-white hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Perpustakaan & Literasi">
+                                        <i class="fa-solid fa-book-open-reader text-indigo-500 text-xs"></i> <span>Literasi</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-school')" class="px-2 py-1 rounded-lg bg-white hover:bg-sky-50 hover:text-sky-700 hover:border-sky-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Sekolah">
+                                        <i class="fa-solid fa-school text-sky-500 text-xs"></i> <span>Sekolah</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-handshake')" class="px-2 py-1 rounded-lg bg-white hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Kemitraan / Komite">
+                                        <i class="fa-solid fa-handshake text-teal-500 text-xs"></i> <span>Komite</span>
+                                    </button>
+                                    <button type="button" onclick="selectQuickIcon('fa-solid fa-chalkboard-user')" class="px-2 py-1 rounded-lg bg-white hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 border border-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Civitas Guru">
+                                        <i class="fa-solid fa-chalkboard-user text-amber-500 text-xs"></i> <span>Guru</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tema Warna Aksen Badge -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                    <span>Tema Warna Aksen Badge Slip</span>
+                                </label>
+                                <select id="edit-halaman-warna-badge" name="warna_badge" class="w-full text-xs font-semibold border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-800 focus:outline-blue-600 shadow-xs cursor-pointer">
+                                    <option value="blue">🔵 Biru Laut (Standard Blue)</option>
+                                    <option value="amber">🟡 Emas / Amber (Elegan)</option>
+                                    <option value="emerald">🟢 Zamrud / Emerald (Fasilitas & Alam)</option>
+                                    <option value="purple">🟣 Ungu / Violet (Program & Inovasi)</option>
+                                    <option value="rose">🔴 Mawar / Rose (Statistik & Prestasi)</option>
+                                    <option value="cyan">🌊 Sian / Biru Terang</option>
+                                    <option value="indigo">🌌 Nila / Indigo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Kolom 2: Slip Kartu & Live Mini Preview -->
+                        <div class="space-y-3 flex flex-col justify-between">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                                    <span>Deskripsi Slip Kartu (Ringkasan) *</span>
+                                    <span id="char-count-ringkasan" class="text-[10px] text-slate-400 font-mono">0/500</span>
+                                </label>
+                                <textarea id="edit-halaman-ringkasan" name="ringkasan" rows="3" maxlength="500"
+                                    placeholder="Tuliskan 1-2 kalimat ringkasan yang menarik untuk tampil pada slip kartu halaman profil ini..."
+                                    class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:outline-blue-600 text-slate-800 shadow-xs resize-none"></textarea>
+                                <p class="text-[11px] text-slate-400 mt-1 leading-normal">
+                                    <i class="fa-solid fa-circle-info text-blue-500 mr-1"></i>
+                                    Teks ini menjadi <strong>slip kartu</strong> yang tampil di daftar menu admin dan cuplikan informasi profil.
+                                </p>
+                            </div>
+
+                            <!-- Live Mini Slip Card Preview -->
+                            <div class="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs">
+                                <div class="flex items-center justify-between mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    <span>Pratinjau Slip Kartu:</span>
+                                    <span id="mini-slip-badge" class="px-1.5 py-0.5 rounded font-extrabold text-[9px] bg-blue-50 text-blue-600 border border-blue-200">SLIP: BLUE</span>
+                                </div>
+                                <div class="flex items-start gap-2.5">
+                                    <div id="mini-slip-icon-box" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center text-sm font-bold shrink-0 transition-colors">
+                                        <i id="mini-slip-icon" class="fa-solid fa-file-lines"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div id="mini-slip-judul" class="font-extrabold text-xs text-slate-900 truncate">Judul Halaman</div>
+                                        <div id="mini-slip-text" class="text-[11px] text-slate-600 line-clamp-2 mt-0.5 leading-snug">Ringkasan slip kartu akan muncul di sini...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Isi Konten Halaman Lengkap (Dual Mode: Builder Kartu & WYSIWYG) -->
+                <div class="space-y-3">
+                    <!-- Mode Header Switcher Tabs -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-slate-200">
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-shapes text-blue-600"></i>
+                                <span>Isi Konten Halaman Lengkap *</span>
+                            </label>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Edit kartu-kartu fasilitas/proker di dalam konten atau gunakan editor visual teks bebas.</p>
+                        </div>
+                        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold self-start sm:self-auto border border-slate-200/80">
+                            <button type="button" id="tab-btn-builder-items" onclick="switchHalamanContentMode('builder')" class="px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-table-cells-large text-xs"></i>
+                                <span>Builder Kartu / Item (<span id="builder-item-counter">0</span>)</span>
+                            </button>
+                            <button type="button" id="tab-btn-wysiwyg" onclick="switchHalamanContentMode('wysiwyg')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-align-left text-xs"></i>
+                                <span>Editor Bebas (WYSIWYG)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 1: BUILDER KARTU / ITEM DI DALAM KONTEN -->
+                    <div id="mode-content-builder" class="space-y-4">
+                        <!-- Paragraf Pembuka / Narasi Pengantar -->
+                        <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paragraph text-slate-500"></i>
+                                    <span>Paragraf Pembuka / Narasi Pengantar (Opsional)</span>
+                                </span>
+                                <span class="text-[10px] text-slate-400">Tampil sebelum susunan kartu</span>
+                            </label>
+                            <textarea id="edit-halaman-pembuka-input" rows="2" 
+                                oninput="compileItemsToHtml()"
+                                placeholder="Tuliskan kalimat pembuka sebelum daftar kartu fasilitas atau program kerja..."
+                                class="w-full text-xs border border-slate-300 rounded-xl p-2.5 bg-white text-slate-800 focus:outline-blue-600 shadow-2xs resize-none"></textarea>
+                        </div>
+
+                        <!-- Header List Kartu Konten -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-blue-600"></i>
+                                    <span>Daftar Kartu / Item Konten</span>
+                                </span>
+                                <span class="text-[11px] text-slate-400">(Tiap item dapat diubah ikon, warna, judul & deskripsinya)</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <!-- Pilihan Model Layout Kartu -->
+                                <div class="flex items-center gap-1 text-[11px] text-slate-600 font-semibold bg-slate-100 px-2 py-1 rounded-xl border border-slate-200">
+                                    <span>Model:</span>
+                                    <select id="edit-halaman-layout-type" onchange="changeHalamanLayoutType(this.value)" class="bg-transparent text-xs font-bold text-blue-950 focus:outline-none cursor-pointer">
+                                        <option value="grid">Grid 2 Kolom (Kotak Fasilitas)</option>
+                                        <option value="list">Daftar Bergaris Aksen (List Proker)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tombol Tambah Kartu Baru -->
+                                <button type="button" onclick="addNewContentItem()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                    <span>Tambah Kartu Baru</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Container Dynamic Items List -->
+                        <div id="halaman-items-container" class="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+                            <!-- Items will be dynamically populated by renderContentItemsBuilder() -->
+                        </div>
+
+                        <!-- Paragraf Penutup (Opsional) -->
+                        <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paragraph text-slate-500"></i>
+                                    <span>Paragraf Penutup / Catatan Kebijakan (Opsional)</span>
+                                </span>
+                                <span class="text-[10px] text-slate-400">Tampil setelah susunan kartu</span>
+                            </label>
+                            <textarea id="edit-halaman-penutup-input" rows="2" 
+                                oninput="compileItemsToHtml()"
+                                placeholder="Tuliskan kalimat penutup atau ringkasan kebijakan sekolah setelah kartu..."
+                                class="w-full text-xs border border-slate-300 rounded-xl p-2.5 bg-white text-slate-800 focus:outline-blue-600 shadow-2xs resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 2: EDITOR VISUAL BEBAS & WYSIWYG -->
+                    <div id="mode-content-wysiwyg" class="hidden space-y-2">
+                        <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-800 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-amber-600 text-xs shrink-0"></i>
+                            <span>Konten HTML di bawah ini sinkron otomatis dengan susunan kartu pada tab <strong>Builder Kartu</strong>. Anda dapat mengedit teks narasi atau paragraf secara visual di sini.</span>
+                        </div>
+
+                        <!-- Visual Toolbar -->
+                        <div class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            <!-- Block Formats -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="formatBlockTag('p')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold text-[11px] transition shadow-xs cursor-pointer" title="Paragraf Biasa">
+                                    Paragraf
+                                </button>
+                                <button type="button" onclick="formatBlockTag('h4')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-blue-950 font-bold text-[11px] transition shadow-xs cursor-pointer" title="Judul Sub-Bab">
+                                    Judul H4
+                                </button>
+                                <button type="button" onclick="formatBlockTag('h5')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-blue-950 font-bold text-[11px] transition shadow-xs cursor-pointer" title="Subjudul">
+                                    Subjudul H5
+                                </button>
+                            </div>
+
+                            <!-- Inline Styling: Bold, Italic, Underline -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('bold')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Tebal (Ctrl+B)">
+                                    <i class="fa-solid fa-bold"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('italic')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 italic text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Miring (Ctrl+I)">
+                                    <i class="fa-solid fa-italic"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('underline')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 underline text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Garis Bawah (Ctrl+U)">
+                                    <i class="fa-solid fa-underline"></i>
+                                </button>
+                            </div>
+
+                            <!-- Lists -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('insertUnorderedList')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Daftar Poin (Bullet List)">
+                                    <i class="fa-solid fa-list-ul"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('insertOrderedList')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Daftar Angka (Numbered List)">
+                                    <i class="fa-solid fa-list-ol"></i>
+                                </button>
+                            </div>
+
+                            <!-- Alignment -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('justifyLeft')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Kiri">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('justifyCenter')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Tengah">
+                                    <i class="fa-solid fa-align-center"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('justifyFull')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Kanan-Kiri (Justify)">
+                                    <i class="fa-solid fa-align-justify"></i>
+                                </button>
+                            </div>
+
+                            <!-- Undo / Redo / Clear -->
+                            <div class="flex items-center gap-1 ml-auto">
+                                <button type="button" onclick="execVisualCmd('undo')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 text-xs flex items-center justify-center transition cursor-pointer" title="Urungkan (Undo - Ctrl+Z)">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('redo')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 text-xs flex items-center justify-center transition cursor-pointer" title="Ulangi (Redo - Ctrl+Y)">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('removeFormat')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-rose-600 text-xs flex items-center justify-center transition cursor-pointer" title="Hapus Format">
+                                    <i class="fa-solid fa-eraser"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Editable Visual Canvas -->
+                        <div id="edit-halaman-visual" 
+                             contenteditable="true" 
+                             spellcheck="false"
+                             class="w-full min-h-[360px] max-h-[500px] overflow-y-auto border border-slate-300 rounded-2xl p-5 sm:p-6 bg-white text-slate-800 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-inner">
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                            <span class="flex items-center gap-1.5 font-medium text-slate-700">
+                                <i class="fa-solid fa-pen text-blue-600"></i>
+                                <span>Klik langsung pada teks untuk mengedit, atau gunakan tab Builder Kartu untuk menyusun kartu secara terstruktur.</span>
+                            </span>
+                            <span class="text-[10px] text-slate-400 hidden sm:inline">Ctrl+B (Tebal) • Ctrl+I (Miring) • Ctrl+Z (Urungkan)</span>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Form Payloads -->
+                    <input type="hidden" id="edit-halaman-items-json" name="items_json">
+                    <input type="hidden" id="edit-halaman-pembuka" name="paragraf_pembuka">
+                    <input type="hidden" id="edit-halaman-penutup" name="paragraf_penutup">
+                    <textarea id="edit-halaman-konten" name="konten" class="hidden"></textarea>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <button type="button" onclick="previewCurrentEdit()" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-eye text-slate-500"></i>
+                        <span>Uji Pratinjau Tampilan</span>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="closeModal('modal-edit-halaman')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer">Batal</button>
+                        <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>Simpan Perubahan</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PRATINJAU HALAMAN PROFIL (ADMIN PREVIEW) -->
+    <div id="modal-preview-halaman-admin" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[88vh] flex flex-col">
+            <div class="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-lg font-bold border border-amber-500/20">
+                        <i class="fa-solid fa-school" id="preview-admin-icon"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-black tracking-widest uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            Pratinjau Tampilan Modal
+                        </span>
+                        <h3 class="text-base font-black text-blue-950 tracking-tight leading-tight mt-0.5" id="preview-admin-judul">
+                            Judul Halaman
+                        </h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-preview-halaman-admin')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-sm font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 sm:p-7 overflow-y-auto space-y-4 text-slate-700 text-sm leading-relaxed" id="preview-admin-body">
+            </div>
+            <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span class="text-slate-400 text-[11px]">Tampilan ini sesuai dengan yang dilihat pengunjung pada popup website.</span>
+                <button type="button" onclick="closeModal('modal-preview-halaman-admin')" class="px-4 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs transition">
+                    Tutup Pratinjau
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- ============================================== -->
+    <!-- MODAL TAMBAH BANNER SLIDER BERANDA            -->
+    <!-- ============================================== -->
+    <div id="modal-tambah-slider" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-150">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-plus"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-base text-blue-950">Tambah Slide Banner Beranda</h3>
+                        <p class="text-[11px] text-slate-500">Banner showcase utama di halaman depan beranda.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-tambah-slider')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <form action="/admin/slider/tambah" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Banner / Slogan <span class="text-rose-500">*</span></label>
+                    <input type="text" name="judul" required placeholder="Contoh: Pendidikan Berkualitas & Berkarakter" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Singkat</label>
+                    <textarea name="deskripsi" rows="3" placeholder="Tuliskan 1-2 kalimat pengantar yang menarik..." class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2 focus:outline-blue-600 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">File Gambar Banner <span class="text-rose-500">*</span></label>
+                    <input type="file" name="gambar_slider" accept="image/*" required class="w-full text-xs border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-[11px] text-slate-400 mt-1">Disarankan rasio lanskap 16:9 atau minimal 1920x1080px (Format: JPG, PNG, WEBP, Maks. 5MB).</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Teks Tombol Aksi</label>
+                        <input type="text" name="teks_tombol" value="Lihat Selengkapnya" placeholder="Contoh: Lihat Selengkapnya" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Link Tujuan Tombol</label>
+                        <input type="text" name="link_tombol" value="#profil" placeholder="Contoh: #profil atau /ppdb" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Urutan Tampil</label>
+                        <input type="number" name="urutan" value="1" min="1" required class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status Publikasi</label>
+                        <select name="status_aktif" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 bg-white">
+                            <option value="Aktif" selected>Aktif (Ditampilkan)</option>
+                            <option value="Nonaktif">Nonaktif (Disembunyikan)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-tambah-slider')" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-save text-xs"></i>
+                        <span>Simpan Banner</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL EDIT BANNER SLIDER BERANDA              -->
+    <!-- ============================================== -->
+    <div id="modal-edit-slider" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-150">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-base text-blue-950">Edit Slide Banner Beranda</h3>
+                        <p class="text-[11px] text-slate-500">Perbarui konten atau perbarui foto banner showcase.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-edit-slider')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="form-edit-slider" action="" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Banner / Slogan <span class="text-rose-500">*</span></label>
+                    <input type="text" id="edit-slider-judul" name="judul" required placeholder="Contoh: Pendidikan Berkualitas" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Singkat</label>
+                    <textarea id="edit-slider-deskripsi" name="deskripsi" rows="3" placeholder="Tuliskan 1-2 kalimat pengantar..." class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2 focus:outline-blue-600 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Ganti Gambar Banner (Opsional)</label>
+                    <div id="edit-slider-preview-container" class="mb-2 hidden">
+                        <img id="edit-slider-preview-img" src="" alt="Pratinjau Saat Ini" class="w-full h-28 object-cover rounded-xl border border-slate-200">
+                        <span class="text-[10px] text-slate-400 mt-1 block">Gambar saat ini. Pilih file baru di bawah hanya jika ingin menggantinya:</span>
+                    </div>
+                    <input type="file" name="gambar_slider" accept="image/*" class="w-full text-xs border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengganti gambar banner.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Teks Tombol Aksi</label>
+                        <input type="text" id="edit-slider-teks-tombol" name="teks_tombol" placeholder="Contoh: Lihat Selengkapnya" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Link Tujuan Tombol</label>
+                        <input type="text" id="edit-slider-link-tombol" name="link_tombol" placeholder="Contoh: #profil" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Urutan Tampil</label>
+                        <input type="number" id="edit-slider-urutan" name="urutan" min="1" required class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status Publikasi</label>
+                        <select id="edit-slider-status" name="status_aktif" class="w-full text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 bg-white">
+                            <option value="Aktif">Aktif (Ditampilkan)</option>
+                            <option value="Nonaktif">Nonaktif (Disembunyikan)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-edit-slider')" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-save text-xs"></i>
+                        <span>Simpan Perubahan</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- CLIENT JAVASCRIPT LOGIC -->
     <script>
         // Tab switching logic
         const tabTitles = {
             'overview': 'Dashboard Overview',
-            'berita': 'Kelola Berita & Artikel',
-            'pengumuman': 'Kelola Pengumuman Resmi',
-            'guru': 'Kelola Guru & Tenaga Kependidikan',
+            'berita': 'Kelola Berita & Publikasi Sekolah',
+            'pengumuman': 'Kelola Pengumuman Resmi Sekolah',
+            'kalender': 'Kelola Kalender Akademik',
+            'guru': 'Kelola Tenaga Pendidik & Kependidikan',
             'komite': 'Kelola Komite Sekolah',
+            'struktur': 'Kelola Bagan & Struktur Organisasi',
             'ppdb': 'Kelola Penerimaan Peserta Didik Baru (PPDB 2026/2027)',
             'eskul': 'Kelola Ekstrakurikuler Siswa',
             'galeri': 'Kelola Galeri Dokumentasi Foto',
             'profil': 'Edit Profil & Informasi Sekolah',
+            'halaman-statis': 'Kelola Halaman Informasi & Sarana Sekolah',
             'pesan': 'Kotak Masuk Pesan Pengunjung'
         };
+
+
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -3007,6 +4351,31 @@
 
         // Event Delegation for Edit & Detail Modals (Prevents any auto-formatter regex breaking!)
         document.addEventListener('click', function(e) {
+            // 0. Edit Hero Slider
+            const editSliderBtn = e.target.closest('.btn-edit-slider');
+            if (editSliderBtn) {
+                document.getElementById('form-edit-slider').action = '/admin/slider/edit/' + editSliderBtn.dataset.id;
+                document.getElementById('edit-slider-judul').value = editSliderBtn.dataset.judul || '';
+                document.getElementById('edit-slider-deskripsi').value = editSliderBtn.dataset.deskripsi || '';
+                document.getElementById('edit-slider-teks-tombol').value = editSliderBtn.dataset.tekstombol || '';
+                document.getElementById('edit-slider-link-tombol').value = editSliderBtn.dataset.linktombol || '';
+                document.getElementById('edit-slider-urutan').value = editSliderBtn.dataset.urutan || 1;
+                document.getElementById('edit-slider-status').value = editSliderBtn.dataset.status || 'Aktif';
+
+                const imgContainer = document.getElementById('edit-slider-preview-container');
+                const imgTag = document.getElementById('edit-slider-preview-img');
+                const currentImg = editSliderBtn.dataset.gambar;
+                if (currentImg && imgContainer && imgTag) {
+                    imgTag.src = currentImg.startsWith('http') ? currentImg : (currentImg.startsWith('/') ? currentImg : '/' + currentImg);
+                    imgContainer.classList.remove('hidden');
+                } else if (imgContainer) {
+                    imgContainer.classList.add('hidden');
+                }
+
+                openModal('modal-edit-slider');
+                return;
+            }
+
             // 1. Edit Berita
             const editBeritaBtn = e.target.closest('.btn-edit-berita');
             if (editBeritaBtn) {
@@ -3101,6 +4470,19 @@
                 document.getElementById('edit-galeri-tanggal').value = editGaleriBtn.dataset.tgl;
                 document.getElementById('edit-galeri-deskripsi').value = editGaleriBtn.dataset.deskripsi;
                 openModal('modal-edit-galeri');
+                return;
+            }
+
+            // Edit Struktur Organisasi
+            const editStrukturBtn = e.target.closest('.btn-edit-struktur');
+            if (editStrukturBtn) {
+                document.getElementById('form-edit-struktur').action = '/admin/struktur-organisasi/anggota/edit/' + editStrukturBtn.dataset.id;
+                document.getElementById('edit-struktur-nama').value = editStrukturBtn.dataset.nama || '';
+                document.getElementById('edit-struktur-nip').value = editStrukturBtn.dataset.nip || '';
+                document.getElementById('edit-struktur-jabatan').value = editStrukturBtn.dataset.jabatan || '';
+                document.getElementById('edit-struktur-kategori').value = editStrukturBtn.dataset.kategori || 'Pimpinan';
+                document.getElementById('edit-struktur-urutan').value = editStrukturBtn.dataset.urutan || 1;
+                openModal('modal-edit-struktur');
                 return;
             }
 
@@ -3224,6 +4606,49 @@
                 openModal('modal-edit-ppdb');
                 return;
             }
+
+            // 13. Edit Halaman Profil (Statis) & Slip Kartu
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman');
+            if (editHalamanBtn) {
+                const id = editHalamanBtn.dataset.id;
+                const slug = editHalamanBtn.dataset.slug;
+                const judul = editHalamanBtn.dataset.judul;
+                const ikon = editHalamanBtn.dataset.ikon || 'fa-solid fa-file-lines';
+                const ringkasan = decodeURIComponent(editHalamanBtn.dataset.ringkasan || '');
+                const warnaBadge = editHalamanBtn.dataset.warnaBadge || 'blue';
+                const pembuka = decodeURIComponent(editHalamanBtn.dataset.pembuka || '');
+                const penutup = decodeURIComponent(editHalamanBtn.dataset.penutup || '');
+                const rawItems = decodeURIComponent(editHalamanBtn.dataset.items || '[]');
+                const konten = decodeURIComponent(editHalamanBtn.dataset.konten || '');
+
+                document.getElementById('form-edit-halaman').action = '/admin/halaman-statis/edit/' + id;
+                document.getElementById('edit-halaman-slug-label').textContent = slug;
+                document.getElementById('edit-halaman-judul').value = judul;
+                document.getElementById('edit-halaman-ikon').value = ikon;
+                document.getElementById('edit-halaman-ringkasan').value = ringkasan;
+                document.getElementById('edit-halaman-warna-badge').value = warnaBadge;
+                document.getElementById('edit-halaman-konten').value = konten;
+
+                // Sinkronkan mini live preview slip kartu & ikon
+                updateHalamanSlipLivePreview();
+
+                // Inisialisasi Builder Kartu / Item di dalam konten
+                initHalamanContentBuilder(slug, rawItems, pembuka, penutup, konten);
+
+                // Buka modal
+                openModal('modal-edit-halaman');
+                return;
+            }
+
+            // 14. Preview Halaman Profil (Statis)
+            const previewHalamanBtn = e.target.closest('.btn-preview-halaman');
+            if (previewHalamanBtn) {
+                const slug = previewHalamanBtn.dataset.slug;
+                const judul = previewHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(previewHalamanBtn.dataset.konten || '');
+                showAdminPreviewHalaman(slug, judul, konten);
+                return;
+            }
         });
 
         // Search & Filter in PPDB Table
@@ -3314,6 +4739,16 @@
             });
         }
 
+        // Search in Struktur Table
+        function filterStrukturTable() {
+            const query = document.getElementById('search-struktur').value.toLowerCase();
+            const rows = document.querySelectorAll('#table-struktur tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
         // Open & Populate Edit Modal for Komite Sekolah
         function openEditKomite(btn) {
             if (!btn) return;
@@ -3360,10 +4795,527 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const queryTab = urlParams.get('tab');
+            const querySubtab = urlParams.get('subtab');
             const hashTab = window.location.hash ? window.location.hash.substring(1) : null;
             const initialTab = queryTab || hashTab || '<%= activeTab || "overview" %>';
             switchTab(initialTab);
+
+
         });
+    
+        // ==============================================
+        // LOGIKA SLIP KARTU, BUILDER ITEM & PREVIEW HALAMAN PROFIL
+        // ==============================================
+        const themeStylesHalaman = {
+            'amber': { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', pill: 'bg-amber-100 text-amber-800' },
+            'emerald': { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', pill: 'bg-emerald-100 text-emerald-800' },
+            'purple': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', pill: 'bg-purple-100 text-purple-800' },
+            'rose': { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', pill: 'bg-rose-100 text-rose-800' },
+            'cyan': { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200', pill: 'bg-cyan-100 text-cyan-800' },
+            'indigo': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', pill: 'bg-indigo-100 text-indigo-800' },
+            'teal': { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-200', pill: 'bg-teal-100 text-teal-800' },
+            'blue': { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', pill: 'bg-blue-100 text-blue-800' }
+        };
+
+        let currentHalamanSlug = '';
+        let currentHalamanItems = [];
+        let currentHalamanLayout = 'grid';
+        let currentHalamanContentMode = 'builder';
+
+        function selectQuickIcon(iconClass) {
+            const iconInput = document.getElementById('edit-halaman-ikon');
+            if (iconInput) {
+                iconInput.value = iconClass;
+                updateHalamanSlipLivePreview();
+            }
+        }
+
+        function updateHalamanSlipLivePreview() {
+            const rawIcon = (document.getElementById('edit-halaman-ikon')?.value || '').trim();
+            const judul = (document.getElementById('edit-halaman-judul')?.value || '').trim() || 'Judul Halaman Profil';
+            const ringkasan = (document.getElementById('edit-halaman-ringkasan')?.value || '').trim();
+            const warna = document.getElementById('edit-halaman-warna-badge')?.value || 'blue';
+            const theme = themeStylesHalaman[warna] || themeStylesHalaman['blue'];
+            const safeIcon = rawIcon || 'fa-solid fa-file-lines';
+
+            // 1. Preview Ikon Input Box
+            const previewIconEl = document.getElementById('preview-ikon-input-icon');
+            if (previewIconEl) {
+                previewIconEl.className = safeIcon;
+            }
+
+            // 2. Header Modal Icon & Badge
+            const headerIcon = document.getElementById('edit-halaman-header-icon');
+            if (headerIcon) {
+                headerIcon.className = safeIcon;
+            }
+            const modalIconBadge = document.getElementById('edit-halaman-modal-icon-badge');
+            if (modalIconBadge) {
+                modalIconBadge.className = `w-10 h-10 rounded-2xl ${theme.bg} ${theme.text} flex items-center justify-center text-lg font-bold border ${theme.border} transition-colors`;
+            }
+
+            // 3. Mini Slip Live Box
+            const miniJudul = document.getElementById('mini-slip-judul');
+            if (miniJudul) miniJudul.textContent = judul;
+
+            const miniText = document.getElementById('mini-slip-text');
+            if (miniText) {
+                miniText.textContent = ringkasan || 'Ringkasan slip kartu akan muncul di sini (masukkan 1-2 kalimat)...';
+            }
+
+            const miniIconBox = document.getElementById('mini-slip-icon-box');
+            if (miniIconBox) {
+                miniIconBox.className = `w-8 h-8 rounded-lg ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-sm font-bold shrink-0 transition-colors`;
+            }
+
+            const miniIcon = document.getElementById('mini-slip-icon');
+            if (miniIcon) {
+                miniIcon.className = safeIcon;
+            }
+
+            const miniBadge = document.getElementById('mini-slip-badge');
+            if (miniBadge) {
+                miniBadge.className = `px-1.5 py-0.5 rounded font-extrabold text-[9px] ${theme.pill} border ${theme.border}`;
+                miniBadge.textContent = 'SLIP: ' + warna.toUpperCase();
+            }
+
+            // 4. Character counter
+            const charCount = document.getElementById('char-count-ringkasan');
+            if (charCount) {
+                charCount.textContent = `${ringkasan.length}/500`;
+            }
+        }
+
+        // ==============================================
+        // BUILDER KARTU / ITEM DI DALAM KONTEN HALAMAN
+        // ==============================================
+        function escapeHtmlAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/"/g, '&quot;');
+        }
+
+        function initHalamanContentBuilder(slug, rawItems, pembuka, penutup, konten) {
+            currentHalamanSlug = slug;
+            try {
+                currentHalamanItems = JSON.parse(rawItems);
+                if (!Array.isArray(currentHalamanItems)) currentHalamanItems = [];
+            } catch (e) {
+                currentHalamanItems = [];
+            }
+
+            // Atur layout bawaan
+            currentHalamanLayout = (slug === 'program-kerja') ? 'list' : 'grid';
+            const layoutSelect = document.getElementById('edit-halaman-layout-type');
+            if (layoutSelect) layoutSelect.value = currentHalamanLayout;
+
+            // Set narasi pembuka & penutup
+            const pembukaInput = document.getElementById('edit-halaman-pembuka-input');
+            if (pembukaInput) pembukaInput.value = pembuka || '';
+
+            const penutupInput = document.getElementById('edit-halaman-penutup-input');
+            if (penutupInput) penutupInput.value = penutup || '';
+
+            // Render daftar kartu item di builder
+            renderContentItemsBuilder();
+
+            // Set visual canvas & hidden payload
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+            if (visualCanvas) visualCanvas.innerHTML = konten || '';
+            if (codeTextarea) codeTextarea.value = konten || '';
+
+            // Jika ada items, buka tab Builder Kartu secara default; jika tidak ada, buka WYSIWYG
+            if (currentHalamanItems.length > 0) {
+                switchHalamanContentMode('builder');
+                compileItemsToHtml();
+            } else {
+                switchHalamanContentMode('wysiwyg');
+            }
+        }
+
+        function switchHalamanContentMode(mode) {
+            currentHalamanContentMode = mode;
+            const builderPanel = document.getElementById('mode-content-builder');
+            const wysiwygPanel = document.getElementById('mode-content-wysiwyg');
+            const btnBuilder = document.getElementById('tab-btn-builder-items');
+            const btnWysiwyg = document.getElementById('tab-btn-wysiwyg');
+
+            if (mode === 'builder') {
+                if (builderPanel) builderPanel.classList.remove('hidden');
+                if (wysiwygPanel) wysiwygPanel.classList.add('hidden');
+                if (btnBuilder) {
+                    btnBuilder.className = 'px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer';
+                }
+                if (btnWysiwyg) {
+                    btnWysiwyg.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer';
+                }
+            } else {
+                if (builderPanel) builderPanel.classList.add('hidden');
+                if (wysiwygPanel) wysiwygPanel.classList.remove('hidden');
+                if (btnBuilder) {
+                    btnBuilder.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer';
+                }
+                if (btnWysiwyg) {
+                    btnWysiwyg.className = 'px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer';
+                }
+            }
+        }
+
+        function changeHalamanLayoutType(layout) {
+            currentHalamanLayout = layout;
+            compileItemsToHtml();
+        }
+
+        function addNewContentItem() {
+            const defaultIcons = ['fa-solid fa-star', 'fa-solid fa-award', 'fa-solid fa-flask', 'fa-solid fa-book-bookmark', 'fa-solid fa-school', 'fa-solid fa-users'];
+            const colors = ['amber', 'blue', 'emerald', 'indigo', 'purple', 'rose', 'teal'];
+            const nextColor = colors[currentHalamanItems.length % colors.length];
+            const nextIcon = defaultIcons[currentHalamanItems.length % defaultIcons.length];
+
+            currentHalamanItems.push({
+                ikon: nextIcon,
+                judul: `Item Kartu Baru ${currentHalamanItems.length + 1}`,
+                deskripsi: 'Deskripsi lengkap mengenai fasilitas, kegiatan, atau program kerja ini...',
+                warna: nextColor
+            });
+
+            renderContentItemsBuilder();
+            compileItemsToHtml();
+
+            // Auto-scroll ke kartu yang baru ditambahkan
+            const container = document.getElementById('halaman-items-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function deleteContentItem(index) {
+            if (confirm(`Hapus kartu item #${index + 1}?`)) {
+                currentHalamanItems.splice(index, 1);
+                renderContentItemsBuilder();
+                compileItemsToHtml();
+            }
+        }
+
+        function moveContentItem(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= currentHalamanItems.length) return;
+            const temp = currentHalamanItems[index];
+            currentHalamanItems[index] = currentHalamanItems[targetIndex];
+            currentHalamanItems[targetIndex] = temp;
+            renderContentItemsBuilder();
+            compileItemsToHtml();
+        }
+
+        function updateContentItemField(index, field, value) {
+            if (!currentHalamanItems[index]) return;
+            currentHalamanItems[index][field] = value;
+
+            if (field === 'ikon' || field === 'warna') {
+                const row = document.querySelector(`.item-card-row[data-index="${index}"]`);
+                if (row) {
+                    const iconBox = row.querySelector('.item-live-icon-box');
+                    const iconEl = row.querySelector('.item-live-icon');
+                    const colorBadge = row.querySelector('.item-color-pill');
+                    const c = currentHalamanItems[index].warna || 'blue';
+                    const theme = themeStylesHalaman[c] || themeStylesHalaman['blue'];
+
+                    if (iconBox) {
+                        iconBox.className = `w-10 h-10 rounded-xl ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-base font-bold shrink-0 shadow-2xs item-live-icon-box`;
+                    }
+                    if (iconEl) {
+                        iconEl.className = currentHalamanItems[index].ikon || 'fa-solid fa-star';
+                    }
+                    if (colorBadge) {
+                        colorBadge.className = `text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${theme.pill} item-color-pill`;
+                        colorBadge.textContent = '● ' + c;
+                    }
+                }
+            }
+
+            compileItemsToHtml();
+        }
+
+        function setItemQuickIcon(index, iconClass) {
+            const row = document.querySelector(`.item-card-row[data-index="${index}"]`);
+            if (row) {
+                const iconInput = row.querySelector('.item-icon-input');
+                if (iconInput) iconInput.value = iconClass;
+            }
+            updateContentItemField(index, 'ikon', iconClass);
+        }
+
+        function renderContentItemsBuilder() {
+            const container = document.getElementById('halaman-items-container');
+            const counterEl = document.getElementById('builder-item-counter');
+            if (counterEl) {
+                counterEl.textContent = currentHalamanItems.length;
+            }
+            if (!container) return;
+
+            if (currentHalamanItems.length === 0) {
+                container.innerHTML = `
+                    <div class="py-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 p-6 space-y-2">
+                        <div class="w-10 h-10 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-shapes"></i>
+                        </div>
+                        <p class="font-bold text-xs text-slate-700">Belum ada kartu atau item di dalam konten</p>
+                        <p class="text-[11px] text-slate-400 max-w-sm mx-auto">Klik tombol <strong>"Tambah Kartu Baru"</strong> di atas untuk menambahkan item kartu fasilitas atau program kerja secara terstruktur.</p>
+                        <button type="button" onclick="addNewContentItem()" class="mt-2 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition inline-flex items-center gap-1.5 shadow-xs cursor-pointer">
+                            <i class="fa-solid fa-plus text-xs"></i> <span>Tambah Kartu Pertama</span>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            currentHalamanItems.forEach((item, idx) => {
+                const c = item.warna || 'blue';
+                const theme = themeStylesHalaman[c] || themeStylesHalaman['blue'];
+                const safeIcon = item.ikon || 'fa-solid fa-star';
+
+                html += `
+                    <div class="item-card-row bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-3 transition-all hover:border-slate-300" data-index="${idx}">
+                        <!-- Item Header -->
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-md bg-blue-950 text-white flex items-center justify-center text-[10px] font-black">${idx + 1}</span>
+                                <span class="text-xs font-black text-slate-800">Kartu Item #${idx + 1}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${theme.pill} item-color-pill">● ${c}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button type="button" onclick="moveContentItem(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 flex items-center justify-center text-xs transition cursor-pointer" title="Pindah ke Atas">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </button>
+                                <button type="button" onclick="moveContentItem(${idx}, 1)" ${idx === currentHalamanItems.length - 1 ? 'disabled' : ''} class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 flex items-center justify-center text-xs transition cursor-pointer" title="Pindah ke Bawah">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </button>
+                                <button type="button" onclick="deleteContentItem(${idx})" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold text-[11px] flex items-center gap-1 transition ml-1.5 cursor-pointer" title="Hapus Kartu Item Ini">
+                                    <i class="fa-solid fa-trash-can text-xs"></i> <span>Hapus</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item Content Fields -->
+                        <div class="grid sm:grid-cols-12 gap-3">
+                            <!-- Left: Icon & Color -->
+                            <div class="sm:col-span-5 space-y-1.5">
+                                <label class="block text-[11px] font-bold text-slate-600">Ikon Item & Aksen Warna</label>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-xl ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-base font-bold shrink-0 shadow-2xs item-live-icon-box">
+                                        <i class="${safeIcon} item-live-icon"></i>
+                                    </div>
+                                    <input type="text" value="${escapeHtmlAttr(item.ikon || '')}" oninput="updateContentItemField(${idx}, 'ikon', this.value)" placeholder="fa-solid fa-flask" class="item-icon-input w-full text-xs font-mono font-bold border border-slate-300 rounded-xl px-2.5 py-2 bg-slate-50 focus:bg-white focus:outline-blue-600">
+                                    <select onchange="updateContentItemField(${idx}, 'warna', this.value)" class="text-xs font-bold border border-slate-300 rounded-xl px-2 py-2 bg-slate-50 focus:bg-white focus:outline-blue-600 shrink-0 cursor-pointer">
+                                        <option value="amber" ${c === 'amber' ? 'selected' : ''}>🟡 Amber</option>
+                                        <option value="blue" ${c === 'blue' ? 'selected' : ''}>🔵 Biru</option>
+                                        <option value="emerald" ${c === 'emerald' ? 'selected' : ''}>🟢 Zamrud</option>
+                                        <option value="indigo" ${c === 'indigo' ? 'selected' : ''}>🌌 Nila</option>
+                                        <option value="purple" ${c === 'purple' ? 'selected' : ''}>🟣 Ungu</option>
+                                        <option value="rose" ${c === 'rose' ? 'selected' : ''}>🔴 Mawar</option>
+                                        <option value="teal" ${c === 'teal' ? 'selected' : ''}>🦚 Teal</option>
+                                        <option value="cyan" ${c === 'cyan' ? 'selected' : ''}>🌊 Sian</option>
+                                    </select>
+                                </div>
+                                <!-- Preset Icons -->
+                                <div class="flex flex-wrap gap-1 pt-1">
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-chalkboard-user')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Ruang Kelas / Guru"><i class="fa-solid fa-chalkboard-user text-amber-500"></i> Kelas</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-flask')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Lab IPA"><i class="fa-solid fa-flask text-blue-500"></i> IPA</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-laptop-code')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Lab Komputer"><i class="fa-solid fa-laptop-code text-indigo-500"></i> Komputer</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-book-bookmark')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Perpustakaan"><i class="fa-solid fa-book-bookmark text-emerald-500"></i> Buku</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-volleyball')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Olahraga"><i class="fa-solid fa-volleyball text-red-500"></i> Olahraga</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-mosque')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Ibadah"><i class="fa-solid fa-mosque text-teal-500"></i> Ibadah</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-graduation-cap')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Kurikulum"><i class="fa-solid fa-graduation-cap text-blue-500"></i> Kurikulum</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-masks-theater')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Seni & Budaya"><i class="fa-solid fa-masks-theater text-purple-500"></i> Seni</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-leaf')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Adiwiyata"><i class="fa-solid fa-leaf text-emerald-500"></i> Adiwiyata</button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Title & Description -->
+                            <div class="sm:col-span-7 space-y-1.5">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Judul Kartu Item *</label>
+                                    <input type="text" value="${escapeHtmlAttr(item.judul || '')}" oninput="updateContentItemField(${idx}, 'judul', this.value)" placeholder="Contoh: Laboratorium IPA Terpadu" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 focus:bg-white focus:outline-blue-600 text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Deskripsi Lengkap Kartu *</label>
+                                    <textarea rows="2" oninput="updateContentItemField(${idx}, 'deskripsi', this.value)" placeholder="Jelaskan fasilitas atau rincian item ini..." class="w-full text-xs border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:outline-blue-600 text-slate-800 resize-none">${escapeHtmlAttr(item.deskripsi || '')}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function compileItemsToHtml() {
+            const pembuka = (document.getElementById('edit-halaman-pembuka-input')?.value || '').trim();
+            const penutup = (document.getElementById('edit-halaman-penutup-input')?.value || '').trim();
+
+            let compiledHtml = '';
+
+            if (pembuka) {
+                compiledHtml += `<p class="mb-4 text-justify leading-relaxed">${pembuka}</p>\n`;
+            }
+
+            if (currentHalamanItems.length > 0) {
+                if (currentHalamanLayout === 'list' || currentHalamanSlug === 'program-kerja') {
+                    compiledHtml += '<div class="space-y-3 my-4">\n';
+                    currentHalamanItems.forEach(item => {
+                        const c = item.warna || 'blue';
+                        const safeIcon = item.ikon || 'fa-solid fa-circle-check';
+                        compiledHtml += `    <div class="border-l-4 border-${c}-500 bg-${c}-50/40 p-3.5 rounded-r-2xl border border-${c}-100 transition-all hover:shadow-xs">\n`;
+                        compiledHtml += `        <h5 class="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-2">\n`;
+                        compiledHtml += `            <i class="${safeIcon} text-${c}-600 text-sm"></i>\n`;
+                        compiledHtml += `            <span>${item.judul || ''}</span>\n`;
+                        compiledHtml += `        </h5>\n`;
+                        compiledHtml += `        <p class="text-xs text-slate-600 mt-1 leading-relaxed">${item.deskripsi || ''}</p>\n`;
+                        compiledHtml += `    </div>\n`;
+                    });
+                    compiledHtml += '</div>\n';
+                } else {
+                    compiledHtml += '<div class="grid sm:grid-cols-2 gap-3.5 my-4">\n';
+                    currentHalamanItems.forEach(item => {
+                        const c = item.warna || 'blue';
+                        const safeIcon = item.ikon || 'fa-solid fa-star';
+                        compiledHtml += `    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-slate-300 transition-all shadow-2xs">\n`;
+                        compiledHtml += `        <h5 class="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-2 mb-1.5">\n`;
+                        compiledHtml += `            <i class="${safeIcon} text-${c}-600"></i> ${item.judul || ''}\n`;
+                        compiledHtml += `        </h5>\n`;
+                        compiledHtml += `        <p class="text-xs text-slate-600 leading-relaxed">${item.deskripsi || ''}</p>\n`;
+                        compiledHtml += `    </div>\n`;
+                    });
+                    compiledHtml += '</div>\n';
+                }
+            }
+
+            if (penutup) {
+                compiledHtml += `<p class="mt-4 text-justify leading-relaxed">${penutup}</p>\n`;
+            }
+
+            // Sync visual canvas and hidden textarea
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+            const itemsJsonInput = document.getElementById('edit-halaman-items-json');
+            const pembukaInput = document.getElementById('edit-halaman-pembuka');
+            const penutupInput = document.getElementById('edit-halaman-penutup');
+
+            if (currentHalamanItems.length > 0 || pembuka || penutup) {
+                if (visualCanvas) visualCanvas.innerHTML = compiledHtml;
+                if (codeTextarea) codeTextarea.value = compiledHtml;
+            }
+
+            if (itemsJsonInput) itemsJsonInput.value = JSON.stringify(currentHalamanItems);
+            if (pembukaInput) pembukaInput.value = pembuka;
+            if (penutupInput) penutupInput.value = penutup;
+
+            const counterEl = document.getElementById('builder-item-counter');
+            if (counterEl) counterEl.textContent = currentHalamanItems.length;
+        }
+
+        // Tampilkan Modal Pratinjau di Sisi Admin
+        function showAdminPreviewHalaman(slug, judul, konten, ikon) {
+            const iconMap = {
+                'sejarah': 'fa-solid fa-landmark',
+                'visi-misi': 'fa-solid fa-bullseye',
+                'sarana': 'fa-solid fa-building-columns',
+                'program-kerja': 'fa-solid fa-list-check',
+                'kondisi-siswa': 'fa-solid fa-chart-pie'
+            };
+            const iconEl = document.getElementById('preview-admin-icon');
+            if (iconEl) {
+                const finalIcon = ikon || iconMap[slug] || 'fa-solid fa-school';
+                iconEl.className = `${finalIcon} text-amber-600`;
+            }
+            document.getElementById('preview-admin-judul').textContent = judul;
+            document.getElementById('preview-admin-body').innerHTML = konten;
+            openModal('modal-preview-halaman-admin');
+        }
+
+        function previewCurrentEdit() {
+            const slug = document.getElementById('edit-halaman-slug-label')?.textContent || '';
+            const judul = document.getElementById('edit-halaman-judul')?.value || 'Pratinjau Halaman Profil';
+            const ikon = document.getElementById('edit-halaman-ikon')?.value || 'fa-solid fa-file-lines';
+            
+            // Jika mode builder, compile dulu
+            if (currentHalamanContentMode === 'builder') {
+                compileItemsToHtml();
+            }
+
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            let konten = visualCanvas ? visualCanvas.innerHTML : '';
+            if (!konten.trim()) {
+                konten = '<p class="text-slate-400 italic">Konten masih kosong.</p>';
+            }
+            showAdminPreviewHalaman(slug, judul, konten, ikon);
+        }
+
+        // Pastikan sinkronisasi form sebelum submit & event listener input
+        document.addEventListener('DOMContentLoaded', function() {
+            const formEditHalaman = document.getElementById('form-edit-halaman');
+            if (formEditHalaman) {
+                formEditHalaman.addEventListener('submit', function() {
+                    if (currentHalamanContentMode === 'builder' && (currentHalamanItems.length > 0 || document.getElementById('edit-halaman-pembuka-input')?.value)) {
+                        compileItemsToHtml();
+                    } else {
+                        const visualCanvas = document.getElementById('edit-halaman-visual');
+                        const codeTextarea = document.getElementById('edit-halaman-konten');
+                        if (visualCanvas && codeTextarea) {
+                            codeTextarea.value = visualCanvas.innerHTML.trim();
+                        }
+                    }
+                });
+            }
+
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (visualCanvas) {
+                visualCanvas.addEventListener('input', syncVisualToCode);
+                visualCanvas.addEventListener('blur', syncVisualToCode);
+            }
+
+            // Real-time live preview event listeners for slip kartu & ikon
+            const inputIkon = document.getElementById('edit-halaman-ikon');
+            if (inputIkon) {
+                inputIkon.addEventListener('input', updateHalamanSlipLivePreview);
+                inputIkon.addEventListener('change', updateHalamanSlipLivePreview);
+            }
+            const inputJudul = document.getElementById('edit-halaman-judul');
+            if (inputJudul) {
+                inputJudul.addEventListener('input', updateHalamanSlipLivePreview);
+            }
+            const inputRingkasan = document.getElementById('edit-halaman-ringkasan');
+            if (inputRingkasan) {
+                inputRingkasan.addEventListener('input', updateHalamanSlipLivePreview);
+                inputRingkasan.addEventListener('keyup', updateHalamanSlipLivePreview);
+            }
+            const selectWarna = document.getElementById('edit-halaman-warna-badge');
+            if (selectWarna) {
+                selectWarna.addEventListener('change', updateHalamanSlipLivePreview);
+            }
+        });
+
+        // Live preview for Logo Sekolah upload
+        function previewLogoSekolah(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImg = document.getElementById('logo-preview-img');
+                    const filenameText = document.getElementById('logo-preview-filename');
+                    if (previewImg) {
+                        previewImg.src = e.target.result;
+                    }
+                    if (filenameText) {
+                        filenameText.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+                        filenameText.classList.add('text-amber-600', 'font-bold');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 </html>

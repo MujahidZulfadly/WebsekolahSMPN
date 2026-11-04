@@ -1,0 +1,66 @@
+                document.getElementById('edit-ppdb-alamat').value = editPPDBBtn.dataset.alamat;
+                document.getElementById('edit-ppdb-catatan').value = editPPDBBtn.dataset.catatan || '';
+                openModal('modal-edit-ppdb');
+                return;
+            }
+
+            // 10. Edit Pengurus OSIS
+            const editOsisPengurusBtn = e.target.closest('.btn-edit-osis-pengurus');
+            if (editOsisPengurusBtn) {
+                document.getElementById('form-edit-osis-pengurus').action = '/admin/osis/pengurus/edit/' + editOsisPengurusBtn.dataset.id;
+                document.getElementById('edit-osis-pengurus-nama').value = editOsisPengurusBtn.dataset.nama || '';
+                document.getElementById('edit-osis-pengurus-jabatan').value = editOsisPengurusBtn.dataset.jabatan || '';
+                document.getElementById('edit-osis-pengurus-kategori').value = editOsisPengurusBtn.dataset.kategori || 'Pengurus Inti';
+                document.getElementById('edit-osis-pengurus-kelas').value = editOsisPengurusBtn.dataset.kelas || '';
+                document.getElementById('edit-osis-pengurus-urutan').value = editOsisPengurusBtn.dataset.urutan || 10;
+                document.getElementById('edit-osis-pengurus-motto').value = editOsisPengurusBtn.dataset.motto || '';
+                openModal('modal-edit-osis-pengurus');
+                return;
+            }
+
+            // 11. Edit Proker OSIS
+            const editOsisProkerBtn = e.target.closest('.btn-edit-osis-proker');
+            if (editOsisProkerBtn) {
+                document.getElementById('form-edit-osis-proker').action = '/admin/osis/proker/edit/' + editOsisProkerBtn.dataset.id;
+                document.getElementById('edit-osis-proker-judul').value = editOsisProkerBtn.dataset.judul || '';
+                document.getElementById('edit-osis-proker-kategori').value = editOsisProkerBtn.dataset.kategori || '';
+                document.getElementById('edit-osis-proker-status').value = editOsisProkerBtn.dataset.status || 'Sedang Berjalan';
+                document.getElementById('edit-osis-proker-jadwal').value = editOsisProkerBtn.dataset.jadwal || '';
+                document.getElementById('edit-osis-proker-target').value = editOsisProkerBtn.dataset.target || '';
+                document.getElementById('edit-osis-proker-icon').value = editOsisProkerBtn.dataset.icon || 'fa-compass';
+                document.getElementById('edit-osis-proker-urutan').value = editOsisProkerBtn.dataset.urutan || 10;
+                document.getElementById('edit-osis-proker-deskripsi').value = editOsisProkerBtn.dataset.deskripsi || '';
+                openModal('modal-edit-osis-proker');
+                return;
+            }
+
+            // 12. Edit Mading Siswa
+            const editOsisMadingBtn = e.target.closest('.btn-edit-osis-mading');
+            if (editOsisMadingBtn) {
+                document.getElementById('form-edit-osis-mading').action = '/admin/osis/mading/edit/' + editOsisMadingBtn.dataset.id;
+                document.getElementById('edit-osis-mading-judul').value = editOsisMadingBtn.dataset.judul || '';
+                document.getElementById('edit-osis-mading-kategori').value = editOsisMadingBtn.dataset.kategori || 'Puisi & Sastra';
+                document.getElementById('edit-osis-mading-tanggal').value = editOsisMadingBtn.dataset.tanggal || '';
+                document.getElementById('edit-osis-mading-penulis').value = editOsisMadingBtn.dataset.penulis || '';
+                document.getElementById('edit-osis-mading-kelas').value = editOsisMadingBtn.dataset.kelas || '';
+                document.getElementById('edit-osis-mading-cuplikan').value = editOsisMadingBtn.dataset.cuplikan || '';
+                document.getElementById('edit-osis-mading-likes').value = editOsisMadingBtn.dataset.likes || 0;
+                openModal('modal-edit-osis-mading');
+                return;
+            }
+
+            // 13. Edit Halaman Statis
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman-statis');
+            if (editHalamanBtn) {
+                document.getElementById('form-edit-halaman-statis').action = '/admin/halaman-statis/edit/' + editHalamanBtn.dataset.id;
+                document.getElementById('edit-halaman-slug-label').textContent = 'Slug: ' + editHalamanBtn.dataset.slug;
+                document.getElementById('edit-halaman-judul').value = editHalamanBtn.dataset.judul || '';
+                document.getElementById('edit-halaman-ikon').value = editHalamanBtn.dataset.ikon || 'fa-solid fa-file-lines';
+                document.getElementById('edit-halaman-warna').value = editHalamanBtn.dataset.warna || 'blue';
+                document.getElementById('edit-halaman-ringkasan').value = editHalamanBtn.dataset.ringkasan || '';
+                document.getElementById('edit-halaman-pembuka').value = editHalamanBtn.dataset.pembuka || '';
+                document.getElementById('edit-halaman-konten').value = editHalamanBtn.dataset.konten || '';
+                document.getElementById('edit-halaman-penutup').value = editHalamanBtn.dataset.penutup || '';
+                openModal('modal-edit-halaman-statis');
+                return;
+            }

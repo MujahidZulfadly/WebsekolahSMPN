@@ -2,6 +2,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><%= (typeof title !== 'undefined' && title) ? title : ((typeof profil !== 'undefined' && profil.nama_sekolah) ? (profil.nama_sekolah + ' - Kabupaten Toraja Utara') : 'UPT SMPN 1 Rantepao - Toraja Utara') %></title>
 
+<!-- Meta SEO & Informasi Sekolah -->
+<meta name="description" content="<%= (typeof description !== 'undefined' && description) ? description : ('Portal Resmi ' + ((typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMP Negeri 1 Rantepao') + ' - Melayani dengan integritas, prestasi, dan keluhuran budaya Toraja.') %>">
+<meta name="keywords" content="SMPN 1 Rantepao, UPT SMP Negeri 1 Rantepao, Toraja Utara, Sekolah Penggerak, PPDB 2026, Profil Pelajar Pancasila">
+<meta name="theme-color" content="#0b132b">
+
+<!-- Open Graph / Meta Berbagi Media Sosial (WhatsApp, Facebook, Telegram) -->
+<meta property="og:type" content="<%= (typeof ogType !== 'undefined' && ogType) ? ogType : 'website' %>">
+<meta property="og:site_name" content="<%= (typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMP Negeri 1 Rantepao' %>">
+<meta property="og:title" content="<%= (typeof title !== 'undefined' && title) ? title : ((typeof profil !== 'undefined' && profil.nama_sekolah) ? (profil.nama_sekolah + ' - Kabupaten Toraja Utara') : 'UPT SMPN 1 Rantepao') %>">
+<meta property="og:description" content="<%= (typeof description !== 'undefined' && description) ? description : 'Portal Resmi Informasi, Akademik, PPDB Online, dan Kegiatan Sekolah UPT SMP Negeri 1 Rantepao, Toraja Utara.' %>">
+<meta property="og:image" content="<%= (typeof ogImage !== 'undefined' && ogImage) ? ogImage : ((typeof profil !== 'undefined' && profil.logo_sekolah) ? ('/uploads/profil/' + profil.logo_sekolah) : '/uploads/profil/logo-smpn1-rantepao.svg') %>">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= (typeof title !== 'undefined' && title) ? title : ((typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMPN 1 Rantepao') %>">
+<meta name="twitter:description" content="<%= (typeof description !== 'undefined' && description) ? description : 'Portal Resmi UPT SMP Negeri 1 Rantepao, Kabupaten Toraja Utara.' %>">
+
+<!-- Favicon Dinamis Logo Sekolah -->
+<link rel="icon" type="image/x-icon" href="<%= (typeof profil !== 'undefined' && profil && profil.logo_sekolah) ? ('/uploads/profil/' + profil.logo_sekolah) : '/uploads/profil/logo-smpn1-rantepao.svg' %>">
+
 <!-- Google Fonts: Poppins -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

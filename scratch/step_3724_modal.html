@@ -1,0 +1,499 @@
+            // 10. Edit Halaman Profil (Statis)
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman');
+            if (editHalamanBtn) {
+                const id = editHalamanBtn.dataset.id;
+                const slug = editHalamanBtn.dataset.slug;
+                const judul = editHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(editHalamanBtn.dataset.konten || '');
+
+                document.getElementById('form-edit-halaman').action = '/admin/halaman-statis/edit/' + id;
+                document.getElementById('edit-halaman-slug-label').textContent = slug;
+                document.getElementById('edit-halaman-judul').value = judul;
+                document.getElementById('edit-halaman-konten').value = konten;
+
+                // Siapkan form ramah operator IT sekolah (bebas dari sintaks/kode HTML)
+                setupOperatorFriendlyForm(slug, konten);
+
+                openModal('modal-edit-halaman');
+                return;
+            }
+
+            // 11. Preview Halaman Profil (Statis)
+            const previewHalamanBtn = e.target.closest('.btn-preview-halaman');
+            if (previewHalamanBtn) {
+                const slug = previewHalamanBtn.dataset.slug;
+                const judul = previewHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(previewHalamanBtn.dataset.konten || '');
+                showAdminPreviewHalaman(slug, judul, konten);
+                return;
+            }
+
+            // 12. Edit Pengurus OSIS
+            const editOsisPengurusBtn = e.target.closest('.btn-edit-osis-pengurus');
+            if (editOsisPengurusBtn) {
+                document.getElementById('form-edit-osis-pengurus').action = '/admin/osis/pengurus/edit/' + editOsisPengurusBtn.dataset.id;
+                document.getElementById('edit-osis-nama').value = editOsisPengurusBtn.dataset.nama || '';
+                document.getElementById('edit-osis-kelas').value = editOsisPengurusBtn.dataset.kelas || '';
+                document.getElementById('edit-osis-jabatan').value = editOsisPengurusBtn.dataset.jabatan || '';
+                document.getElementById('edit-osis-kategori').value = editOsisPengurusBtn.dataset.kategori || 'Pengurus Inti';
+                document.getElementById('edit-osis-motto').value = editOsisPengurusBtn.dataset.motto || '';
+                document.getElementById('edit-osis-urutan').value = editOsisPengurusBtn.dataset.urutan || 10;
+                openModal('modal-edit-osis-pengurus');
+                return;
+            }
+
+            // 13. Edit Proker OSIS
+            const editOsisProkerBtn = e.target.closest('.btn-edit-osis-proker');
+            if (editOsisProkerBtn) {
+                document.getElementById('form-edit-osis-proker').action = '/admin/osis/proker/edit/' + editOsisProkerBtn.dataset.id;
+                document.getElementById('edit-proker-judul').value = editOsisProkerBtn.dataset.judul || '';
+                document.getElementById('edit-proker-kategori').value = editOsisProkerBtn.dataset.kategori || '';
+                document.getElementById('edit-proker-icon').value = editOsisProkerBtn.dataset.icon || 'fa-compass';
+                document.getElementById('edit-proker-jadwal').value = editOsisProkerBtn.dataset.jadwal || '';
+                document.getElementById('edit-proker-target').value = editOsisProkerBtn.dataset.target || '';
+                document.getElementById('edit-proker-status').value = editOsisProkerBtn.dataset.status || 'Sedang Berjalan';
+                document.getElementById('edit-proker-deskripsi').value = editOsisProkerBtn.dataset.deskripsi || '';
+                document.getElementById('edit-proker-urutan').value = editOsisProkerBtn.dataset.urutan || 10;
+                openModal('modal-edit-osis-proker');
+                return;
+            }
+
+            // 14. Edit Mading Siswa
+            const editOsisMadingBtn = e.target.closest('.btn-edit-osis-mading');
+            if (editOsisMadingBtn) {
+                document.getElementById('form-edit-osis-mading').action = '/admin/osis/mading/edit/' + editOsisMadingBtn.dataset.id;
+                document.getElementById('edit-mading-judul').value = editOsisMadingBtn.dataset.judul || '';
+                document.getElementById('edit-mading-kategori').value = editOsisMadingBtn.dataset.kategori || 'Puisi Siswa';
+                document.getElementById('edit-mading-penulis').value = editOsisMadingBtn.dataset.penulis || '';
+                document.getElementById('edit-mading-kelas').value = editOsisMadingBtn.dataset.kelas || '';
+                document.getElementById('edit-mading-tanggal').value = editOsisMadingBtn.dataset.tanggal || '';
+                document.getElementById('edit-mading-cuplikan').value = editOsisMadingBtn.dataset.cuplikan || '';
+                document.getElementById('edit-mading-likes').value = editOsisMadingBtn.dataset.likes || 0;
+                openModal('modal-edit-osis-mading');
+                return;
+            }
+        });
+
+        // ==============================================================
+        // SISTEM FORM EDIT HALAMAN PROFIL RAMAH OPERATOR IT (BEBAS KODE)
+        // ==============================================================
+        let currentEditSlug = '';
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeHtmlAttr(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function setupOperatorFriendlyForm(slug, rawHtml) {
+            currentEditSlug = slug;
+            const container = document.getElementById('edit-halaman-form-container');
+            if (!container) return;
+
+            // 1. SARANA & PRASARANA
+            if (slug === 'sarana') {
+                const introMatch = rawHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+                const intro = introMatch ? introMatch[1].replace(/<[^>]+>/g, '').trim() : 'Untuk mendukung tercapainya proses pembelajaran yang optimal dan berdaya saing tinggi, UPT SMP Negeri 1 Rantepao dilengkapi dengan sarana dan prasarana modern yang ramah peserta didik:';
+
+                const cardRegex = /<div class="bg-slate-50[^"]*">([\s\S]*?)<\/div>/gi;
+                let m;
+                const cards = [];
+                while ((m = cardRegex.exec(rawHtml)) !== null) {
+                    const cardHtml = m[1];
+                    const iconMatch = cardHtml.match(/<i class="fa-solid (fa-[\w-]+)/i);
+                    const titleMatch = cardHtml.match(/<h5[^>]*>([\s\S]*?)<\/h5>/i);
+                    const pMatch = cardHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+
+                    cards.push({
+                        icon: iconMatch ? iconMatch[1] : 'fa-building-columns',
+                        judul: titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : '',
+                        deskripsi: pMatch ? pMatch[1].replace(/<[^>]+>/g, '').trim() : ''
+                    });
+                }
+
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Paragraf Pengantar Sarana & Prasarana</label>
+                            <textarea id="sarana-intro" rows="2" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 text-slate-800 font-sans leading-relaxed" placeholder="Tuliskan kalimat pengantar sarana prasarana...">${escapeHtmlAttr(intro)}</textarea>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-800">Daftar Fasilitas / Sarana Sekolah</label>
+                                    <p class="text-[11px] text-slate-400">Setiap fasilitas akan otomatis tampil rapi dalam bentuk kartu grid berikon di website</p>
+                                </div>
+                                <button type="button" onclick="addSaranaCardItem()" class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                    <span>Tambah Fasilitas Baru</span>
+                                </button>
+                            </div>
+
+                            <div id="sarana-items-container" class="space-y-3 max-h-[46vh] overflow-y-auto pr-1">
+                                ${cards.map((c, i) => renderSaranaCardRow(c.judul, c.deskripsi, c.icon, i)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 2. VISI & MISI
+            if (slug === 'visi-misi') {
+                const visiMatch = rawHtml.match(/<p class="text-slate-800[^"]*">([\s\S]*?)<\/p>/i);
+                const visi = visiMatch ? visiMatch[1].replace(/<[^>]+>/g, '').replace(/^"|"$/g, '').trim() : '';
+
+                const liRegex = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+                let m;
+                const misiList = [];
+                while ((m = liRegex.exec(rawHtml)) !== null) {
+                    const liHtml = m[1];
+                    const strongMatch = liHtml.match(/<strong[^>]*>([\s\S]*?)<\/strong>/i);
+                    const judul = strongMatch ? strongMatch[1].replace(/<[^>]+>/g, '').replace(/:$/, '').trim() : '';
+                    const deskripsi = liHtml.replace(/<strong[^>]*>[\s\S]*?<\/strong>/i, '').replace(/<[^>]+>/g, '').trim();
+                    misiList.push({ judul, deskripsi });
+                }
+
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Teks Visi Sekolah *</label>
+                            <textarea id="visi-text" rows="3" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 font-semibold text-slate-800 leading-relaxed" placeholder="Tuliskan rumusan visi sekolah...">${escapeHtmlAttr(visi)}</textarea>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-800">Daftar Butir Misi Sekolah</label>
+                                    <p class="text-[11px] text-slate-400">Urutan butir misi akan otomatis bernomor 1, 2, 3... pada website</p>
+                                </div>
+                                <button type="button" onclick="addMisiItem()" class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                    <span>Tambah Butir Misi</span>
+                                </button>
+                            </div>
+
+                            <div id="misi-items-container" class="space-y-3 max-h-[46vh] overflow-y-auto pr-1">
+                                ${misiList.map((m, i) => renderMisiRow(m.judul, m.deskripsi, i)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 3. PROGRAM KERJA
+            if (slug === 'program-kerja') {
+                const introMatch = rawHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+                const intro = introMatch ? introMatch[1].replace(/<[^>]+>/g, '').trim() : 'Dalam rangka meningkatkan mutu layanan pendidikan secara berkesinambungan, sekolah menyusun program kerja strategis yang berfokus pada kemandirian dan kecakapan abad ke-21:';
+
+                const itemRegex = /<div class="border-l-4[^"]*">([\s\S]*?)<\/div>/gi;
+                let m;
+                const programs = [];
+                while ((m = itemRegex.exec(rawHtml)) !== null) {
+                    const itemHtml = m[1];
+                    const h5Match = itemHtml.match(/<h5[^>]*>([\s\S]*?)<\/h5>/i);
+                    const pMatch = itemHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+                    programs.push({
+                        judul: h5Match ? h5Match[1].replace(/<[^>]+>/g, '').trim() : '',
+                        deskripsi: pMatch ? pMatch[1].replace(/<[^>]+>/g, '').trim() : ''
+                    });
+                }
+
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Paragraf Pengantar Program Kerja</label>
+                            <textarea id="program-intro" rows="2" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 text-slate-800 font-sans leading-relaxed" placeholder="Tuliskan kalimat pengantar program kerja...">${escapeHtmlAttr(intro)}</textarea>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-800">Daftar Program Kerja & Inovasi Sekolah</label>
+                                    <p class="text-[11px] text-slate-400">Setiap item program akan otomatis tampil dengan kartu aksen berwarna</p>
+                                </div>
+                                <button type="button" onclick="addProgramItem()" class="px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                    <span>Tambah Program Kerja</span>
+                                </button>
+                            </div>
+
+                            <div id="program-items-container" class="space-y-3 max-h-[46vh] overflow-y-auto pr-1">
+                                ${programs.map((p, i) => renderProgramRow(p.judul, p.deskripsi, i)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 4. SEJARAH / KONDISI SISWA / TEKS UMUM
+            const pRegex = /<p[^>]*>([\s\S]*?)<\/p>/gi;
+            let m;
+            const paragraphs = [];
+            while ((m = pRegex.exec(rawHtml)) !== null) {
+                paragraphs.push(m[1].replace(/<[^>]+>/g, '').trim());
+            }
+            const cleanText = paragraphs.length > 0 ? paragraphs.join('\n\n') : rawHtml.replace(/<[^>]+>/g, '').trim();
+
+            container.innerHTML = `
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-700">Isi Informasi Halaman (Paragraf demi Paragraf) *</label>
+                    <textarea id="edit-teks-narasi" rows="11" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl p-3.5 focus:outline-blue-600 leading-relaxed text-slate-800 font-sans" placeholder="Tuliskan uraian informasi lengkap di sini...">${escapeHtmlAttr(cleanText)}</textarea>
+                    <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100 flex items-start gap-2 text-[11px] text-blue-900">
+                        <i class="fa-solid fa-circle-info text-blue-600 mt-0.5"></i>
+                        <div>
+                            <span class="font-bold">Panduan Operator IT:</span> Cukup ketik teks seperti pada dokumen biasa. Tekan <kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-[10px] font-mono shadow-xs">Enter</kbd> (baris baru) untuk memisahkan paragraf. Sistem otomatis menata tampilan halaman agar rapi dan proporsional di website tanpa perlu kode HTML.
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Row Renders
+        function renderSaranaCardRow(judul, deskripsi, icon, index) {
+            const icons = [
+                { val: 'fa-chalkboard-user', label: 'Ruang Kelas' },
+                { val: 'fa-flask', label: 'Laboratorium IPA' },
+                { val: 'fa-laptop-code', label: 'Lab Komputer' },
+                { val: 'fa-book-bookmark', label: 'Perpustakaan' },
+                { val: 'fa-volleyball', label: 'Lapangan Olahraga' },
+                { val: 'fa-mosque', label: 'Ruang Ibadah' },
+                { val: 'fa-building-columns', label: 'Gedung / Aula' },
+                { val: 'fa-star', label: 'Fasilitas Lainnya' }
+            ];
+            const selectedIcon = icon || 'fa-building-columns';
+
+            return `
+                <div class="sarana-row p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 relative group hover:border-slate-300 transition">
+                    <div class="flex items-center gap-2">
+                        <select class="sarana-icon text-xs border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-medium text-slate-700 focus:outline-blue-600">
+                            ${icons.map(ic => `<option value="${ic.val}" ${ic.val === selectedIcon ? 'selected' : ''}>${ic.label}</option>`).join('')}
+                        </select>
+                        <input type="text" class="sarana-judul flex-1 text-xs sm:text-sm font-bold border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-blue-600 bg-white" placeholder="Nama Fasilitas (contoh: Ruang Kelas Representatif)" value="${escapeHtmlAttr(judul)}">
+                        <button type="button" onclick="this.closest('.sarana-row').remove()" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 transition shrink-0 cursor-pointer" title="Hapus fasilitas ini">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <textarea class="sarana-deskripsi w-full text-xs border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-blue-600 bg-white leading-relaxed" rows="2" placeholder="Keterangan rincian fasilitas...">${escapeHtmlAttr(deskripsi)}</textarea>
+                </div>
+            `;
+        }
+
+        function addSaranaCardItem() {
+            const container = document.getElementById('sarana-items-container');
+            if (!container) return;
+            const newRow = document.createElement('div');
+            newRow.innerHTML = renderSaranaCardRow('', '', 'fa-building-columns', 99);
+            container.appendChild(newRow.firstElementChild);
+            const lastRow = container.lastElementChild;
+            lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            lastRow.querySelector('.sarana-judul')?.focus();
+        }
+
+        function renderMisiRow(judul, deskripsi, index) {
+            return `
+                <div class="misi-row p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 relative group hover:border-slate-300 transition">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-blue-900 text-white flex items-center justify-center text-[10px] font-bold shrink-0 misi-number">${index + 1}</span>
+                        <input type="text" class="misi-judul flex-1 text-xs sm:text-sm font-bold border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-blue-600 bg-white" placeholder="Judul / Pokok Misi (contoh: Penguatan Karakter)" value="${escapeHtmlAttr(judul)}">
+                        <button type="button" onclick="this.closest('.misi-row').remove(); updateMisiNumbers();" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 transition shrink-0 cursor-pointer" title="Hapus butir misi ini">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <textarea class="misi-deskripsi w-full text-xs border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-blue-600 bg-white leading-relaxed" rows="2" placeholder="Uraian penjelasan butir misi sekolah...">${escapeHtmlAttr(deskripsi)}</textarea>
+                </div>
+            `;
+        }
+
+        function addMisiItem() {
+            const container = document.getElementById('misi-items-container');
+            if (!container) return;
+            const count = container.querySelectorAll('.misi-row').length;
+            const newRow = document.createElement('div');
+            newRow.innerHTML = renderMisiRow('', '', count);
+            container.appendChild(newRow.firstElementChild);
+            const lastRow = container.lastElementChild;
+            lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            lastRow.querySelector('.misi-judul')?.focus();
+            updateMisiNumbers();
+        }
+
+        function updateMisiNumbers() {
+            const rows = document.querySelectorAll('#misi-items-container .misi-row');
+            rows.forEach((r, idx) => {
+                const num = r.querySelector('.misi-number');
+                if (num) num.textContent = idx + 1;
+            });
+        }
+
+        function renderProgramRow(judul, deskripsi, index) {
+            return `
+                <div class="program-row p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 relative group hover:border-slate-300 transition">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-amber-500 text-blue-950 flex items-center justify-center text-[10px] font-black shrink-0 program-number">${index + 1}</span>
+                        <input type="text" class="program-judul flex-1 text-xs sm:text-sm font-bold border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-blue-600 bg-white" placeholder="Nama Program Kerja (contoh: Gerakan Literasi Sekolah)" value="${escapeHtmlAttr(judul)}">
+                        <button type="button" onclick="this.closest('.program-row').remove(); updateProgramNumbers();" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 transition shrink-0 cursor-pointer" title="Hapus program ini">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <textarea class="program-deskripsi w-full text-xs border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-blue-600 bg-white leading-relaxed" rows="2" placeholder="Uraian pelaksanaan dan target program...">${escapeHtmlAttr(deskripsi)}</textarea>
+                </div>
+            `;
+        }
+
+        function addProgramItem() {
+            const container = document.getElementById('program-items-container');
+            if (!container) return;
+            const count = container.querySelectorAll('.program-row').length;
+            const newRow = document.createElement('div');
+            newRow.innerHTML = renderProgramRow('', '', count);
+            container.appendChild(newRow.firstElementChild);
+            const lastRow = container.lastElementChild;
+            lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            lastRow.querySelector('.program-judul')?.focus();
+            updateProgramNumbers();
+        }
+
+        function updateProgramNumbers() {
+            const rows = document.querySelectorAll('#program-items-container .program-row');
+            rows.forEach((r, idx) => {
+                const num = r.querySelector('.program-number');
+                if (num) num.textContent = idx + 1;
+            });
+        }
+
+        // Kompilasi input formulir kembali menjadi kode HTML murni untuk disimpan & dipratinjau
+        function compileFormToHtml() {
+            if (currentEditSlug === 'sarana') {
+                const intro = (document.getElementById('sarana-intro')?.value || '').trim();
+                const rows = document.querySelectorAll('#sarana-items-container .sarana-row');
+                const cardsHtml = [];
+                const colors = ['text-amber-500', 'text-blue-600', 'text-indigo-600', 'text-emerald-600', 'text-red-500', 'text-teal-600', 'text-purple-600', 'text-cyan-600'];
+
+                rows.forEach((r, idx) => {
+                    const judul = (r.querySelector('.sarana-judul')?.value || '').trim();
+                    const deskripsi = (r.querySelector('.sarana-deskripsi')?.value || '').trim();
+                    const icon = r.querySelector('.sarana-icon')?.value || 'fa-building-columns';
+                    const color = colors[idx % colors.length];
+                    if (judul || deskripsi) {
+                        cardsHtml.push(`    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <h5 class="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-2 mb-1">
+            <i class="fa-solid ${icon} ${color}"></i> ${escapeHtml(judul)}
+        </h5>
+        <p class="text-xs text-slate-600">${escapeHtml(deskripsi)}</p>
+    </div>`);
+                    }
+                });
+
+                return `<p class="mb-4 text-justify leading-relaxed">${escapeHtml(intro)}</p>\n<div class="grid sm:grid-cols-2 gap-3.5 my-4">\n${cardsHtml.join('\n')}\n</div>`;
+            }
+
+            if (currentEditSlug === 'visi-misi') {
+                const visi = (document.getElementById('visi-text')?.value || '').trim();
+                const rows = document.querySelectorAll('#misi-items-container .misi-row');
+                const misiHtml = [];
+                rows.forEach(r => {
+                    const judul = (r.querySelector('.misi-judul')?.value || '').trim();
+                    const deskripsi = (r.querySelector('.misi-deskripsi')?.value || '').trim();
+                    if (judul || deskripsi) {
+                        misiHtml.push(`    <li><strong>${escapeHtml(judul)}:</strong> ${escapeHtml(deskripsi)}</li>`);
+                    }
+                });
+
+                return `<div class="mb-6 bg-blue-50/70 p-5 rounded-2xl border border-blue-200/80">
+    <h4 class="text-xs font-black text-blue-950 uppercase tracking-wider mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-bullseye text-amber-500"></i> VISI SEKOLAH
+    </h4>
+    <p class="text-slate-800 font-semibold italic text-base leading-relaxed">"${escapeHtml(visi)}"</p>
+</div>
+<h4 class="text-xs font-black text-blue-950 uppercase tracking-wider mb-3 flex items-center gap-2">
+    <i class="fa-solid fa-list-ol text-blue-900"></i> MISI SEKOLAH
+</h4>
+<ol class="list-decimal list-inside space-y-2.5 text-slate-700 text-sm leading-relaxed">
+${misiHtml.join('\n')}
+</ol>`;
+            }
+
+            if (currentEditSlug === 'program-kerja') {
+                const intro = (document.getElementById('program-intro')?.value || '').trim();
+                const rows = document.querySelectorAll('#program-items-container .program-row');
+                const colors = [
+                    'border-amber-500 bg-amber-50/40 border-amber-100',
+                    'border-blue-600 bg-blue-50/40 border-blue-100',
+                    'border-emerald-500 bg-emerald-50/40 border-emerald-100',
+                    'border-purple-500 bg-purple-50/40 border-purple-100',
+                    'border-rose-500 bg-rose-50/40 border-rose-100'
+                ];
+                const progHtml = [];
+                rows.forEach((r, idx) => {
+                    const judul = (r.querySelector('.program-judul')?.value || '').trim();
+                    const deskripsi = (r.querySelector('.program-deskripsi')?.value || '').trim();
+                    const c = colors[idx % colors.length];
+                    if (judul || deskripsi) {
+                        progHtml.push(`    <div class="border-l-4 ${c} p-3 rounded-r-xl border">
+        <h5 class="font-bold text-blue-950 text-xs sm:text-sm">${escapeHtml(judul)}</h5>
+        <p class="text-xs text-slate-600 mt-0.5">${escapeHtml(deskripsi)}</p>
+    </div>`);
+                    }
+                });
+
+                return `<p class="mb-4 text-justify leading-relaxed">${escapeHtml(intro)}</p>\n<div class="space-y-3 my-4">\n${progHtml.join('\n')}\n</div>`;
+            }
+
+            // Default: Sejarah / Kondisi Siswa (Teks Narasi)
+            const rawText = (document.getElementById('edit-teks-narasi')?.value || '').trim();
+            const paras = rawText.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+            if (paras.length === 0) return '<p class="mb-4 text-justify leading-relaxed">' + escapeHtml(rawText) + '</p>';
+            return paras.map(p => `<p class="mb-4 text-justify leading-relaxed">${escapeHtml(p)}</p>`).join('\n');
+        }
+
+        // Tampilkan Modal Pratinjau di Sisi Admin
+        function showAdminPreviewHalaman(slug, judul, konten) {
+            const iconMap = {
+                'sejarah': 'fa-landmark',
+                'visi-misi': 'fa-bullseye',
+                'sarana': 'fa-building-columns',
+                'program-kerja': 'fa-list-check',
+                'kondisi-siswa': 'fa-chart-pie'
+            };
+            const iconEl = document.getElementById('preview-admin-icon');
+            if (iconEl) {
+                iconEl.className = `fa-solid ${iconMap[slug] || 'fa-school'} text-amber-600`;
+            }
+            document.getElementById('preview-admin-judul').textContent = judul;
+            document.getElementById('preview-admin-body').innerHTML = konten;
+            openModal('modal-preview-halaman-admin');
+        }
+
+        function previewCurrentEdit() {
+            const slug = document.getElementById('edit-halaman-slug-label')?.textContent || '';
+            const judul = document.getElementById('edit-halaman-judul')?.value || 'Pratinjau Halaman Profil';
+            const konten = compileFormToHtml();
+            showAdminPreviewHalaman(slug, judul, konten);
+        }
+
+        // Pastikan kompilasi form sebelum submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const formEditHalaman = document.getElementById('form-edit-halaman');
+            if (formEditHalaman) {
+                formEditHalaman.addEventListener('submit', function() {
+                    const compiledHtml = compileFormToHtml();
+                    document.getElementById('edit-halaman-konten').value = compiledHtml;
+                });
+            }
+        });

@@ -1,0 +1,89 @@
+                <!-- Konten Visual Halaman -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-800 mb-1.5">Isi Konten Halaman Lengkap *</label>
+
+                    <div class="space-y-2">
+                        <!-- Visual Toolbar -->
+                        <div class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            <!-- Block Formats -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="formatBlockTag('p')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold text-[11px] transition shadow-xs cursor-pointer" title="Paragraf Biasa">
+                                    Paragraf
+                                </button>
+                                <button type="button" onclick="formatBlockTag('h4')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-blue-950 font-bold text-[11px] transition shadow-xs cursor-pointer" title="Judul Sub-Bab">
+                                    Judul H4
+                                </button>
+                                <button type="button" onclick="formatBlockTag('h5')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-blue-950 font-bold text-[11px] transition shadow-xs cursor-pointer" title="Subjudul">
+                                    Subjudul H5
+                                </button>
+                            </div>
+
+                            <!-- Inline Styling: Bold, Italic, Underline -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('bold')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Tebal (Ctrl+B)">
+                                    <i class="fa-solid fa-bold"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('italic')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 italic text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Miring (Ctrl+I)">
+                                    <i class="fa-solid fa-italic"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('underline')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 underline text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Garis Bawah (Ctrl+U)">
+                                    <i class="fa-solid fa-underline"></i>
+                                </button>
+                            </div>
+
+                            <!-- Lists -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('insertUnorderedList')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Daftar Poin (Bullet List)">
+                                    <i class="fa-solid fa-list-ul"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('insertOrderedList')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Daftar Angka (Numbered List)">
+                                    <i class="fa-solid fa-list-ol"></i>
+                                </button>
+                            </div>
+
+                            <!-- Alignment -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('justifyLeft')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Kiri">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('justifyCenter')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Tengah">
+                                    <i class="fa-solid fa-align-center"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('justifyFull')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Kanan-Kiri (Justify)">
+                                    <i class="fa-solid fa-align-justify"></i>
+                                </button>
+                            </div>
+
+                            <!-- Undo / Redo / Clear -->
+                            <div class="flex items-center gap-1 ml-auto">
+                                <button type="button" onclick="execVisualCmd('undo')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 text-xs flex items-center justify-center transition cursor-pointer" title="Urungkan (Undo - Ctrl+Z)">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('redo')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 text-xs flex items-center justify-center transition cursor-pointer" title="Ulangi (Redo - Ctrl+Y)">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('removeFormat')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-rose-600 text-xs flex items-center justify-center transition cursor-pointer" title="Hapus Format">
+                                    <i class="fa-solid fa-eraser"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Editable Visual Canvas -->
+                        <div id="edit-halaman-visual" 
+                             contenteditable="true" 
+                             spellcheck="false"
+                             class="w-full min-h-[360px] max-h-[500px] overflow-y-auto border border-slate-300 rounded-2xl p-5 sm:p-6 bg-white text-slate-800 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-inner">
+                        </div>
+
+                        <!-- Hidden Textarea for Form Payload -->
+                        <textarea id="edit-halaman-konten" name="konten" class="hidden"></textarea>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                            <span class="flex items-center gap-1.5 font-medium text-slate-700">
+                                <i class="fa-solid fa-pen text-blue-600"></i>
+                                <span>Klik langsung pada teks untuk mengedit tulisan, atau tekan Enter untuk membuat paragraf baru.</span>
+                            </span>
+                            <span class="text-[10px] text-slate-400 hidden sm:inline">Ctrl+B (Tebal) • Ctrl+I (Miring) • Ctrl+Z (Urungkan)</span>
+                        </div>
+                    </div>
+                </div>

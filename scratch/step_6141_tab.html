@@ -1,0 +1,473 @@
+                    <!-- Footer Count Info -->
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span id="ppdb-counter-text">Menampilkan semua calon siswa pendaftar PPDB</span>
+                        <span>Panitia PPDB UPT SMPN 1 Rantepao</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 10: KELOLA OSIS & MADING SISWA -->
+            <!-- ============================================== -->
+            <div id="tab-osis" class="tab-content space-y-6">
+                <!-- Action Header Bar -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase">
+                                Masa Bakti <%= (typeof osisProfil !== 'undefined' && osisProfil.periode) ? osisProfil.periode : '2025/2026' %>
+                            </span>
+                            <span class="text-xs text-slate-400">Total: <%= (typeof stats !== 'undefined' && stats.totalOsisPengurus) ? stats.totalOsisPengurus : 0 %> Pengurus • <%= (typeof stats !== 'undefined' && stats.totalOsisProker) ? stats.totalOsisProker : 0 %> Proker • <%= (typeof stats !== 'undefined' && stats.totalOsisMading) ? stats.totalOsisMading : 0 %> Mading</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mt-1">Organisasi Siswa Intra Sekolah (OSIS) & Mading</h3>
+                        <p class="text-xs text-slate-400">Kelola jajaran pengurus siswa, program kerja seksi bidang, publikasi mading, serta sambutan ketua OSIS</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <a href="/osis" target="_blank" class="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 border border-blue-200 shadow-xs">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            <span>Halaman Publik OSIS</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- OSIS Sub-Navigation Pills -->
+                <div class="flex flex-wrap gap-2 p-1.5 bg-slate-200/70 rounded-2xl w-fit">
+                    <button type="button" onclick="switchOsisSubtab('pengurus')" id="btn-subtab-pengurus" class="osis-subtab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-xs">
+                        <i class="fa-solid fa-users text-xs"></i>
+                        <span>Pengurus OSIS</span>
+                        <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-white/20"><%= (typeof osisPengurus !== 'undefined') ? osisPengurus.length : 0 %></span>
+                    </button>
+                    <button type="button" onclick="switchOsisSubtab('proker')" id="btn-subtab-proker" class="osis-subtab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-list-check text-xs"></i>
+                        <span>Program Kerja</span>
+                        <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-slate-300 text-slate-700"><%= (typeof osisProker !== 'undefined') ? osisProker.length : 0 %></span>
+                    </button>
+                    <button type="button" onclick="switchOsisSubtab('mading')" id="btn-subtab-mading" class="osis-subtab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-newspaper text-xs"></i>
+                        <span>Mading Siswa</span>
+                        <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-slate-300 text-slate-700"><%= (typeof osisMading !== 'undefined') ? osisMading.length : 0 %></span>
+                    </button>
+                    <button type="button" onclick="switchOsisSubtab('sambutan')" id="btn-subtab-sambutan" class="osis-subtab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-user-tie text-xs"></i>
+                        <span>Profil & Sambutan Ketua</span>
+                    </button>
+                </div>
+
+                <!-- SUBTAB 1: PENGURUS OSIS -->
+                <div id="subtab-osis-pengurus" class="osis-subtab-pane bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Daftar Pengurus OSIS</h4>
+                            <p class="text-xs text-slate-400">Struktur pengurus inti dan perwakilan seksi bidang (Sekbid)</p>
+                        </div>
+                        <button type="button" onclick="openModal('modal-tambah-osis-pengurus')" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-xs">
+                            <i class="fa-solid fa-user-plus text-xs"></i>
+                            <span>Tambah Pengurus Baru</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50/75 border-b border-slate-100 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                                    <th class="py-3 px-4">Pengurus</th>
+                                    <th class="py-3 px-4">Jabatan</th>
+                                    <th class="py-3 px-4">Kategori</th>
+                                    <th class="py-3 px-4">Kelas</th>
+                                    <th class="py-3 px-4">Motto / Visi Diri</th>
+                                    <th class="py-3 px-4 text-center">Urutan</th>
+                                    <th class="py-3 px-4 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% if (!osisPengurus || osisPengurus.length === 0) { %>
+                                    <tr>
+                                        <td colspan="7" class="py-8 text-center text-slate-400">
+                                            Belum ada data pengurus OSIS. Silakan klik "Tambah Pengurus Baru".
+                                        </td>
+                                    </tr>
+                                <% } else { %>
+                                    <% osisPengurus.forEach(p => { %>
+                                        <tr class="hover:bg-slate-50/60 transition">
+                                            <td class="py-3 px-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0">
+                                                        <% if (p.foto && !p.foto.startsWith('default') && !p.foto.endsWith('-osis.jpg')) { %>
+                                                            <img src="/uploads/osis/<%= p.foto %>" alt="<%= p.nama_lengkap %>" class="w-full h-full object-cover">
+                                                        <% } else { %>
+                                                            <div class="w-full h-full flex items-center justify-center bg-blue-900 text-amber-300 font-bold text-xs">
+                                                                <%= p.nama_lengkap ? p.nama_lengkap.charAt(0) : 'O' %>
+                                                            </div>
+                                                        <% } %>
+                                                    </div>
+                                                    <div>
+                                                        <span class="font-bold text-slate-800 block"><%= p.nama_lengkap %></span>
+                                                        <span class="text-[10px] text-slate-400"><%= p.kelas || '-' %></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-4 font-semibold text-blue-900"><%= p.jabatan %></td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold <%= p.kategori === 'Pengurus Inti' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800' %>">
+                                                    <%= p.kategori || 'Pengurus Inti' %>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4 text-slate-600"><%= p.kelas || '-' %></td>
+                                            <td class="py-3 px-4 text-slate-500 max-w-xs truncate italic">"<%= p.motto || '-' %>"</td>
+                                            <td class="py-3 px-4 text-center font-mono font-bold text-slate-500"><%= p.urutan_tampil || 10 %></td>
+                                            <td class="py-3 px-4 text-right">
+                                                <div class="flex items-center justify-end gap-1.5">
+                                                    <button type="button"
+                                                            class="btn-edit-osis-pengurus p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                                            title="Edit Pengurus"
+                                                            data-id="<%= p.id %>"
+                                                            data-nama="<%= p.nama_lengkap %>"
+                                                            data-jabatan="<%= p.jabatan %>"
+                                                            data-kategori="<%= p.kategori %>"
+                                                            data-kelas="<%= p.kelas || '' %>"
+                                                            data-motto="<%= p.motto || '' %>"
+                                                            data-urutan="<%= p.urutan_tampil || 10 %>">
+                                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                                    </button>
+                                                    <form action="/admin/osis/pengurus/hapus/<%= p.id %>" method="POST" onsubmit="return confirm('Hapus pengurus <%= p.nama_lengkap %>?')">
+                                                        <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Pengurus">
+                                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SUBTAB 2: PROGRAM KERJA OSIS -->
+                <div id="subtab-osis-proker" class="osis-subtab-pane hidden bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Program Kerja (Proker) OSIS</h4>
+                            <p class="text-xs text-slate-400">Rencana kegiatan, seksi bidang penanggung jawab, jadwal, dan status realisasi</p>
+                        </div>
+                        <button type="button" onclick="openModal('modal-tambah-osis-proker')" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-xs">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Program Kerja</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50/75 border-b border-slate-100 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                                    <th class="py-3 px-4">Program Kerja</th>
+                                    <th class="py-3 px-4">Seksi Bidang</th>
+                                    <th class="py-3 px-4">Jadwal / Waktu</th>
+                                    <th class="py-3 px-4">Target Sasaran</th>
+                                    <th class="py-3 px-4 text-center">Status</th>
+                                    <th class="py-3 px-4 text-center">Urutan</th>
+                                    <th class="py-3 px-4 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% if (!osisProker || osisProker.length === 0) { %>
+                                    <tr>
+                                        <td colspan="7" class="py-8 text-center text-slate-400">
+                                            Belum ada data program kerja OSIS. Silakan klik "Tambah Program Kerja".
+                                        </td>
+                                    </tr>
+                                <% } else { %>
+                                    <% osisProker.forEach(pr => { %>
+                                        <tr class="hover:bg-slate-50/60 transition">
+                                            <td class="py-3 px-4">
+                                                <div class="flex items-start gap-2.5">
+                                                    <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
+                                                        <i class="fa-solid <%= pr.icon || 'fa-compass' %>"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="font-bold text-slate-800 block"><%= pr.judul %></span>
+                                                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-1"><%= pr.deskripsi || '-' %></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-4 font-medium text-slate-700"><%= pr.kategori %></td>
+                                            <td class="py-3 px-4 text-slate-600"><%= pr.jadwal || '-' %></td>
+                                            <td class="py-3 px-4 text-slate-600"><%= pr.target || 'Seluruh Siswa' %></td>
+                                            <td class="py-3 px-4 text-center">
+                                                <% let stColor = 'bg-slate-100 text-slate-800';
+                                                   if (pr.status === 'Terlaksana') stColor = 'bg-emerald-100 text-emerald-800';
+                                                   else if (pr.status === 'Sedang Berjalan') stColor = 'bg-amber-100 text-amber-800';
+                                                   else if (pr.status === 'Terencana') stColor = 'bg-blue-100 text-blue-800';
+                                                %>
+                                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold <%= stColor %>">
+                                                    <%= pr.status || 'Sedang Berjalan' %>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4 text-center font-mono font-bold text-slate-500"><%= pr.urutan_tampil || 10 %></td>
+                                            <td class="py-3 px-4 text-right">
+                                                <div class="flex items-center justify-end gap-1.5">
+                                                    <button type="button"
+                                                            class="btn-edit-osis-proker p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                                            title="Edit Proker"
+                                                            data-id="<%= pr.id %>"
+                                                            data-judul="<%= pr.judul %>"
+                                                            data-kategori="<%= pr.kategori %>"
+                                                            data-icon="<%= pr.icon || 'fa-compass' %>"
+                                                            data-jadwal="<%= pr.jadwal || '' %>"
+                                                            data-target="<%= pr.target || '' %>"
+                                                            data-status="<%= pr.status || 'Sedang Berjalan' %>"
+                                                            data-deskripsi="<%= pr.deskripsi || '' %>"
+                                                            data-urutan="<%= pr.urutan_tampil || 10 %>">
+                                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                                    </button>
+                                                    <form action="/admin/osis/proker/hapus/<%= pr.id %>" method="POST" onsubmit="return confirm('Hapus program kerja: <%= pr.judul %>?')">
+                                                        <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Proker">
+                                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SUBTAB 3: MADING SISWA -->
+                <div id="subtab-osis-mading" class="osis-subtab-pane hidden bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Majalah Dinding (Mading) Siswa</h4>
+                            <p class="text-xs text-slate-400">Karya puisi, cerpen, karikatur, opini, dan kreativitas literasi siswa SMPN 1 Rantepao</p>
+                        </div>
+                        <button type="button" onclick="openModal('modal-tambah-osis-mading')" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-xs">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Publikasikan Karya Mading</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50/75 border-b border-slate-100 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                                    <th class="py-3 px-4">Karya Mading</th>
+                                    <th class="py-3 px-4">Kategori</th>
+                                    <th class="py-3 px-4">Penulis & Kelas</th>
+                                    <th class="py-3 px-4">Tanggal</th>
+                                    <th class="py-3 px-4 text-center">Apresiasi (Likes)</th>
+                                    <th class="py-3 px-4 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% if (!osisMading || osisMading.length === 0) { %>
+                                    <tr>
+                                        <td colspan="6" class="py-8 text-center text-slate-400">
+                                            Belum ada karya mading yang diterbitkan. Silakan klik "Publikasikan Karya Mading".
+                                        </td>
+                                    </tr>
+                                <% } else { %>
+                                    <% osisMading.forEach(m => { %>
+                                        <tr class="hover:bg-slate-50/60 transition">
+                                            <td class="py-3 px-4">
+                                                <div class="flex items-center gap-3">
+                                                    <% if (m.foto) { %>
+                                                        <img src="/uploads/osis/<%= m.foto %>" alt="<%= m.judul %>" class="w-12 h-10 object-cover rounded-lg border border-slate-200 flex-shrink-0">
+                                                    <% } else { %>
+                                                        <div class="w-12 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 flex-shrink-0">
+                                                            <i class="fa-solid fa-newspaper text-sm"></i>
+                                                        </div>
+                                                    <% } %>
+                                                    <div>
+                                                        <span class="font-bold text-slate-800 block"><%= m.judul %></span>
+                                                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-1"><%= m.cuplikan || '-' %></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                                                    <%= m.kategori || 'Karya Siswa' %>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <span class="font-medium text-slate-800 block"><%= m.penulis %></span>
+                                                <span class="text-[10px] text-slate-400"><%= m.kelas || '-' %></span>
+                                            </td>
+                                            <td class="py-3 px-4 text-slate-500 whitespace-nowrap"><%= m.tanggal || '-' %></td>
+                                            <td class="py-3 px-4 text-center font-bold text-rose-600">
+                                                <span class="inline-flex items-center gap-1">
+                                                    <i class="fa-solid fa-heart text-xs"></i>
+                                                    <span><%= m.likes || 0 %></span>
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4 text-right">
+                                                <div class="flex items-center justify-end gap-1.5">
+                                                    <button type="button"
+                                                            class="btn-edit-osis-mading p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                                            title="Edit Mading"
+                                                            data-id="<%= m.id %>"
+                                                            data-judul="<%= m.judul %>"
+                                                            data-kategori="<%= m.kategori %>"
+                                                            data-penulis="<%= m.penulis %>"
+                                                            data-kelas="<%= m.kelas || '' %>"
+                                                            data-tanggal="<%= m.tanggal || '' %>"
+                                                            data-cuplikan="<%= m.cuplikan || '' %>"
+                                                            data-likes="<%= m.likes || 0 %>">
+                                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                                    </button>
+                                                    <form action="/admin/osis/mading/hapus/<%= m.id %>" method="POST" onsubmit="return confirm('Hapus karya mading: <%= m.judul %>?')">
+                                                        <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Mading">
+                                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SUBTAB 4: PROFIL & SAMBUTAN KETUA OSIS -->
+                <div id="subtab-osis-sambutan" class="osis-subtab-pane hidden bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
+                    <div class="pb-4 mb-6 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-base text-blue-950 flex items-center gap-2">
+                                <i class="fa-solid fa-user-tie text-blue-900"></i>
+                                <span>Profil & Sambutan Resmi Ketua OSIS</span>
+                            </h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Teks sambutan dan visi ini ditampilkan di halaman pembuka /osis</p>
+                        </div>
+                    </div>
+
+                    <form action="/admin/osis/profil/update" method="POST" enctype="multipart/form-data" class="space-y-5">
+                        <div class="grid md:grid-cols-12 gap-5 items-start">
+                            <div class="md:col-span-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <label class="block text-xs font-bold text-slate-700 mb-2">Foto Resmi Ketua OSIS</label>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-20 h-24 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 flex-shrink-0 shadow-xs">
+                                        <% if (osisProfil && osisProfil.foto_ketua && osisProfil.foto_ketua !== 'default-osis.jpg' && osisProfil.foto_ketua !== 'ketua-osis.jpg') { %>
+                                            <img src="/uploads/osis/<%= osisProfil.foto_ketua %>" alt="Ketua OSIS" class="w-full h-full object-cover">
+                                        <% } else { %>
+                                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100 text-xs">
+                                                <i class="fa-solid fa-graduation-cap text-2xl mb-1 text-slate-400"></i>
+                                                <span class="text-[9px]">Default</span>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <input type="file" name="foto_ketua_osis" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                        <p class="text-[10px] text-slate-400 mt-1.5 leading-snug">Kosongkan jika tidak ingin mengganti foto.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-8 grid sm:grid-cols-3 gap-4">
+                                <div class="sm:col-span-1">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Ketua OSIS *</label>
+                                    <input type="text" name="nama_ketua" value="<%= (osisProfil && osisProfil.nama_ketua) ? osisProfil.nama_ketua : 'Gabriel Ranteallo' %>" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas *</label>
+                                    <input type="text" name="kelas_ketua" value="<%= (osisProfil && osisProfil.kelas_ketua) ? osisProfil.kelas_ketua : 'Kelas IX-A' %>" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Masa Bakti / Periode *</label>
+                                    <input type="text" name="periode" value="<%= (osisProfil && osisProfil.periode) ? osisProfil.periode : '2025/2026' %>" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Visi Utama Masa Bakti *</label>
+                                    <input type="text" name="visi_utama" value="<%= (osisProfil && osisProfil.visi_utama) ? osisProfil.visi_utama : 'Terwujudnya OSIS SMPN 1 Rantepao yang Berkarakter, Inovatif, Kolaboratif, serta Menjunjung Tinggi Keluhuran Budaya Toraja.' %>" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Teks Sambutan Ketua OSIS *</label>
+                                    <textarea name="teks_sambutan" rows="6" required class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:outline-blue-600 leading-relaxed"><%= (osisProfil && osisProfil.teks_sambutan) ? osisProfil.teks_sambutan : '' %></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-3 border-t border-slate-100">
+                            <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk text-xs"></i>
+                                <span>Simpan Profil & Sambutan Ketua OSIS</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 11: KELOLA HALAMAN PROFIL & SARANA (STATIS) -->
+            <!-- ============================================== -->
+            <div id="tab-halaman-statis" class="tab-content space-y-6">
+                <!-- Action Header Bar -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-extrabold uppercase">Modal Popup Profil</span>
+                            <span class="text-xs text-slate-400">Total: <%= (typeof stats !== 'undefined' && stats.totalHalamanStatis) ? stats.totalHalamanStatis : 0 %> Halaman</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mt-1">Kelola Halaman Informasi & Sarana Sekolah</h3>
+                        <p class="text-xs text-slate-400">Konten ini tampil saat pengunjung mengklik menu Profil di navigasi (Sejarah Singkat, Sarana & Prasarana, Program Kerja, Kondisi Siswa)</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-5">
+                    <% if (typeof halamanStatis !== 'undefined' && halamanStatis.length > 0) { %>
+                        <% halamanStatis.forEach(h => { %>
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-start justify-between gap-3 mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center text-lg flex-shrink-0 shadow-xs">
+                                                <i class="<%= h.ikon || 'fa-solid fa-file-lines' %>"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-extrabold text-slate-800 text-sm sm:text-base"><%= h.judul %></h4>
+                                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-semibold">slug: <%= h.slug %></span>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            Aktif
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-slate-600 line-clamp-2 mt-2 leading-relaxed"><%= h.ringkasan || '-' %></p>
+                                    <% if (h.paragraf_pembuka) { %>
+                                        <div class="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500 italic">
+                                            "<%= h.paragraf_pembuka %>"
+                                        </div>
+                                    <% } %>
+                                </div>
+
+                                <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="text-[10px] text-slate-400">
+                                        Diperbarui: <%= h.updated_at ? new Date(h.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Terkini' %>
+                                    </span>
+                                    <button type="button"
+                                            class="btn-edit-halaman-statis px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs"
+                                            data-id="<%= h.id %>"
+                                            data-slug="<%= h.slug %>"
+                                            data-judul="<%= h.judul %>"
+                                            data-ikon="<%= h.ikon || 'fa-solid fa-file-lines' %>"
+                                            data-warna="<%= h.warna_badge || 'blue' %>"
+                                            data-ringkasan="<%= h.ringkasan || '' %>"
+                                            data-pembuka="<%= h.paragraf_pembuka || '' %>"
+                                            data-penutup="<%= h.paragraf_penutup || '' %>"
+                                            data-konten="<%= (h.konten || '').replace(/\"/g, '&quot;') %>">
+                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                        <span>Edit Konten</span>
+                                    </button>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="col-span-2 py-10 text-center bg-white rounded-2xl border border-slate-200 text-slate-400 text-xs">
+                            Belum ada halaman statis yang terdaftar.
+                        </div>
+                    <% } %>
+                </div>
+            </div>

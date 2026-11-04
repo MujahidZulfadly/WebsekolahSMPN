@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <%- include('partials/head', { title: (typeof title !== 'undefined' && title) ? title : 'Halaman Tidak Ditemukan (404) - UPT SMPN 1 Rantepao' }) %>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen selection:bg-amber-500 selection:text-blue-950">
+
+    <!-- Navbar Global -->
+    <%- include('partials/navbar', { activePage: '' }) %>
+
+    <!-- 404 Hero Section -->
+    <main class="flex-1 flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gradient-to-b from-slate-100 via-slate-50 to-white">
+        <!-- Ambient Decorative Glows -->
+        <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-blue-600/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-xl w-full text-center relative z-10 space-y-6" data-aos="fade-up">
+            
+            <!-- School Emblem / Badge -->
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-slate-900 border-2 border-amber-400/50 shadow-2xl p-2.5 mx-auto relative group">
+                <div class="absolute inset-0 bg-gradient-to-tr from-blue-950 to-slate-900 rounded-3xl -z-0"></div>
+                <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
+                    <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo Sekolah" class="w-full h-full object-contain relative z-10">
+                <% } else { %>
+                    <span class="font-black text-amber-400 text-3xl relative z-10">S1</span>
+                <% } %>
+            </div>
+
+            <!-- Big 404 Headline -->
+            <div>
+                <span class="px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-700 text-xs font-black uppercase tracking-wider">
+                    Error 404 • Halaman Tidak Ditemukan
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-black text-blue-950 tracking-tight mt-4">
+                    Tersesat di Halaman Ini?
+                </h1>
+                <p class="text-slate-500 text-sm sm:text-base mt-3 max-w-md mx-auto leading-relaxed">
+                    Mohon maaf, halaman atau tautan yang Anda tuju mungkin telah dipindahkan, berganti alamat, atau tidak lagi tersedia di sistem.
+                </p>
+            </div>
+
+            <!-- Quick Action Links -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <a href="/" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-950/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-house text-amber-400"></i>
+                    <span>Kembali ke Beranda</span>
+                </a>
+                <a href="/ppdb" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-blue-950 font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span>Informasi PPDB Online</span>
+                </a>
+            </div>
+
+            <!-- Popular Shortcuts -->
+            <div class="pt-6 border-t border-slate-200/80 text-xs text-slate-500 space-y-2">
+                <p class="font-semibold text-slate-700">Tautan Penting Sekolah:</p>
+                <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-blue-900 font-medium">
+                    <a href="/struktur-organisasi" class="hover:text-amber-600 transition">Struktur Organisasi</a>
+                    <span class="text-slate-300">•</span>
+                    <a href="/civitas" class="hover:text-amber-600 transition">Civitas Akademik</a>
+                    <span class="text-slate-300">•</span>
+                    <a href="/komite" class="hover:text-amber-600 transition">Komite Sekolah</a>
+                    <span class="text-slate-300">•</span>
+                    <a href="/osis" class="hover:text-amber-600 transition">OSIS &amp; Mading</a>
+                    <span class="text-slate-300">•</span>
+                    <a href="/galeri" class="hover:text-amber-600 transition">Galeri Kegiatan</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Global -->
+    <%- include('partials/footer') %>
+
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+                                        <button type="button" 
+                                            class="btn-edit-halaman px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                                            data-id="<%= hal.id %>"
+                                            data-slug="<%= hal.slug %>"
+                                            data-judul="<%= hal.judul %>"
+                                            data-ikon="<%= safeIkon %>"
+                                            data-ringkasan="<%= encodeURIComponent(hal.ringkasan || '') %>"
+                                            data-warna-badge="<%= hal.warna_badge || 'blue' %>"
+                                            data-pembuka="<%= encodeURIComponent(hal.paragraf_pembuka || '') %>"
+                                            data-penutup="<%= encodeURIComponent(hal.paragraf_penutup || '') %>"
+                                            data-items="<%= encodeURIComponent(hal.items_json || '[]') %>"
+                                            data-konten="<%= encodeURIComponent(hal.konten || '') %>">
+                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            <span>Edit Konten & Slip</span>
+                                        </button>

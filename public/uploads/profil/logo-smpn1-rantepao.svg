@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="35%" stop-color="#F59E0B"/>
+      <stop offset="70%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="50%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#0B132B"/>
+    </linearGradient>
+    <linearGradient id="torchGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#DC2626"/>
+      <stop offset="40%" stop-color="#F97316"/>
+      <stop offset="80%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#FEF08A"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Ring Shadow & Base -->
+  <circle cx="256" cy="256" r="246" fill="url(#goldGrad)" filter="url(#shadow)"/>
+  
+  <!-- Outer Rim Accent -->
+  <circle cx="256" cy="256" r="236" fill="#0B132B" stroke="url(#goldGrad)" stroke-width="4"/>
+  
+  <!-- Outer Gold Dashed / Beaded Border -->
+  <circle cx="256" cy="256" r="230" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6,4"/>
+
+  <!-- Text Paths for Circular Text -->
+  <def>
+    <path id="textArcTop" d="M 64 256 A 192 192 0 0 1 448 256" fill="none"/>
+    <path id="textArcBottom" d="M 448 256 A 192 192 0 0 1 64 256" fill="none"/>
+  </def>
+
+  <!-- Circular Texts -->
+  <text font-family="'Poppins', 'Segoe UI', Arial, sans-serif" font-weight="900" font-size="22" fill="#FCD34D" letter-spacing="3.5">
+    <textPath href="#textArcTop" startOffset="50%" text-anchor="middle">
+      UPT SMP NEGERI 1 RANTEPAO
+    </textPath>
+  </text>
+  
+  <text font-family="'Poppins', 'Segoe UI', Arial, sans-serif" font-weight="800" font-size="19" fill="#FCD34D" letter-spacing="4">
+    <textPath href="#textArcBottom" startOffset="50%" text-anchor="middle">
+      ★ TORAJA UTARA ★
+    </textPath>
+  </text>
+
+  <!-- Inner Medallion -->
+  <circle cx="256" cy="256" r="160" fill="url(#navyGrad)" stroke="url(#goldGrad)" stroke-width="5" filter="url(#shadow)"/>
+  <circle cx="256" cy="256" r="152" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Five Stars (Pancasila) -->
+  <g fill="#FCD34D" transform="translate(256, 130)">
+    <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" transform="translate(0, 0) scale(1.1)"/>
+    <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" transform="translate(-32, 6) scale(0.85)"/>
+    <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" transform="translate(32, 6) scale(0.85)"/>
+    <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" transform="translate(-60, 18) scale(0.65)"/>
+    <polygon points="0,-10 3,-3 10,-3 4,2 6,9 0,5 -6,9 -4,2 -10,-3 -3,-3" transform="translate(60, 18) scale(0.65)"/>
+  </g>
+
+  <!-- Stylized Toraja Tongkonan Roof Curves (Cultural Identity) -->
+  <g fill="none" stroke="url(#goldGrad)" stroke-width="4.5" stroke-linecap="round">
+    <path d="M 160 230 C 190 190, 220 185, 256 185 C 292 185, 322 190, 352 230" />
+    <path d="M 148 220 C 190 170, 225 168, 256 168 C 287 168, 322 170, 364 220" stroke-width="2.5" opacity="0.7"/>
+    <!-- Center Peak Finial -->
+    <path d="M 256 165 L 256 150" stroke-width="3"/>
+    <circle cx="256" cy="148" r="3.5" fill="#FCD34D" stroke="none"/>
+  </g>
+
+  <!-- Center Torch (Obor Pendidikan & Semangat Belajar) -->
+  <g transform="translate(256, 235)">
+    <!-- Flame -->
+    <path d="M 0 -45 C -14 -30 -16 -16 0 0 C 16 -16 14 -30 0 -45 Z" fill="url(#torchGrad)" filter="url(#shadow)"/>
+    <path d="M 0 -36 C -8 -25 -8 -15 0 -5 C 8 -15 8 -25 0 -36 Z" fill="#FEF08A"/>
+    <!-- Torch Bowl -->
+    <path d="M -16 -4 L 16 -4 L 10 10 L -10 10 Z" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.5"/>
+    <!-- Torch Handle -->
+    <path d="M -6 10 L -4 46 L 4 46 L 6 10 Z" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.5"/>
+    <rect x="-7" y="24" width="14" height="4" rx="2" fill="#FDE68A"/>
+  </g>
+
+  <!-- Open Book of Knowledge (Buku Terbuka Ilmu Pengetahuan) -->
+  <g transform="translate(256, 305)">
+    <!-- Book Pages Shadow/Back -->
+    <path d="M 0 6 C -25 -4 -65 -4 -90 10 L -86 36 C -62 24 -24 24 0 32 C 24 24 62 24 86 36 L 90 10 C 65 -4 25 -4 0 6 Z" fill="#F8FAFC" stroke="#0F172A" stroke-width="3"/>
+    <!-- Inner Leaf Spine -->
+    <path d="M 0 6 L 0 32" stroke="#0F172A" stroke-width="3"/>
+    <!-- Book Bookmark Ribbon -->
+    <path d="M 0 28 L 0 46 L 5 42 L 10 46 L 10 30" fill="#DC2626"/>
+    <!-- Text Lines on Book Pages -->
+    <line x1="-75" y1="16" x2="-20" y2="12" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="-75" y1="23" x2="-25" y2="20" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="20" y1="12" x2="75" y2="16" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="25" y1="20" x2="75" y2="23" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Banner at Bottom (Motto / Keluhuran) -->
+  <g transform="translate(256, 360)">
+    <rect x="-85" y="-12" width="170" height="24" rx="12" fill="url(#goldGrad)" stroke="#78350F" stroke-width="2" filter="url(#shadow)"/>
+    <text x="0" y="4" font-family="'Poppins', sans-serif" font-weight="900" font-size="11" fill="#0B132B" text-anchor="middle" letter-spacing="1.5">
+      CERDAS &amp; BERKARAKTER
+    </text>
+  </g>
+</svg>
+

@@ -79,8 +79,13 @@
                 <!-- School Brand / Logo -->
                 <a href="/" class="flex items-center space-x-3.5 group flex-shrink-0">
                     <div
-                        class="w-12 h-12 bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 rounded-2xl flex items-center justify-center font-black text-blue-950 text-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-amber-500/20 flex-shrink-0 border border-white/30">
-                        S1
+                        class="w-12 h-12 bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 rounded-2xl flex items-center justify-center font-black text-blue-950 text-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-amber-500/20 flex-shrink-0 border border-white/30 overflow-hidden p-1 shrink-0">
+                        <% if (profilData && profilData.logo_sekolah) { %>
+                            <img src="/uploads/profil/<%= profilData.logo_sekolah %>" alt="Logo <%= profilData.nama_sekolah || 'SMPN 1 Rantepao' %>" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                            <span class="hidden">S1</span>
+                        <% } else { %>
+                            <span>S1</span>
+                        <% } %>
                     </div>
                     <div>
                         <h1
@@ -94,7 +99,7 @@
                 </a>
 
                 <!-- Desktop Navigation Links with animated hover indicators -->
-                <nav class="hidden lg:flex items-center space-x-4 xl:space-x-5 text-xs font-semibold">
+                <nav class="hidden lg:flex items-center space-x-2.5 xl:space-x-3.5 2xl:space-x-5 text-xs font-semibold">
                     <a href="/"
                         class="<%= currentActive === 'beranda' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
                         Beranda
@@ -105,7 +110,7 @@
 
                     <!-- Dropdown Profil (Multi-Level) -->
                     <div class="relative group/profil py-4">
-                        <button type="button" class="flex items-center gap-1.5 <%= (currentActive === 'profil' || currentActive === 'civitas' || currentActive === 'komite') ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-400' %> transition-colors py-1.5 relative focus:outline-none cursor-pointer">
+                        <button type="button" class="flex items-center gap-1.5 <%= (currentActive === 'profil' || currentActive === 'civitas' || currentActive === 'komite' || currentActive === 'struktur' || currentActive === 'struktur') ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-400' %> transition-colors py-1.5 relative focus:outline-none cursor-pointer">
                             <span>Profil</span>
                             <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/profil:rotate-180 text-slate-400 group-hover/profil:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
@@ -166,6 +171,17 @@
                                     </div>
                                 </div>
 
+                                <!-- Sub-menu: Struktur Organisasi (Halaman Khusus Tata Kelola & Pimpinan) -->
+                                <a href="/struktur-organisasi" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/struktur">
+                                    <span class="flex items-center gap-2.5">
+                                        <i class="fa-solid fa-sitemap text-amber-400 group-hover/struktur:text-blue-950 transition-colors w-4 text-center"></i>
+                                        <span>Struktur Organisasi</span>
+                                    </span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover/struktur:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+
                                 <!-- Sub-menu 2: Civitas Akademik (Scroll ke Slider Guru & Pegawai di Beranda) -->
                                 <a href="/#guru" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/civitas">
                                     <span class="flex items-center gap-2.5">
@@ -202,6 +218,84 @@
                             </div>
                         </div>
                     </div>
+
+                    
+                    <!-- Dropdown Layanan Lain -->
+                    <div class="relative group/layanan py-4">
+                        <button type="button" class="flex items-center gap-1.5 <%= (currentActive === 'layanan') ? 'text-amber-400 font-bold' : 'text-slate-200 hover:text-amber-400' %> transition-colors py-1.5 relative focus:outline-none cursor-pointer">
+                            <span>Layanan Lain</span>
+                            <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/layanan:rotate-180 text-slate-400 group-hover/layanan:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover/layanan:w-full transition-all duration-300"></span>
+                        </button>
+
+                        <!-- Dropdown Pane -->
+                        <div class="invisible opacity-0 translate-y-2 pointer-events-none group-hover/layanan:visible group-hover/layanan:opacity-100 group-hover/layanan:translate-y-0 group-hover/layanan:pointer-events-auto transition-all duration-300 ease-out absolute top-full left-0 pt-2 w-72 sm:w-80 z-50">
+                            <div class="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2.5 space-y-1">
+                                <div class="px-3 py-1.5 mb-1 border-b border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+                                    <span class="font-bold text-amber-400 uppercase tracking-wider text-[10px] flex items-center gap-1.5">
+                                        <i class="fa-solid fa-shapes text-amber-400"></i>
+                                        <span>Portal Layanan Lain</span>
+                                    </span>
+                                    <span class="text-[10px] bg-white/10 text-slate-300 px-2 py-0.5 rounded-full font-medium">10 Layanan</span>
+                                </div>
+                                <div class="max-h-[380px] overflow-y-auto space-y-0.5 pr-1 custom-scrollbar">
+                                    <!-- 1. Buku Tamu -->
+                                    <a href="/layanan/buku-tamu" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-book-open-reader text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Buku Tamu</span>
+                                    </a>
+                                    <!-- 2. Pengaduan -->
+                                    <a href="/layanan/pengaduan" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-bullhorn text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Pengaduan</span>
+                                    </a>
+                                    <!-- 3. LMS -->
+                                    <a href="/layanan/lms" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-graduation-cap text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">LMS</span>
+                                    </a>
+                                    <!-- 4. Smart Absen -->
+                                    <a href="/layanan/smart-absen" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-fingerprint text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Smart Absen</span>
+                                    </a>
+                                    <!-- 5. Smart Absensi -->
+                                    <a href="/layanan/smart-absensi" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-user-clock text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Smart Absensi</span>
+                                    </a>
+                                    <!-- 6. Smart Library -->
+                                    <a href="/layanan/smart-library" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-book-bookmark text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Smart Library</span>
+                                    </a>
+                                    <!-- 7. Biso CBT -->
+                                    <a href="/layanan/biso-cbt" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-laptop-code text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Biso CBT</span>
+                                    </a>
+                                    <!-- 8. Bisolpin Academy -->
+                                    <a href="/layanan/bisolpin-academy" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-award text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Bisolpin Academy</span>
+                                    </a>
+                                    <!-- 9. Siakad Sekolah -->
+                                    <a href="/layanan/siakad-sekolah" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-network-wired text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Siakad Sekolah</span>
+                                    </a>
+                                    <!-- 10. Download -->
+                                    <a href="/layanan/download" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-200 hover:bg-amber-500 hover:text-blue-950 font-semibold text-xs transition-all duration-200 group/item">
+                                        <i class="fa-solid fa-download text-amber-400 group-hover/item:text-blue-950 transition-colors w-4 text-center shrink-0"></i>
+                                        <span class="truncate">Download</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <a href="/#berita"
                         class="<%= currentActive === 'berita' ? 'text-amber-400 font-bold py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-amber-400' : 'text-slate-200 hover:text-amber-400 transition-colors py-1.5 relative group' %>">
@@ -317,6 +411,16 @@
                                 <a href="javascript:void(0)" onclick="openHalamanModal('kondisi-siswa')" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5 cursor-pointer">6. Kondisi Siswa / Statistik</a>
                             </div>
                         </div>
+                        <!-- Sub: Struktur Organisasi -->
+                        <a href="/struktur-organisasi" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-amber-400 hover:bg-white/10 group/struktur-m">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-sitemap text-amber-400/80"></i>
+                                <span>Struktur Organisasi</span>
+                            </span>
+                            <svg class="w-3.5 h-3.5 text-slate-400 group-hover/struktur-m:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                         <!-- Sub 2: Civitas Akademik (Scroll ke Slider Guru & Pegawai di Beranda) -->
                         <a href="/#guru" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-amber-400 hover:bg-white/10 group/civitas-m">
                             <span class="flex items-center gap-2">
@@ -349,6 +453,33 @@
                         </a>
                     </div>
                 </div>
+                
+                <!-- Mobile Layanan Lain Accordion -->
+                <div class="space-y-1">
+                    <button type="button" onclick="toggleMobileSubmenu('mobile-layanan-sub', 'mobile-layanan-arrow')"
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold <%= (currentActive === 'layanan') ? 'text-amber-400 bg-white/10' : 'text-slate-200 hover:bg-white/10' %> transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-shapes text-amber-400"></i>
+                            <span>Layanan Lain</span>
+                        </span>
+                        <svg id="mobile-layanan-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="mobile-layanan-sub" class="hidden pl-3 space-y-1 border-l-2 border-amber-400/30 ml-3 mt-1 text-[11px]">
+                        <a href="/layanan/buku-tamu" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-book-open-reader text-amber-400/80 mr-2 w-4"></i>Buku Tamu</a>
+                        <a href="/layanan/pengaduan" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-bullhorn text-amber-400/80 mr-2 w-4"></i>Pengaduan</a>
+                        <a href="/layanan/lms" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-graduation-cap text-amber-400/80 mr-2 w-4"></i>LMS</a>
+                        <a href="/layanan/smart-absen" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-fingerprint text-amber-400/80 mr-2 w-4"></i>Smart Absen</a>
+                        <a href="/layanan/smart-absensi" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-user-clock text-amber-400/80 mr-2 w-4"></i>Smart Absensi</a>
+                        <a href="/layanan/smart-library" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-book-bookmark text-amber-400/80 mr-2 w-4"></i>Smart Library</a>
+                        <a href="/layanan/biso-cbt" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-laptop-code text-amber-400/80 mr-2 w-4"></i>Biso CBT</a>
+                        <a href="/layanan/bisolpin-academy" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-award text-amber-400/80 mr-2 w-4"></i>Bisolpin Academy</a>
+                        <a href="/layanan/siakad-sekolah" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-network-wired text-amber-400/80 mr-2 w-4"></i>Siakad Sekolah</a>
+                        <a href="/layanan/download" class="block px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-amber-400 hover:bg-white/5"><i class="fa-solid fa-download text-amber-400/80 mr-2 w-4"></i>Download</a>
+                    </div>
+                </div>
+
                 <a href="/#berita"
                     class="block px-3 py-2 rounded-xl text-xs font-semibold <%= currentActive === 'berita' ? 'bg-white/20 text-amber-400' : 'text-slate-200 hover:bg-white/10' %>">Berita</a>
                 <a href="/#pengumuman"

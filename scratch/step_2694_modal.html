@@ -1,0 +1,93 @@
+            // 9. Edit Data PPDB
+            const editPPDBBtn = e.target.closest('.btn-edit-ppdb');
+            if (editPPDBBtn) {
+                document.getElementById('form-edit-ppdb').action = '/admin/ppdb/edit/' + editPPDBBtn.dataset.id;
+                document.getElementById('edit-ppdb-header-no').textContent = 'No. Registrasi: ' + editPPDBBtn.dataset.no;
+                document.getElementById('edit-ppdb-nama').value = editPPDBBtn.dataset.nama;
+                document.getElementById('edit-ppdb-nisn').value = editPPDBBtn.dataset.nisn !== '-' ? editPPDBBtn.dataset.nisn : '';
+                document.getElementById('edit-ppdb-jk').value = editPPDBBtn.dataset.jk;
+                document.getElementById('edit-ppdb-sekolah').value = editPPDBBtn.dataset.sekolah;
+                document.getElementById('edit-ppdb-jalur').value = editPPDBBtn.dataset.jalur;
+                document.getElementById('edit-ppdb-status').value = editPPDBBtn.dataset.status;
+                document.getElementById('edit-ppdb-ortu').value = editPPDBBtn.dataset.ortu;
+                document.getElementById('edit-ppdb-hp').value = editPPDBBtn.dataset.hp;
+                document.getElementById('edit-ppdb-alamat').value = editPPDBBtn.dataset.alamat;
+                document.getElementById('edit-ppdb-catatan').value = editPPDBBtn.dataset.catatan || '';
+                openModal('modal-edit-ppdb');
+                return;
+            }
+
+            // 10. Edit Halaman Profil (Statis)
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman');
+            if (editHalamanBtn) {
+                const id = editHalamanBtn.dataset.id;
+                const slug = editHalamanBtn.dataset.slug;
+                const judul = editHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(editHalamanBtn.dataset.konten || '');
+
+                document.getElementById('form-edit-halaman').action = '/admin/halaman-statis/edit/' + id;
+                document.getElementById('edit-halaman-slug-label').textContent = slug;
+                document.getElementById('edit-halaman-judul').value = judul;
+                document.getElementById('edit-halaman-konten').value = konten;
+                openModal('modal-edit-halaman');
+                return;
+            }
+
+            // 11. Preview Halaman Profil (Statis)
+            const previewHalamanBtn = e.target.closest('.btn-preview-halaman');
+            if (previewHalamanBtn) {
+                const slug = previewHalamanBtn.dataset.slug;
+                const judul = previewHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(previewHalamanBtn.dataset.konten || '');
+                showAdminPreviewHalaman(slug, judul, konten);
+                return;
+            }
+        });
+
+        // Helper Sisip Tag Cepat untuk Halaman Profil
+        function insertTagHalaman(type) {
+            const textarea = document.getElementById('edit-halaman-konten');
+            if (!textarea) return;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selected = textarea.value.substring(start, end);
+            let replacement = '';
+
+            if (type === 'p') {
+                replacement = `<p class="mb-4 text-justify leading-relaxed">${selected || 'Tulis teks paragraf di sini...'}</p>`;
+            } else if (type === 'strong') {
+                replacement = `<strong>${selected || 'teks tebal'}</strong>`;
+            } else if (type === 'em') {
+                replacement = `<em>${selected || 'teks miring'}</em>`;
+            } else if (type === 'box') {
+                replacement = `<div class="p-4 bg-blue-50/80 rounded-2xl border border-blue-200/80 my-3">\n    <h5 class="font-bold text-blue-950 text-sm mb-1">${selected || 'Judul Sorotan'}</h5>\n    <p class="text-xs text-slate-700">Tuliskan poin atau rincian penting di sini...</p>\n</div>`;
+            }
+
+            textarea.setRangeText(replacement, start, end, 'end');
+            textarea.focus();
+        }
+
+        // Tampilkan Modal Pratinjau di Sisi Admin
+        function showAdminPreviewHalaman(slug, judul, konten) {
+            const iconMap = {
+                'sejarah': 'fa-landmark',
+                'visi-misi': 'fa-bullseye',
+                'sarana': 'fa-building-columns',
+                'program-kerja': 'fa-list-check',
+                'kondisi-siswa': 'fa-chart-pie'
+            };
+            const iconEl = document.getElementById('preview-admin-icon');
+            if (iconEl) {
+                iconEl.className = `fa-solid ${iconMap[slug] || 'fa-school'} text-amber-600`;
+            }
+            document.getElementById('preview-admin-judul').textContent = judul;
+            document.getElementById('preview-admin-body').innerHTML = konten;
+            openModal('modal-preview-halaman-admin');
+        }
+
+        function previewCurrentEdit() {
+            const slug = document.getElementById('edit-halaman-slug-label').textContent;
+            const judul = document.getElementById('edit-halaman-judul').value || 'Pratinjau Halaman Profil';
+            const konten = document.getElementById('edit-halaman-konten').value || '<p class="text-slate-400 italic">Konten masih kosong.</p>';
+            showAdminPreviewHalaman(slug, judul, konten);
+        }

@@ -1,0 +1,32 @@
+            // 10. Edit Halaman Profil (Statis) & Slip Kartu
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman');
+            if (editHalamanBtn) {
+                const id = editHalamanBtn.dataset.id;
+                const slug = editHalamanBtn.dataset.slug;
+                const judul = editHalamanBtn.dataset.judul;
+                const ikon = editHalamanBtn.dataset.ikon || 'fa-solid fa-file-lines';
+                const ringkasan = decodeURIComponent(editHalamanBtn.dataset.ringkasan || '');
+                const warnaBadge = editHalamanBtn.dataset.warnaBadge || 'blue';
+                const pembuka = decodeURIComponent(editHalamanBtn.dataset.pembuka || '');
+                const penutup = decodeURIComponent(editHalamanBtn.dataset.penutup || '');
+                const rawItems = decodeURIComponent(editHalamanBtn.dataset.items || '[]');
+                const konten = decodeURIComponent(editHalamanBtn.dataset.konten || '');
+
+                document.getElementById('form-edit-halaman').action = '/admin/halaman-statis/edit/' + id;
+                document.getElementById('edit-halaman-slug-label').textContent = slug;
+                document.getElementById('edit-halaman-judul').value = judul;
+                document.getElementById('edit-halaman-ikon').value = ikon;
+                document.getElementById('edit-halaman-ringkasan').value = ringkasan;
+                document.getElementById('edit-halaman-warna-badge').value = warnaBadge;
+                document.getElementById('edit-halaman-konten').value = konten;
+
+                // Sinkronkan mini live preview slip kartu & ikon
+                updateHalamanSlipLivePreview();
+
+                // Inisialisasi Builder Kartu / Item di dalam konten
+                initHalamanContentBuilder(slug, rawItems, pembuka, penutup, konten);
+
+                // Buka modal
+                openModal('modal-edit-halaman');
+                return;
+            }

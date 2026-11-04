@@ -24,8 +24,13 @@
             
             <!-- School Header -->
             <div class="text-center mb-8">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 text-blue-950 font-black flex items-center justify-center text-2xl mx-auto shadow-lg shadow-amber-500/30 mb-4">
-                    S1
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 text-blue-950 font-black flex items-center justify-center text-2xl mx-auto shadow-lg shadow-amber-500/30 mb-4 overflow-hidden border border-white/30 p-1.5 shrink-0">
+                    <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
+                        <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                        <span class="hidden">S1</span>
+                    <% } else { %>
+                        <span>S1</span>
+                    <% } %>
                 </div>
                 <h1 class="text-2xl font-extrabold text-blue-950 tracking-tight">Portal Admin</h1>
                 <p class="text-xs text-slate-500 mt-1 font-medium">UPT SMPN 1 Rantepao • Toraja Utara</p>

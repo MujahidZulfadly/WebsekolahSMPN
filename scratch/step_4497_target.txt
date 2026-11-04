@@ -1,0 +1,147 @@
+        // ==============================================
+        // LOGIKA SLIP KARTU & PREVIEW HALAMAN PROFIL
+        // ==============================================
+        const themeStylesHalaman = {
+            'amber': { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', pill: 'bg-amber-100 text-amber-800' },
+            'emerald': { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', pill: 'bg-emerald-100 text-emerald-800' },
+            'purple': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', pill: 'bg-purple-100 text-purple-800' },
+            'rose': { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', pill: 'bg-rose-100 text-rose-800' },
+            'cyan': { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200', pill: 'bg-cyan-100 text-cyan-800' },
+            'indigo': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', pill: 'bg-indigo-100 text-indigo-800' },
+            'blue': { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', pill: 'bg-blue-100 text-blue-800' }
+        };
+
+        function selectQuickIcon(iconClass) {
+            const iconInput = document.getElementById('edit-halaman-ikon');
+            if (iconInput) {
+                iconInput.value = iconClass;
+                updateHalamanSlipLivePreview();
+            }
+        }
+
+        function updateHalamanSlipLivePreview() {
+            const rawIcon = (document.getElementById('edit-halaman-ikon')?.value || '').trim();
+            const judul = (document.getElementById('edit-halaman-judul')?.value || '').trim() || 'Judul Halaman Profil';
+            const ringkasan = (document.getElementById('edit-halaman-ringkasan')?.value || '').trim();
+            const warna = document.getElementById('edit-halaman-warna-badge')?.value || 'blue';
+            const theme = themeStylesHalaman[warna] || themeStylesHalaman['blue'];
+            const safeIcon = rawIcon || 'fa-solid fa-file-lines';
+
+            // 1. Preview Ikon Input Box
+            const previewIconEl = document.getElementById('preview-ikon-input-icon');
+            if (previewIconEl) {
+                previewIconEl.className = safeIcon;
+            }
+
+            // 2. Header Modal Icon & Badge
+            const headerIcon = document.getElementById('edit-halaman-header-icon');
+            if (headerIcon) {
+                headerIcon.className = safeIcon;
+            }
+            const modalIconBadge = document.getElementById('edit-halaman-modal-icon-badge');
+            if (modalIconBadge) {
+                modalIconBadge.className = `w-10 h-10 rounded-2xl ${theme.bg} ${theme.text} flex items-center justify-center text-lg font-bold border ${theme.border} transition-colors`;
+            }
+
+            // 3. Mini Slip Live Box
+            const miniJudul = document.getElementById('mini-slip-judul');
+            if (miniJudul) miniJudul.textContent = judul;
+
+            const miniText = document.getElementById('mini-slip-text');
+            if (miniText) {
+                miniText.textContent = ringkasan || 'Ringkasan slip kartu akan muncul di sini (masukkan 1-2 kalimat)...';
+            }
+
+            const miniIconBox = document.getElementById('mini-slip-icon-box');
+            if (miniIconBox) {
+                miniIconBox.className = `w-8 h-8 rounded-lg ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-sm font-bold shrink-0 transition-colors`;
+            }
+
+            const miniIcon = document.getElementById('mini-slip-icon');
+            if (miniIcon) {
+                miniIcon.className = safeIcon;
+            }
+
+            const miniBadge = document.getElementById('mini-slip-badge');
+            if (miniBadge) {
+                miniBadge.className = `px-1.5 py-0.5 rounded font-extrabold text-[9px] ${theme.pill} border ${theme.border}`;
+                miniBadge.textContent = 'SLIP: ' + warna.toUpperCase();
+            }
+
+            // 4. Character counter
+            const charCount = document.getElementById('char-count-ringkasan');
+            if (charCount) {
+                charCount.textContent = `${ringkasan.length}/500`;
+            }
+        }
+
+        // Tampilkan Modal Pratinjau di Sisi Admin
+        function showAdminPreviewHalaman(slug, judul, konten, ikon) {
+            const iconMap = {
+                'sejarah': 'fa-solid fa-landmark',
+                'visi-misi': 'fa-solid fa-bullseye',
+                'sarana': 'fa-solid fa-building-columns',
+                'program-kerja': 'fa-solid fa-list-check',
+                'kondisi-siswa': 'fa-solid fa-chart-pie'
+            };
+            const iconEl = document.getElementById('preview-admin-icon');
+            if (iconEl) {
+                const finalIcon = ikon || iconMap[slug] || 'fa-solid fa-school';
+                iconEl.className = `${finalIcon} text-amber-600`;
+            }
+            document.getElementById('preview-admin-judul').textContent = judul;
+            document.getElementById('preview-admin-body').innerHTML = konten;
+            openModal('modal-preview-halaman-admin');
+        }
+
+        function previewCurrentEdit() {
+            const slug = document.getElementById('edit-halaman-slug-label')?.textContent || '';
+            const judul = document.getElementById('edit-halaman-judul')?.value || 'Pratinjau Halaman Profil';
+            const ikon = document.getElementById('edit-halaman-ikon')?.value || 'fa-solid fa-file-lines';
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            let konten = visualCanvas ? visualCanvas.innerHTML : '';
+            if (!konten.trim()) {
+                konten = '<p class="text-slate-400 italic">Konten masih kosong.</p>';
+            }
+            showAdminPreviewHalaman(slug, judul, konten, ikon);
+        }
+
+        // Pastikan sinkronisasi form sebelum submit & event listener input
+        document.addEventListener('DOMContentLoaded', function() {
+            const formEditHalaman = document.getElementById('form-edit-halaman');
+            if (formEditHalaman) {
+                formEditHalaman.addEventListener('submit', function() {
+                    const visualCanvas = document.getElementById('edit-halaman-visual');
+                    const codeTextarea = document.getElementById('edit-halaman-konten');
+                    if (visualCanvas && codeTextarea) {
+                        codeTextarea.value = visualCanvas.innerHTML.trim();
+                    }
+                });
+            }
+
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (visualCanvas) {
+                visualCanvas.addEventListener('input', syncVisualToCode);
+                visualCanvas.addEventListener('blur', syncVisualToCode);
+            }
+
+            // Real-time live preview event listeners for slip kartu & ikon
+            const inputIkon = document.getElementById('edit-halaman-ikon');
+            if (inputIkon) {
+                inputIkon.addEventListener('input', updateHalamanSlipLivePreview);
+                inputIkon.addEventListener('change', updateHalamanSlipLivePreview);
+            }
+            const inputJudul = document.getElementById('edit-halaman-judul');
+            if (inputJudul) {
+                inputJudul.addEventListener('input', updateHalamanSlipLivePreview);
+            }
+            const inputRingkasan = document.getElementById('edit-halaman-ringkasan');
+            if (inputRingkasan) {
+                inputRingkasan.addEventListener('input', updateHalamanSlipLivePreview);
+                inputRingkasan.addEventListener('keyup', updateHalamanSlipLivePreview);
+            }
+            const selectWarna = document.getElementById('edit-halaman-warna-badge');
+            if (selectWarna) {
+                selectWarna.addEventListener('change', updateHalamanSlipLivePreview);
+            }
+        });

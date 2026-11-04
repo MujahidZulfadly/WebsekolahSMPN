@@ -1,0 +1,94 @@
+    <!-- ============================================== -->
+    <!-- MODALS SECTION -->
+    <!-- ============================================== -->
+
+    <!-- MODAL EDIT HALAMAN PROFIL (STATIS) -->
+    <div id="modal-edit-halaman" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 overflow-y-auto max-h-[92vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold border border-blue-100">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-slate-900 leading-tight">Edit Halaman Profil Sekolah</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Kode Identifikasi: <span id="edit-halaman-slug-label" class="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">slug</span></p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-edit-halaman')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-sm font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="form-edit-halaman" method="POST" class="space-y-4 mt-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Judul Halaman *</label>
+                    <input type="text" id="edit-halaman-judul" name="judul" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-blue-600 font-semibold text-slate-800">
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Isi Konten Halaman (HTML / Teks) *</label>
+                        <!-- Quick Insert Helper Buttons -->
+                        <div class="flex items-center gap-1.5 text-[11px]">
+                            <span class="text-slate-400 hidden sm:inline text-[10px]">Sisip Cepat:</span>
+                            <button type="button" onclick="insertTagHalaman('p')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono font-bold text-[10px]" title="Sisipkan Paragraf">&lt;p&gt;</button>
+                            <button type="button" onclick="insertTagHalaman('strong')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px]" title="Tebal (Bold)">B</button>
+                            <button type="button" onclick="insertTagHalaman('em')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 italic font-bold text-[10px]" title="Miring (Italic)">I</button>
+                            <button type="button" onclick="insertTagHalaman('box')" class="px-2 py-0.5 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-[10px]" title="Kotak Sorot">Kotak Sorot</button>
+                        </div>
+                    </div>
+                    <textarea id="edit-halaman-konten" name="konten" rows="13" required class="w-full text-xs font-mono border border-slate-300 rounded-xl p-3.5 focus:outline-blue-600 leading-relaxed bg-slate-50/50 text-slate-800" placeholder="Tuliskan isi informasi halaman..."></textarea>
+                    <p class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                        <i class="fa-solid fa-circle-info text-blue-500"></i>
+                        <span>Mendukung teks biasa maupun tag HTML seperti &lt;p&gt;, &lt;strong&gt;, &lt;ol&gt;, &lt;li&gt;, serta styling Tailwind CSS.</span>
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <button type="button" onclick="previewCurrentEdit()" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-eye text-slate-500"></i>
+                        <span>Uji Pratinjau</span>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="closeModal('modal-edit-halaman')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer">Batal</button>
+                        <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>Simpan Perubahan</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PRATINJAU HALAMAN PROFIL (ADMIN PREVIEW) -->
+    <div id="modal-preview-halaman-admin" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[88vh] flex flex-col">
+            <div class="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-lg font-bold border border-amber-500/20">
+                        <i class="fa-solid fa-school" id="preview-admin-icon"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-black tracking-widest uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            Pratinjau Tampilan Modal
+                        </span>
+                        <h3 class="text-base font-black text-blue-950 tracking-tight leading-tight mt-0.5" id="preview-admin-judul">
+                            Judul Halaman
+                        </h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-preview-halaman-admin')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-sm font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 sm:p-7 overflow-y-auto space-y-4 text-slate-700 text-sm leading-relaxed" id="preview-admin-body">
+            </div>
+            <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span class="text-slate-400 text-[11px]">Tampilan ini sesuai dengan yang dilihat pengunjung pada popup website.</span>
+                <button type="button" onclick="closeModal('modal-preview-halaman-admin')" class="px-4 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs transition">
+                    Tutup Pratinjau
+                </button>
+            </div>
+        </div>
+    </div>

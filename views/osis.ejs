@@ -73,29 +73,35 @@
                     <i class="fa-solid fa-newspaper text-amber-400"></i>
                     <span>Mading Online</span>
                 </a>
+                <a href="#galeri-osis" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 backdrop-blur-md transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-images text-amber-400"></i>
+                    <span>Galeri Kegiatan</span>
+                </a>
                 <a href="#aspirasi" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-600 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm transition-all duration-300 shadow-md flex items-center gap-2 border border-blue-400/30">
                     <i class="fa-solid fa-comment-dots text-amber-300"></i>
                     <span>Kotak Aspirasi</span>
                 </a>
             </div>
 
-            <!-- Stats Highlight Bar -->
-            <div class="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="900">
+            <!-- Stats Highlight Bar (Live Tracking Terintegrasi Database) -->
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto" data-aos="zoom-in" data-aos-duration="900">
                 <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
-                    <div class="text-2xl sm:text-3xl font-black text-amber-400">32</div>
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">
+                        <%= (typeof stats !== 'undefined' && stats.totalPengurus !== undefined) ? stats.totalPengurus : (pengurusList ? pengurusList.length : 0) %>
+                    </div>
                     <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Pengurus Aktif</div>
                 </div>
                 <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
-                    <div class="text-2xl sm:text-3xl font-black text-amber-400">6</div>
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">
+                        <%= (typeof stats !== 'undefined' && stats.totalSekbid !== undefined) ? stats.totalSekbid : 6 %>
+                    </div>
                     <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Seksi Bidang (Sekbid)</div>
                 </div>
                 <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
-                    <div class="text-2xl sm:text-3xl font-black text-amber-400">24+</div>
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400">
+                        <%= (typeof stats !== 'undefined' && stats.totalProker !== undefined) ? stats.totalProker : (prokerList ? prokerList.length : 0) %>
+                    </div>
                     <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Proker Terencana</div>
-                </div>
-                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
-                    <div class="text-2xl sm:text-3xl font-black text-amber-400">920+</div>
-                    <div class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider mt-0.5">Siswa Ternaungi</div>
                 </div>
             </div>
 
@@ -199,8 +205,13 @@
                             <p class="text-sm font-black text-blue-950"><%= sambutanKetua.nama %></p>
                             <p class="text-[11px] text-slate-500 font-semibold">Ketua OSIS SMPN 1 Rantepao</p>
                         </div>
-                        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center font-black text-xl shadow-inner">
-                            S1
+                        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center font-black text-xl shadow-inner overflow-hidden p-1.5 shrink-0">
+                            <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
+                                <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                                <span class="hidden">S1</span>
+                            <% } else { %>
+                                <span>S1</span>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -232,10 +243,10 @@
                         Semua Pengurus (<%= pengurusList.length %>)
                     </button>
                     <button type="button" onclick="filterOsis('Pengurus Inti')" id="btn-filter-inti" class="filter-osis-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-blue-950 transition-all">
-                        Pengurus Inti
+                        Pengurus Inti (<%= pengurusList.filter(p => p.kategori === 'Pengurus Inti').length %>)
                     </button>
                     <button type="button" onclick="filterOsis('Seksi Bidang')" id="btn-filter-sekbid" class="filter-osis-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-blue-950 transition-all">
-                        Seksi Bidang (Sekbid)
+                        Seksi Bidang (<%= pengurusList.filter(p => p.kategori === 'Seksi Bidang').length %>)
                     </button>
                 </div>
             </div>
@@ -395,15 +406,14 @@
                 <% madingList.forEach((mading, idx) => { %>
                     <div class="bg-slate-900/90 backdrop-blur-md rounded-3xl p-6 border border-white/10 hover:border-amber-400/60 shadow-xl transition-all duration-300 flex flex-col justify-between group" data-aos="fade-up" data-aos-delay="<%= idx * 80 %>">
                         <div>
-                            <!-- Header: Badge Kategori & Likes -->
+                            <!-- Header: Badge Kategori -->
                             <div class="flex items-center justify-between gap-2 mb-3">
                                 <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider <%= mading.badgeClass || ((mading.kategori || '').includes('Puisi') ? 'bg-rose-50 text-rose-700 border border-rose-200' : ((mading.kategori || '').includes('Esai') ? 'bg-blue-50 text-blue-700 border border-blue-200' : ((mading.kategori || '').includes('Warta') ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'))) %>">
                                     <%= mading.kategori %>
                                 </span>
-                                <button type="button" onclick="likeMading(this, <%= mading.likes %>)" class="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 transition-colors focus:outline-none">
-                                    <i class="fa-regular fa-heart"></i>
-                                    <span class="font-bold text-[11px]"><%= mading.likes %></span>
-                                </button>
+                                <span class="text-[10px] font-semibold text-slate-400 flex items-center gap-1">
+                                    <i class="fa-solid fa-feather text-[10px] text-amber-400"></i> Karya Siswa
+                                </span>
                             </div>
 
                             <h3 class="text-base font-black text-white group-hover:text-amber-400 transition-colors line-clamp-2 mt-2 leading-snug">
@@ -459,29 +469,43 @@
             </div>
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <% galeriOsis.forEach((item, idx) => { %>
-                    <div class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="<%= idx * 80 %>">
-                        <div class="relative h-56 overflow-hidden bg-slate-900">
-                            <img src="<%= item.foto %>" alt="<%= item.judul %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <span class="text-xs text-amber-300 font-bold flex items-center gap-1">
-                                    <i class="fa-solid fa-magnifying-glass-plus"></i> Dokumentasi Resmi OSIS
+                <% if (!galeriOsis || galeriOsis.length === 0) { %>
+                    <div class="sm:col-span-2 lg:col-span-3 text-center py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-300">
+                        <i class="fa-solid fa-camera-retro text-4xl text-slate-300 mb-3 block"></i>
+                        <h4 class="text-base font-bold text-slate-700">Belum Ada Dokumentasi Kegiatan</h4>
+                        <p class="text-xs text-slate-400 mt-1">Dokumentasi kegiatan OSIS akan segera diperbarui oleh pengurus.</p>
+                    </div>
+                <% } else { %>
+                    <% galeriOsis.forEach((item, idx) => { %>
+                        <div class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group" data-aos="fade-up" data-aos-delay="<%= idx * 80 %>">
+                            <div class="relative h-56 overflow-hidden bg-slate-900">
+                                <% const fotoSrc = (item.foto && (item.foto.startsWith('http://') || item.foto.startsWith('https://'))) ? item.foto : '/uploads/osis/' + item.foto; %>
+                                <img src="<%= fotoSrc %>" alt="<%= item.judul %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop'">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <span class="text-xs text-amber-300 font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-camera"></i> Dokumentasi Resmi OSIS
+                                    </span>
+                                </div>
+                                <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-950/80 text-amber-400 backdrop-blur-md border border-white/10">
+                                    <%= item.kategori %>
                                 </span>
                             </div>
-                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-950/80 text-amber-400 backdrop-blur-md border border-white/10">
-                                <%= item.kategori %>
-                            </span>
+                            <div class="p-5">
+                                <p class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 mb-1">
+                                    <i class="fa-regular fa-calendar text-amber-500"></i> <%= item.tanggal %>
+                                </p>
+                                <h4 class="font-extrabold text-blue-950 text-sm leading-snug group-hover:text-blue-900 transition-colors">
+                                    <%= item.judul %>
+                                </h4>
+                                <% if (item.keterangan) { %>
+                                    <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
+                                        <%= item.keterangan %>
+                                    </p>
+                                <% } %>
+                            </div>
                         </div>
-                        <div class="p-5">
-                            <p class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 mb-1">
-                                <i class="fa-regular fa-calendar text-amber-500"></i> <%= item.tanggal %>
-                            </p>
-                            <h4 class="font-extrabold text-blue-950 text-sm leading-snug group-hover:text-blue-900 transition-colors">
-                                <%= item.judul %>
-                            </h4>
-                        </div>
-                    </div>
-                <% }) %>
+                    <% }) %>
+                <% } %>
             </div>
 
         </div>
@@ -613,22 +637,6 @@
             }
         }
 
-        // Like Interaction on Mading Cards
-        function likeMading(btn, initialCount) {
-            const icon = btn.querySelector('i');
-            const countEl = btn.querySelector('span');
-            if (icon.classList.contains('fa-regular')) {
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid', 'text-rose-500', 'scale-125');
-                countEl.textContent = initialCount + 1;
-                countEl.classList.add('text-rose-400');
-            } else {
-                icon.classList.remove('fa-solid', 'text-rose-500', 'scale-125');
-                icon.classList.add('fa-regular');
-                countEl.textContent = initialCount;
-                countEl.classList.remove('text-rose-400');
-            }
-        }
 
         // Read Mading Modal
         function readMading(judul, penulis, kelas, kategori, cuplikanEncoded) {

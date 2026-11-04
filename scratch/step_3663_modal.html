@@ -1,0 +1,312 @@
+            // 10. Edit Halaman Profil (Statis)
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman');
+            if (editHalamanBtn) {
+                const id = editHalamanBtn.dataset.id;
+                const slug = editHalamanBtn.dataset.slug;
+                const judul = editHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(editHalamanBtn.dataset.konten || '');
+
+                document.getElementById('form-edit-halaman').action = '/admin/halaman-statis/edit/' + id;
+                document.getElementById('edit-halaman-slug-label').textContent = slug;
+                document.getElementById('edit-halaman-judul').value = judul;
+                document.getElementById('edit-halaman-konten').value = konten;
+
+                const visualCanvas = document.getElementById('edit-halaman-visual');
+                if (visualCanvas) {
+                    visualCanvas.innerHTML = konten;
+                }
+
+                // Default selalu buka di Mode Visual agar admin tidak bingung melihat sintaks kode HTML
+                switchEditorMode('visual');
+                openModal('modal-edit-halaman');
+                return;
+            }
+
+            // 11. Preview Halaman Profil (Statis)
+            const previewHalamanBtn = e.target.closest('.btn-preview-halaman');
+            if (previewHalamanBtn) {
+                const slug = previewHalamanBtn.dataset.slug;
+                const judul = previewHalamanBtn.dataset.judul;
+                const konten = decodeURIComponent(previewHalamanBtn.dataset.konten || '');
+                showAdminPreviewHalaman(slug, judul, konten);
+                return;
+            }
+
+            // 12. Edit Pengurus OSIS
+            const editOsisPengurusBtn = e.target.closest('.btn-edit-osis-pengurus');
+            if (editOsisPengurusBtn) {
+                document.getElementById('form-edit-osis-pengurus').action = '/admin/osis/pengurus/edit/' + editOsisPengurusBtn.dataset.id;
+                document.getElementById('edit-osis-nama').value = editOsisPengurusBtn.dataset.nama || '';
+                document.getElementById('edit-osis-kelas').value = editOsisPengurusBtn.dataset.kelas || '';
+                document.getElementById('edit-osis-jabatan').value = editOsisPengurusBtn.dataset.jabatan || '';
+                document.getElementById('edit-osis-kategori').value = editOsisPengurusBtn.dataset.kategori || 'Pengurus Inti';
+                document.getElementById('edit-osis-motto').value = editOsisPengurusBtn.dataset.motto || '';
+                document.getElementById('edit-osis-urutan').value = editOsisPengurusBtn.dataset.urutan || 10;
+                openModal('modal-edit-osis-pengurus');
+                return;
+            }
+
+            // 13. Edit Proker OSIS
+            const editOsisProkerBtn = e.target.closest('.btn-edit-osis-proker');
+            if (editOsisProkerBtn) {
+                document.getElementById('form-edit-osis-proker').action = '/admin/osis/proker/edit/' + editOsisProkerBtn.dataset.id;
+                document.getElementById('edit-proker-judul').value = editOsisProkerBtn.dataset.judul || '';
+                document.getElementById('edit-proker-kategori').value = editOsisProkerBtn.dataset.kategori || '';
+                document.getElementById('edit-proker-icon').value = editOsisProkerBtn.dataset.icon || 'fa-compass';
+                document.getElementById('edit-proker-jadwal').value = editOsisProkerBtn.dataset.jadwal || '';
+                document.getElementById('edit-proker-target').value = editOsisProkerBtn.dataset.target || '';
+                document.getElementById('edit-proker-status').value = editOsisProkerBtn.dataset.status || 'Sedang Berjalan';
+                document.getElementById('edit-proker-deskripsi').value = editOsisProkerBtn.dataset.deskripsi || '';
+                document.getElementById('edit-proker-urutan').value = editOsisProkerBtn.dataset.urutan || 10;
+                openModal('modal-edit-osis-proker');
+                return;
+            }
+
+            // 14. Edit Mading Siswa
+            const editOsisMadingBtn = e.target.closest('.btn-edit-osis-mading');
+            if (editOsisMadingBtn) {
+                document.getElementById('form-edit-osis-mading').action = '/admin/osis/mading/edit/' + editOsisMadingBtn.dataset.id;
+                document.getElementById('edit-mading-judul').value = editOsisMadingBtn.dataset.judul || '';
+                document.getElementById('edit-mading-kategori').value = editOsisMadingBtn.dataset.kategori || 'Puisi Siswa';
+                document.getElementById('edit-mading-penulis').value = editOsisMadingBtn.dataset.penulis || '';
+                document.getElementById('edit-mading-kelas').value = editOsisMadingBtn.dataset.kelas || '';
+                document.getElementById('edit-mading-tanggal').value = editOsisMadingBtn.dataset.tanggal || '';
+                document.getElementById('edit-mading-cuplikan').value = editOsisMadingBtn.dataset.cuplikan || '';
+                document.getElementById('edit-mading-likes').value = editOsisMadingBtn.dataset.likes || 0;
+                openModal('modal-edit-osis-mading');
+                return;
+            }
+        });
+
+        // ==============================================
+        // LOGIKA DUAL-MODE EDITOR (VISUAL & KODE HTML)
+        // ==============================================
+        let currentEditorMode = 'visual';
+
+        function switchEditorMode(mode) {
+            currentEditorMode = mode;
+            const visualSection = document.getElementById('editor-section-visual');
+            const codeSection = document.getElementById('editor-section-code');
+            const btnVisual = document.getElementById('btn-mode-visual');
+            const btnCode = document.getElementById('btn-mode-code');
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+
+            if (!visualSection || !codeSection) return;
+
+            if (mode === 'visual') {
+                // Sync code ke visual
+                if (codeTextarea && visualCanvas) {
+                    visualCanvas.innerHTML = codeTextarea.value;
+                }
+                visualSection.classList.remove('hidden');
+                codeSection.classList.add('hidden');
+
+                if (btnVisual) {
+                    btnVisual.className = "px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-white text-blue-600 shadow-sm cursor-pointer";
+                }
+                if (btnCode) {
+                    btnCode.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 cursor-pointer";
+                }
+            } else {
+                // Sync visual ke code
+                if (visualCanvas && codeTextarea) {
+                    codeTextarea.value = visualCanvas.innerHTML.trim();
+                }
+                visualSection.classList.add('hidden');
+                codeSection.classList.remove('hidden');
+
+                if (btnCode) {
+                    btnCode.className = "px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-slate-900 text-white shadow-sm cursor-pointer";
+                }
+                if (btnVisual) {
+                    btnVisual.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 cursor-pointer";
+                }
+            }
+        }
+
+        function execVisualCmd(command, value = null) {
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (!visualCanvas) return;
+            visualCanvas.focus();
+            document.execCommand(command, false, value);
+            syncVisualToCode();
+        }
+
+        function formatBlockTag(tag) {
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (!visualCanvas) return;
+            visualCanvas.focus();
+            if (tag === 'p') {
+                document.execCommand('formatBlock', false, '<p>');
+            } else if (tag === 'h4') {
+                document.execCommand('formatBlock', false, '<h4>');
+            } else if (tag === 'h5') {
+                document.execCommand('formatBlock', false, '<h5>');
+            }
+            syncVisualToCode();
+        }
+
+        function syncVisualToCode() {
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+            if (visualCanvas && codeTextarea) {
+                codeTextarea.value = visualCanvas.innerHTML;
+            }
+        }
+
+        function insertVisualBlock(type) {
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (!visualCanvas) return;
+            visualCanvas.focus();
+
+            if (type === 'paragraph') {
+                const p = document.createElement('p');
+                p.className = 'mb-4 text-justify leading-relaxed';
+                p.innerHTML = 'Tuliskan paragraf informasi baru di sini...';
+                visualCanvas.appendChild(p);
+                syncVisualToCode();
+                p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            if (type === 'box') {
+                const box = document.createElement('div');
+                box.className = 'mb-5 bg-blue-50/70 p-5 rounded-2xl border border-blue-200/80 my-3';
+                box.innerHTML = `<h4 class="text-xs font-black text-blue-950 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye text-amber-500"></i> JUDUL SOROTAN UTAMA
+                </h4>
+                <p class="text-slate-800 font-semibold italic text-sm leading-relaxed">"Tuliskan poin penting, visi, atau amanat sekolah di sini..."</p>`;
+                visualCanvas.appendChild(box);
+                syncVisualToCode();
+                box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            if (type === 'card') {
+                let grid = visualCanvas.querySelector('.grid');
+                if (!grid) {
+                    grid = document.createElement('div');
+                    grid.className = 'grid sm:grid-cols-2 gap-3.5 my-4';
+                    visualCanvas.appendChild(grid);
+                }
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-200';
+                card.innerHTML = `<h5 class="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-star text-amber-500"></i> Fasilitas / Sarana Baru
+                </h5>
+                <p class="text-xs text-slate-600">Keterangan fasilitas penunjang pembelajaran di sini...</p>`;
+                grid.appendChild(card);
+                syncVisualToCode();
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            if (type === 'program') {
+                let progList = visualCanvas.querySelector('.space-y-3');
+                if (!progList) {
+                    progList = document.createElement('div');
+                    progList.className = 'space-y-3 my-4';
+                    visualCanvas.appendChild(progList);
+                }
+                const item = document.createElement('div');
+                item.className = 'border-l-4 border-blue-600 bg-blue-50/40 p-3 rounded-r-xl border border-blue-100';
+                item.innerHTML = `<h5 class="font-bold text-blue-950 text-xs sm:text-sm">Inovasi / Program Kerja Baru</h5>
+                <p class="text-xs text-slate-600 mt-0.5">Penjelasan pelaksanaan program dan dampaknya bagi siswa di sini...</p>`;
+                progList.appendChild(item);
+                syncVisualToCode();
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+        }
+
+        // Helper Sisip Tag Cepat untuk Halaman Profil (Mode Kode HTML)
+        function insertTagHalaman(type) {
+            const textarea = document.getElementById('edit-halaman-konten');
+            if (!textarea) return;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selected = textarea.value.substring(start, end);
+            let replacement = '';
+
+            if (type === 'p') {
+                replacement = `<p class="mb-4 text-justify leading-relaxed">${selected || 'Tulis teks paragraf di sini...'}</p>`;
+            } else if (type === 'strong') {
+                replacement = `<strong>${selected || 'teks tebal'}</strong>`;
+            } else if (type === 'em') {
+                replacement = `<em>${selected || 'teks miring'}</em>`;
+            } else if (type === 'box') {
+                replacement = `<div class="p-4 bg-blue-50/80 rounded-2xl border border-blue-200/80 my-3">\n    <h5 class="font-bold text-blue-950 text-sm mb-1">${selected || 'Judul Sorotan'}</h5>\n    <p class="text-xs text-slate-700">Tuliskan poin atau rincian penting di sini...</p>\n</div>`;
+            }
+
+            textarea.setRangeText(replacement, start, end, 'end');
+            textarea.focus();
+            // Sync to visual if needed
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (visualCanvas) visualCanvas.innerHTML = textarea.value;
+        }
+
+        // Tampilkan Modal Pratinjau di Sisi Admin
+        function showAdminPreviewHalaman(slug, judul, konten) {
+            const iconMap = {
+                'sejarah': 'fa-landmark',
+                'visi-misi': 'fa-bullseye',
+                'sarana': 'fa-building-columns',
+                'program-kerja': 'fa-list-check',
+                'kondisi-siswa': 'fa-chart-pie'
+            };
+            const iconEl = document.getElementById('preview-admin-icon');
+            if (iconEl) {
+                iconEl.className = `fa-solid ${iconMap[slug] || 'fa-school'} text-amber-600`;
+            }
+            document.getElementById('preview-admin-judul').textContent = judul;
+            document.getElementById('preview-admin-body').innerHTML = konten;
+            openModal('modal-preview-halaman-admin');
+        }
+
+        function previewCurrentEdit() {
+            const slug = document.getElementById('edit-halaman-slug-label')?.textContent || '';
+            const judul = document.getElementById('edit-halaman-judul')?.value || 'Pratinjau Halaman Profil';
+            let konten = '';
+            if (currentEditorMode === 'visual') {
+                konten = document.getElementById('edit-halaman-visual')?.innerHTML || '';
+            } else {
+                konten = document.getElementById('edit-halaman-konten')?.value || '';
+            }
+            if (!konten.trim()) {
+                konten = '<p class="text-slate-400 italic">Konten masih kosong.</p>';
+            }
+            showAdminPreviewHalaman(slug, judul, konten);
+        }
+
+        // Pastikan sinkronisasi form sebelum submit & event listener input
+        document.addEventListener('DOMContentLoaded', function() {
+            const formEditHalaman = document.getElementById('form-edit-halaman');
+            if (formEditHalaman) {
+                formEditHalaman.addEventListener('submit', function() {
+                    if (currentEditorMode === 'visual') {
+                        const visualCanvas = document.getElementById('edit-halaman-visual');
+                        const codeTextarea = document.getElementById('edit-halaman-konten');
+                        if (visualCanvas && codeTextarea) {
+                            codeTextarea.value = visualCanvas.innerHTML.trim();
+                        }
+                    }
+                });
+            }
+
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (visualCanvas) {
+                visualCanvas.addEventListener('input', syncVisualToCode);
+                visualCanvas.addEventListener('blur', syncVisualToCode);
+            }
+
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+            if (codeTextarea) {
+                codeTextarea.addEventListener('input', function() {
+                    if (currentEditorMode === 'code') {
+                        const canvas = document.getElementById('edit-halaman-visual');
+                        if (canvas) canvas.innerHTML = codeTextarea.value;
+                    }
+                });
+            }
+        });

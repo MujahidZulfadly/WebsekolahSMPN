@@ -1,0 +1,493 @@
+        // ==============================================
+        // LOGIKA SLIP KARTU, BUILDER ITEM & PREVIEW HALAMAN PROFIL
+        // ==============================================
+        const themeStylesHalaman = {
+            'amber': { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', pill: 'bg-amber-100 text-amber-800' },
+            'emerald': { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', pill: 'bg-emerald-100 text-emerald-800' },
+            'purple': { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', pill: 'bg-purple-100 text-purple-800' },
+            'rose': { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', pill: 'bg-rose-100 text-rose-800' },
+            'cyan': { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200', pill: 'bg-cyan-100 text-cyan-800' },
+            'indigo': { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', pill: 'bg-indigo-100 text-indigo-800' },
+            'teal': { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-200', pill: 'bg-teal-100 text-teal-800' },
+            'blue': { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', pill: 'bg-blue-100 text-blue-800' }
+        };
+
+        let currentHalamanSlug = '';
+        let currentHalamanItems = [];
+        let currentHalamanLayout = 'grid';
+        let currentHalamanContentMode = 'builder';
+
+        function selectQuickIcon(iconClass) {
+            const iconInput = document.getElementById('edit-halaman-ikon');
+            if (iconInput) {
+                iconInput.value = iconClass;
+                updateHalamanSlipLivePreview();
+            }
+        }
+
+        function updateHalamanSlipLivePreview() {
+            const rawIcon = (document.getElementById('edit-halaman-ikon')?.value || '').trim();
+            const judul = (document.getElementById('edit-halaman-judul')?.value || '').trim() || 'Judul Halaman Profil';
+            const ringkasan = (document.getElementById('edit-halaman-ringkasan')?.value || '').trim();
+            const warna = document.getElementById('edit-halaman-warna-badge')?.value || 'blue';
+            const theme = themeStylesHalaman[warna] || themeStylesHalaman['blue'];
+            const safeIcon = rawIcon || 'fa-solid fa-file-lines';
+
+            // 1. Preview Ikon Input Box
+            const previewIconEl = document.getElementById('preview-ikon-input-icon');
+            if (previewIconEl) {
+                previewIconEl.className = safeIcon;
+            }
+
+            // 2. Header Modal Icon & Badge
+            const headerIcon = document.getElementById('edit-halaman-header-icon');
+            if (headerIcon) {
+                headerIcon.className = safeIcon;
+            }
+            const modalIconBadge = document.getElementById('edit-halaman-modal-icon-badge');
+            if (modalIconBadge) {
+                modalIconBadge.className = `w-10 h-10 rounded-2xl ${theme.bg} ${theme.text} flex items-center justify-center text-lg font-bold border ${theme.border} transition-colors`;
+            }
+
+            // 3. Mini Slip Live Box
+            const miniJudul = document.getElementById('mini-slip-judul');
+            if (miniJudul) miniJudul.textContent = judul;
+
+            const miniText = document.getElementById('mini-slip-text');
+            if (miniText) {
+                miniText.textContent = ringkasan || 'Ringkasan slip kartu akan muncul di sini (masukkan 1-2 kalimat)...';
+            }
+
+            const miniIconBox = document.getElementById('mini-slip-icon-box');
+            if (miniIconBox) {
+                miniIconBox.className = `w-8 h-8 rounded-lg ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-sm font-bold shrink-0 transition-colors`;
+            }
+
+            const miniIcon = document.getElementById('mini-slip-icon');
+            if (miniIcon) {
+                miniIcon.className = safeIcon;
+            }
+
+            const miniBadge = document.getElementById('mini-slip-badge');
+            if (miniBadge) {
+                miniBadge.className = `px-1.5 py-0.5 rounded font-extrabold text-[9px] ${theme.pill} border ${theme.border}`;
+                miniBadge.textContent = 'SLIP: ' + warna.toUpperCase();
+            }
+
+            // 4. Character counter
+            const charCount = document.getElementById('char-count-ringkasan');
+            if (charCount) {
+                charCount.textContent = `${ringkasan.length}/500`;
+            }
+        }
+
+        // ==============================================
+        // BUILDER KARTU / ITEM DI DALAM KONTEN HALAMAN
+        // ==============================================
+        function escapeHtmlAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/"/g, '&quot;');
+        }
+
+        function initHalamanContentBuilder(slug, rawItems, pembuka, penutup, konten) {
+            currentHalamanSlug = slug;
+            try {
+                currentHalamanItems = JSON.parse(rawItems);
+                if (!Array.isArray(currentHalamanItems)) currentHalamanItems = [];
+            } catch (e) {
+                currentHalamanItems = [];
+            }
+
+            // Atur layout bawaan
+            currentHalamanLayout = (slug === 'program-kerja') ? 'list' : 'grid';
+            const layoutSelect = document.getElementById('edit-halaman-layout-type');
+            if (layoutSelect) layoutSelect.value = currentHalamanLayout;
+
+            // Set narasi pembuka & penutup
+            const pembukaInput = document.getElementById('edit-halaman-pembuka-input');
+            if (pembukaInput) pembukaInput.value = pembuka || '';
+
+            const penutupInput = document.getElementById('edit-halaman-penutup-input');
+            if (penutupInput) penutupInput.value = penutup || '';
+
+            // Render daftar kartu item di builder
+            renderContentItemsBuilder();
+
+            // Set visual canvas & hidden payload
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+            if (visualCanvas) visualCanvas.innerHTML = konten || '';
+            if (codeTextarea) codeTextarea.value = konten || '';
+
+            // Jika ada items, buka tab Builder Kartu secara default; jika tidak ada, buka WYSIWYG
+            if (currentHalamanItems.length > 0) {
+                switchHalamanContentMode('builder');
+                compileItemsToHtml();
+            } else {
+                switchHalamanContentMode('wysiwyg');
+            }
+        }
+
+        function switchHalamanContentMode(mode) {
+            currentHalamanContentMode = mode;
+            const builderPanel = document.getElementById('mode-content-builder');
+            const wysiwygPanel = document.getElementById('mode-content-wysiwyg');
+            const btnBuilder = document.getElementById('tab-btn-builder-items');
+            const btnWysiwyg = document.getElementById('tab-btn-wysiwyg');
+
+            if (mode === 'builder') {
+                if (builderPanel) builderPanel.classList.remove('hidden');
+                if (wysiwygPanel) wysiwygPanel.classList.add('hidden');
+                if (btnBuilder) {
+                    btnBuilder.className = 'px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer';
+                }
+                if (btnWysiwyg) {
+                    btnWysiwyg.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer';
+                }
+            } else {
+                if (builderPanel) builderPanel.classList.add('hidden');
+                if (wysiwygPanel) wysiwygPanel.classList.remove('hidden');
+                if (btnBuilder) {
+                    btnBuilder.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer';
+                }
+                if (btnWysiwyg) {
+                    btnWysiwyg.className = 'px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer';
+                }
+            }
+        }
+
+        function changeHalamanLayoutType(layout) {
+            currentHalamanLayout = layout;
+            compileItemsToHtml();
+        }
+
+        function addNewContentItem() {
+            const defaultIcons = ['fa-solid fa-star', 'fa-solid fa-award', 'fa-solid fa-flask', 'fa-solid fa-book-bookmark', 'fa-solid fa-school', 'fa-solid fa-users'];
+            const colors = ['amber', 'blue', 'emerald', 'indigo', 'purple', 'rose', 'teal'];
+            const nextColor = colors[currentHalamanItems.length % colors.length];
+            const nextIcon = defaultIcons[currentHalamanItems.length % defaultIcons.length];
+
+            currentHalamanItems.push({
+                ikon: nextIcon,
+                judul: `Item Kartu Baru ${currentHalamanItems.length + 1}`,
+                deskripsi: 'Deskripsi lengkap mengenai fasilitas, kegiatan, atau program kerja ini...',
+                warna: nextColor
+            });
+
+            renderContentItemsBuilder();
+            compileItemsToHtml();
+
+            // Auto-scroll ke kartu yang baru ditambahkan
+            const container = document.getElementById('halaman-items-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function deleteContentItem(index) {
+            if (confirm(`Hapus kartu item #${index + 1}?`)) {
+                currentHalamanItems.splice(index, 1);
+                renderContentItemsBuilder();
+                compileItemsToHtml();
+            }
+        }
+
+        function moveContentItem(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= currentHalamanItems.length) return;
+            const temp = currentHalamanItems[index];
+            currentHalamanItems[index] = currentHalamanItems[targetIndex];
+            currentHalamanItems[targetIndex] = temp;
+            renderContentItemsBuilder();
+            compileItemsToHtml();
+        }
+
+        function updateContentItemField(index, field, value) {
+            if (!currentHalamanItems[index]) return;
+            currentHalamanItems[index][field] = value;
+
+            if (field === 'ikon' || field === 'warna') {
+                const row = document.querySelector(`.item-card-row[data-index="${index}"]`);
+                if (row) {
+                    const iconBox = row.querySelector('.item-live-icon-box');
+                    const iconEl = row.querySelector('.item-live-icon');
+                    const colorBadge = row.querySelector('.item-color-pill');
+                    const c = currentHalamanItems[index].warna || 'blue';
+                    const theme = themeStylesHalaman[c] || themeStylesHalaman['blue'];
+
+                    if (iconBox) {
+                        iconBox.className = `w-10 h-10 rounded-xl ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-base font-bold shrink-0 shadow-2xs item-live-icon-box`;
+                    }
+                    if (iconEl) {
+                        iconEl.className = currentHalamanItems[index].ikon || 'fa-solid fa-star';
+                    }
+                    if (colorBadge) {
+                        colorBadge.className = `text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${theme.pill} item-color-pill`;
+                        colorBadge.textContent = '● ' + c;
+                    }
+                }
+            }
+
+            compileItemsToHtml();
+        }
+
+        function setItemQuickIcon(index, iconClass) {
+            const row = document.querySelector(`.item-card-row[data-index="${index}"]`);
+            if (row) {
+                const iconInput = row.querySelector('.item-icon-input');
+                if (iconInput) iconInput.value = iconClass;
+            }
+            updateContentItemField(index, 'ikon', iconClass);
+        }
+
+        function renderContentItemsBuilder() {
+            const container = document.getElementById('halaman-items-container');
+            const counterEl = document.getElementById('builder-item-counter');
+            if (counterEl) {
+                counterEl.textContent = currentHalamanItems.length;
+            }
+            if (!container) return;
+
+            if (currentHalamanItems.length === 0) {
+                container.innerHTML = `
+                    <div class="py-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 p-6 space-y-2">
+                        <div class="w-10 h-10 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-shapes"></i>
+                        </div>
+                        <p class="font-bold text-xs text-slate-700">Belum ada kartu atau item di dalam konten</p>
+                        <p class="text-[11px] text-slate-400 max-w-sm mx-auto">Klik tombol <strong>"Tambah Kartu Baru"</strong> di atas untuk menambahkan item kartu fasilitas atau program kerja secara terstruktur.</p>
+                        <button type="button" onclick="addNewContentItem()" class="mt-2 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition inline-flex items-center gap-1.5 shadow-xs cursor-pointer">
+                            <i class="fa-solid fa-plus text-xs"></i> <span>Tambah Kartu Pertama</span>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            currentHalamanItems.forEach((item, idx) => {
+                const c = item.warna || 'blue';
+                const theme = themeStylesHalaman[c] || themeStylesHalaman['blue'];
+                const safeIcon = item.ikon || 'fa-solid fa-star';
+
+                html += `
+                    <div class="item-card-row bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-3 transition-all hover:border-slate-300" data-index="${idx}">
+                        <!-- Item Header -->
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-md bg-blue-950 text-white flex items-center justify-center text-[10px] font-black">${idx + 1}</span>
+                                <span class="text-xs font-black text-slate-800">Kartu Item #${idx + 1}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${theme.pill} item-color-pill">● ${c}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button type="button" onclick="moveContentItem(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 flex items-center justify-center text-xs transition cursor-pointer" title="Pindah ke Atas">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </button>
+                                <button type="button" onclick="moveContentItem(${idx}, 1)" ${idx === currentHalamanItems.length - 1 ? 'disabled' : ''} class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 flex items-center justify-center text-xs transition cursor-pointer" title="Pindah ke Bawah">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </button>
+                                <button type="button" onclick="deleteContentItem(${idx})" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold text-[11px] flex items-center gap-1 transition ml-1.5 cursor-pointer" title="Hapus Kartu Item Ini">
+                                    <i class="fa-solid fa-trash-can text-xs"></i> <span>Hapus</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item Content Fields -->
+                        <div class="grid sm:grid-cols-12 gap-3">
+                            <!-- Left: Icon & Color -->
+                            <div class="sm:col-span-5 space-y-1.5">
+                                <label class="block text-[11px] font-bold text-slate-600">Ikon Item & Aksen Warna</label>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-xl ${theme.bg} ${theme.text} border ${theme.border} flex items-center justify-center text-base font-bold shrink-0 shadow-2xs item-live-icon-box">
+                                        <i class="${safeIcon} item-live-icon"></i>
+                                    </div>
+                                    <input type="text" value="${escapeHtmlAttr(item.ikon || '')}" oninput="updateContentItemField(${idx}, 'ikon', this.value)" placeholder="fa-solid fa-flask" class="item-icon-input w-full text-xs font-mono font-bold border border-slate-300 rounded-xl px-2.5 py-2 bg-slate-50 focus:bg-white focus:outline-blue-600">
+                                    <select onchange="updateContentItemField(${idx}, 'warna', this.value)" class="text-xs font-bold border border-slate-300 rounded-xl px-2 py-2 bg-slate-50 focus:bg-white focus:outline-blue-600 shrink-0 cursor-pointer">
+                                        <option value="amber" ${c === 'amber' ? 'selected' : ''}>🟡 Amber</option>
+                                        <option value="blue" ${c === 'blue' ? 'selected' : ''}>🔵 Biru</option>
+                                        <option value="emerald" ${c === 'emerald' ? 'selected' : ''}>🟢 Zamrud</option>
+                                        <option value="indigo" ${c === 'indigo' ? 'selected' : ''}>🌌 Nila</option>
+                                        <option value="purple" ${c === 'purple' ? 'selected' : ''}>🟣 Ungu</option>
+                                        <option value="rose" ${c === 'rose' ? 'selected' : ''}>🔴 Mawar</option>
+                                        <option value="teal" ${c === 'teal' ? 'selected' : ''}>🦚 Teal</option>
+                                        <option value="cyan" ${c === 'cyan' ? 'selected' : ''}>🌊 Sian</option>
+                                    </select>
+                                </div>
+                                <!-- Preset Icons -->
+                                <div class="flex flex-wrap gap-1 pt-1">
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-chalkboard-user')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Ruang Kelas / Guru"><i class="fa-solid fa-chalkboard-user text-amber-500"></i> Kelas</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-flask')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Lab IPA"><i class="fa-solid fa-flask text-blue-500"></i> IPA</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-laptop-code')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Lab Komputer"><i class="fa-solid fa-laptop-code text-indigo-500"></i> Komputer</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-book-bookmark')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Perpustakaan"><i class="fa-solid fa-book-bookmark text-emerald-500"></i> Buku</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-volleyball')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Olahraga"><i class="fa-solid fa-volleyball text-red-500"></i> Olahraga</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-mosque')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Ibadah"><i class="fa-solid fa-mosque text-teal-500"></i> Ibadah</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-graduation-cap')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Kurikulum"><i class="fa-solid fa-graduation-cap text-blue-500"></i> Kurikulum</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-masks-theater')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Seni & Budaya"><i class="fa-solid fa-masks-theater text-purple-500"></i> Seni</button>
+                                    <button type="button" onclick="setItemQuickIcon(${idx}, 'fa-solid fa-leaf')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-medium transition cursor-pointer" title="Adiwiyata"><i class="fa-solid fa-leaf text-emerald-500"></i> Adiwiyata</button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Title & Description -->
+                            <div class="sm:col-span-7 space-y-1.5">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Judul Kartu Item *</label>
+                                    <input type="text" value="${escapeHtmlAttr(item.judul || '')}" oninput="updateContentItemField(${idx}, 'judul', this.value)" placeholder="Contoh: Laboratorium IPA Terpadu" class="w-full text-xs font-bold border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 focus:bg-white focus:outline-blue-600 text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Deskripsi Lengkap Kartu *</label>
+                                    <textarea rows="2" oninput="updateContentItemField(${idx}, 'deskripsi', this.value)" placeholder="Jelaskan fasilitas atau rincian item ini..." class="w-full text-xs border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:outline-blue-600 text-slate-800 resize-none">${escapeHtmlAttr(item.deskripsi || '')}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function compileItemsToHtml() {
+            const pembuka = (document.getElementById('edit-halaman-pembuka-input')?.value || '').trim();
+            const penutup = (document.getElementById('edit-halaman-penutup-input')?.value || '').trim();
+
+            let compiledHtml = '';
+
+            if (pembuka) {
+                compiledHtml += `<p class="mb-4 text-justify leading-relaxed">${pembuka}</p>\n`;
+            }
+
+            if (currentHalamanItems.length > 0) {
+                if (currentHalamanLayout === 'list' || currentHalamanSlug === 'program-kerja') {
+                    compiledHtml += '<div class="space-y-3 my-4">\n';
+                    currentHalamanItems.forEach(item => {
+                        const c = item.warna || 'blue';
+                        const safeIcon = item.ikon || 'fa-solid fa-circle-check';
+                        compiledHtml += `    <div class="border-l-4 border-${c}-500 bg-${c}-50/40 p-3.5 rounded-r-2xl border border-${c}-100 transition-all hover:shadow-xs">\n`;
+                        compiledHtml += `        <h5 class="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-2">\n`;
+                        compiledHtml += `            <i class="${safeIcon} text-${c}-600 text-sm"></i>\n`;
+                        compiledHtml += `            <span>${item.judul || ''}</span>\n`;
+                        compiledHtml += `        </h5>\n`;
+                        compiledHtml += `        <p class="text-xs text-slate-600 mt-1 leading-relaxed">${item.deskripsi || ''}</p>\n`;
+                        compiledHtml += `    </div>\n`;
+                    });
+                    compiledHtml += '</div>\n';
+                } else {
+                    compiledHtml += '<div class="grid sm:grid-cols-2 gap-3.5 my-4">\n';
+                    currentHalamanItems.forEach(item => {
+                        const c = item.warna || 'blue';
+                        const safeIcon = item.ikon || 'fa-solid fa-star';
+                        compiledHtml += `    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 hover:border-slate-300 transition-all shadow-2xs">\n`;
+                        compiledHtml += `        <h5 class="font-bold text-blue-950 text-xs sm:text-sm flex items-center gap-2 mb-1.5">\n`;
+                        compiledHtml += `            <i class="${safeIcon} text-${c}-600"></i> ${item.judul || ''}\n`;
+                        compiledHtml += `        </h5>\n`;
+                        compiledHtml += `        <p class="text-xs text-slate-600 leading-relaxed">${item.deskripsi || ''}</p>\n`;
+                        compiledHtml += `    </div>\n`;
+                    });
+                    compiledHtml += '</div>\n';
+                }
+            }
+
+            if (penutup) {
+                compiledHtml += `<p class="mt-4 text-justify leading-relaxed">${penutup}</p>\n`;
+            }
+
+            // Sync visual canvas and hidden textarea
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            const codeTextarea = document.getElementById('edit-halaman-konten');
+            const itemsJsonInput = document.getElementById('edit-halaman-items-json');
+            const pembukaInput = document.getElementById('edit-halaman-pembuka');
+            const penutupInput = document.getElementById('edit-halaman-penutup');
+
+            if (currentHalamanItems.length > 0 || pembuka || penutup) {
+                if (visualCanvas) visualCanvas.innerHTML = compiledHtml;
+                if (codeTextarea) codeTextarea.value = compiledHtml;
+            }
+
+            if (itemsJsonInput) itemsJsonInput.value = JSON.stringify(currentHalamanItems);
+            if (pembukaInput) pembukaInput.value = pembuka;
+            if (penutupInput) penutupInput.value = penutup;
+
+            const counterEl = document.getElementById('builder-item-counter');
+            if (counterEl) counterEl.textContent = currentHalamanItems.length;
+        }
+
+        // Tampilkan Modal Pratinjau di Sisi Admin
+        function showAdminPreviewHalaman(slug, judul, konten, ikon) {
+            const iconMap = {
+                'sejarah': 'fa-solid fa-landmark',
+                'visi-misi': 'fa-solid fa-bullseye',
+                'sarana': 'fa-solid fa-building-columns',
+                'program-kerja': 'fa-solid fa-list-check',
+                'kondisi-siswa': 'fa-solid fa-chart-pie'
+            };
+            const iconEl = document.getElementById('preview-admin-icon');
+            if (iconEl) {
+                const finalIcon = ikon || iconMap[slug] || 'fa-solid fa-school';
+                iconEl.className = `${finalIcon} text-amber-600`;
+            }
+            document.getElementById('preview-admin-judul').textContent = judul;
+            document.getElementById('preview-admin-body').innerHTML = konten;
+            openModal('modal-preview-halaman-admin');
+        }
+
+        function previewCurrentEdit() {
+            const slug = document.getElementById('edit-halaman-slug-label')?.textContent || '';
+            const judul = document.getElementById('edit-halaman-judul')?.value || 'Pratinjau Halaman Profil';
+            const ikon = document.getElementById('edit-halaman-ikon')?.value || 'fa-solid fa-file-lines';
+            
+            // Jika mode builder, compile dulu
+            if (currentHalamanContentMode === 'builder') {
+                compileItemsToHtml();
+            }
+
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            let konten = visualCanvas ? visualCanvas.innerHTML : '';
+            if (!konten.trim()) {
+                konten = '<p class="text-slate-400 italic">Konten masih kosong.</p>';
+            }
+            showAdminPreviewHalaman(slug, judul, konten, ikon);
+        }
+
+        // Pastikan sinkronisasi form sebelum submit & event listener input
+        document.addEventListener('DOMContentLoaded', function() {
+            const formEditHalaman = document.getElementById('form-edit-halaman');
+            if (formEditHalaman) {
+                formEditHalaman.addEventListener('submit', function() {
+                    if (currentHalamanContentMode === 'builder' && (currentHalamanItems.length > 0 || document.getElementById('edit-halaman-pembuka-input')?.value)) {
+                        compileItemsToHtml();
+                    } else {
+                        const visualCanvas = document.getElementById('edit-halaman-visual');
+                        const codeTextarea = document.getElementById('edit-halaman-konten');
+                        if (visualCanvas && codeTextarea) {
+                            codeTextarea.value = visualCanvas.innerHTML.trim();
+                        }
+                    }
+                });
+            }
+
+            const visualCanvas = document.getElementById('edit-halaman-visual');
+            if (visualCanvas) {
+                visualCanvas.addEventListener('input', syncVisualToCode);
+                visualCanvas.addEventListener('blur', syncVisualToCode);
+            }
+
+            // Real-time live preview event listeners for slip kartu & ikon
+            const inputIkon = document.getElementById('edit-halaman-ikon');
+            if (inputIkon) {
+                inputIkon.addEventListener('input', updateHalamanSlipLivePreview);
+                inputIkon.addEventListener('change', updateHalamanSlipLivePreview);
+            }
+            const inputJudul = document.getElementById('edit-halaman-judul');
+            if (inputJudul) {
+                inputJudul.addEventListener('input', updateHalamanSlipLivePreview);
+            }
+            const inputRingkasan = document.getElementById('edit-halaman-ringkasan');
+            if (inputRingkasan) {
+                inputRingkasan.addEventListener('input', updateHalamanSlipLivePreview);
+                inputRingkasan.addEventListener('keyup', updateHalamanSlipLivePreview);
+            }
+            const selectWarna = document.getElementById('edit-halaman-warna-badge');
+            if (selectWarna) {
+                selectWarna.addEventListener('change', updateHalamanSlipLivePreview);
+            }
+        });

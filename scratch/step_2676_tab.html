@@ -1,0 +1,122 @@
+                    <!-- Footer Count Info -->
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span id="ppdb-counter-text">Menampilkan semua calon siswa pendaftar PPDB</span>
+                        <span>Panitia PPDB UPT SMPN 1 Rantepao</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB: KELOLA HALAMAN PROFIL (MODAL POPUP) -->
+            <!-- ============================================== -->
+            <div id="tab-halaman-statis" class="tab-content space-y-6">
+                <!-- Header Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 text-xl font-bold shadow-sm">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-lg text-slate-900 leading-tight">Kelola Konten Halaman Profil</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    ● Modal Popup Aktif
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1 max-w-2xl">
+                                Kelola isi teks dan struktur informasi yang muncul secara instan saat pengunjung mengklik sub-menu <strong>Tentang Kami</strong> di navigasi utama website (Sejarah Singkat, Visi Misi, Sarana Prasarana, Program Kerja, dll).
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <a href="/" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500"></i>
+                            <span>Buka Web & Uji Modal</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cards Grid List Halaman Profil -->
+                <% const listHalaman = (typeof halamanStatis !== 'undefined' && Array.isArray(halamanStatis)) ? halamanStatis : []; %>
+                <div class="grid lg:grid-cols-2 gap-5">
+                    <% if (listHalaman.length > 0) { %>
+                        <% listHalaman.forEach((hal) => { %>
+                            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between group">
+                                <div>
+                                    <!-- Card Header -->
+                                    <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 border border-blue-100 flex items-center justify-center text-base font-bold shadow-xs">
+                                                <% if (hal.slug === 'sejarah') { %>
+                                                    <i class="fa-solid fa-landmark text-amber-600"></i>
+                                                <% } else if (hal.slug === 'visi-misi') { %>
+                                                    <i class="fa-solid fa-bullseye text-blue-600"></i>
+                                                <% } else if (hal.slug === 'sarana') { %>
+                                                    <i class="fa-solid fa-building-columns text-emerald-600"></i>
+                                                <% } else if (hal.slug === 'program-kerja') { %>
+                                                    <i class="fa-solid fa-list-check text-purple-600"></i>
+                                                <% } else if (hal.slug === 'kondisi-siswa') { %>
+                                                    <i class="fa-solid fa-chart-pie text-rose-600"></i>
+                                                <% } else { %>
+                                                    <i class="fa-solid fa-file-lines text-slate-600"></i>
+                                                <% } %>
+                                            </div>
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                                                        slug: <%= hal.slug %>
+                                                    </span>
+                                                </div>
+                                                <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mt-1 line-clamp-1">
+                                                    <%= hal.judul %>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content Preview (Strip HTML Tags for safe brief excerpt) -->
+                                    <div class="py-3.5">
+                                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider text-[10px] mb-1">Cuplikan Konten:</p>
+                                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 line-clamp-3 leading-relaxed font-sans">
+                                            <%= (hal.konten || '').replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim() %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card Footer Actions -->
+                                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                                    <span class="flex items-center gap-1.5 text-[11px]">
+                                        <i class="fa-solid fa-clock-rotate-left text-slate-300"></i>
+                                        <span>Update: <%= new Date(hal.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                                    </span>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" 
+                                            class="btn-preview-halaman px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition flex items-center gap-1.5 cursor-pointer"
+                                            data-slug="<%= hal.slug %>"
+                                            data-judul="<%= hal.judul %>"
+                                            data-konten="<%= encodeURIComponent(hal.konten || '') %>">
+                                            <i class="fa-solid fa-eye text-xs text-slate-500"></i>
+                                            <span>Pratinjau</span>
+                                        </button>
+                                        <button type="button" 
+                                            class="btn-edit-halaman px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                                            data-id="<%= hal.id %>"
+                                            data-slug="<%= hal.slug %>"
+                                            data-judul="<%= hal.judul %>"
+                                            data-konten="<%= encodeURIComponent(hal.konten || '') %>">
+                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            <span>Edit Konten</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="col-span-full py-12 text-center bg-white rounded-2xl border border-slate-200">
+                            <i class="fa-solid fa-file-circle-exclamation text-4xl text-slate-300 mb-3"></i>
+                            <p class="font-bold text-slate-700">Belum ada halaman profil</p>
+                            <p class="text-xs text-slate-400 mt-1">Data awal sedang diinisialisasi oleh sistem.</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>

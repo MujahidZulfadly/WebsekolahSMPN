@@ -1,0 +1,42 @@
+            // 10. Edit Halaman Profil (Statis) & Slip Kartu
+            const editHalamanBtn = e.target.closest('.btn-edit-halaman');
+            if (editHalamanBtn) {
+                const id = editHalamanBtn.dataset.id;
+                const slug = editHalamanBtn.dataset.slug;
+                const judul = editHalamanBtn.dataset.judul;
+                const ikon = editHalamanBtn.dataset.ikon || 'fa-solid fa-file-lines';
+                const ringkasan = decodeURIComponent(editHalamanBtn.dataset.ringkasan || '');
+                const warnaBadge = editHalamanBtn.dataset.warnaBadge || 'blue';
+                const konten = decodeURIComponent(editHalamanBtn.dataset.konten || '');
+
+                document.getElementById('form-edit-halaman').action = '/admin/halaman-statis/edit/' + id;
+                document.getElementById('edit-halaman-slug-label').textContent = slug;
+                document.getElementById('edit-halaman-judul').value = judul;
+                document.getElementById('edit-halaman-ikon').value = ikon;
+                document.getElementById('edit-halaman-ringkasan').value = ringkasan;
+                document.getElementById('edit-halaman-warna-badge').value = warnaBadge;
+                document.getElementById('edit-halaman-konten').value = konten;
+
+                // Sinkronkan mini live preview slip kartu & ikon
+                updateHalamanSlipLivePreview();
+
+                const visualCanvas = document.getElementById('edit-halaman-visual');
+                if (visualCanvas) {
+                    visualCanvas.innerHTML = konten;
+                }
+
+                // Buka modal langsung dalam mode visual murni
+                openModal('modal-edit-halaman');
+                return;
+            }
+
+            // 11. Preview Halaman Profil (Statis)
+            const previewHalamanBtn = e.target.closest('.btn-preview-halaman');
+            if (previewHalamanBtn) {
+                const slug = previewHalamanBtn.dataset.slug;
+                const judul = previewHalamanBtn.dataset.judul;
+                const ikon = previewHalamanBtn.dataset.ikon || 'fa-solid fa-file-lines';
+                const konten = decodeURIComponent(previewHalamanBtn.dataset.konten || '');
+                showAdminPreviewHalaman(slug, judul, konten, ikon);
+                return;
+            }

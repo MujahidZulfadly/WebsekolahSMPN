@@ -1,0 +1,183 @@
+                <!-- Isi Konten Halaman Lengkap (Dual Mode: Builder Kartu & WYSIWYG) -->
+                <div class="space-y-3">
+                    <!-- Mode Header Switcher Tabs -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-slate-200">
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-shapes text-blue-600"></i>
+                                <span>Isi Konten Halaman Lengkap *</span>
+                            </label>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Edit kartu-kartu fasilitas/proker di dalam konten atau gunakan editor visual teks bebas.</p>
+                        </div>
+                        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold self-start sm:self-auto border border-slate-200/80">
+                            <button type="button" id="tab-btn-builder-items" onclick="switchHalamanContentMode('builder')" class="px-3 py-1.5 rounded-lg bg-blue-900 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-table-cells-large text-xs"></i>
+                                <span>Builder Kartu / Item (<span id="builder-item-counter">0</span>)</span>
+                            </button>
+                            <button type="button" id="tab-btn-wysiwyg" onclick="switchHalamanContentMode('wysiwyg')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-align-left text-xs"></i>
+                                <span>Editor Bebas (WYSIWYG)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 1: BUILDER KARTU / ITEM DI DALAM KONTEN -->
+                    <div id="mode-content-builder" class="space-y-4">
+                        <!-- Paragraf Pembuka / Narasi Pengantar -->
+                        <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paragraph text-slate-500"></i>
+                                    <span>Paragraf Pembuka / Narasi Pengantar (Opsional)</span>
+                                </span>
+                                <span class="text-[10px] text-slate-400">Tampil sebelum susunan kartu</span>
+                            </label>
+                            <textarea id="edit-halaman-pembuka-input" rows="2" 
+                                oninput="compileItemsToHtml()"
+                                placeholder="Tuliskan kalimat pembuka sebelum daftar kartu fasilitas atau program kerja..."
+                                class="w-full text-xs border border-slate-300 rounded-xl p-2.5 bg-white text-slate-800 focus:outline-blue-600 shadow-2xs resize-none"></textarea>
+                        </div>
+
+                        <!-- Header List Kartu Konten -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-blue-600"></i>
+                                    <span>Daftar Kartu / Item Konten</span>
+                                </span>
+                                <span class="text-[11px] text-slate-400">(Tiap item dapat diubah ikon, warna, judul & deskripsinya)</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <!-- Pilihan Model Layout Kartu -->
+                                <div class="flex items-center gap-1 text-[11px] text-slate-600 font-semibold bg-slate-100 px-2 py-1 rounded-xl border border-slate-200">
+                                    <span>Model:</span>
+                                    <select id="edit-halaman-layout-type" onchange="changeHalamanLayoutType(this.value)" class="bg-transparent text-xs font-bold text-blue-950 focus:outline-none cursor-pointer">
+                                        <option value="grid">Grid 2 Kolom (Kotak Fasilitas)</option>
+                                        <option value="list">Daftar Bergaris Aksen (List Proker)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tombol Tambah Kartu Baru -->
+                                <button type="button" onclick="addNewContentItem()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                    <span>Tambah Kartu Baru</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Container Dynamic Items List -->
+                        <div id="halaman-items-container" class="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+                            <!-- Items will be dynamically populated by renderContentItemsBuilder() -->
+                        </div>
+
+                        <!-- Paragraf Penutup (Opsional) -->
+                        <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paragraph text-slate-500"></i>
+                                    <span>Paragraf Penutup / Catatan Kebijakan (Opsional)</span>
+                                </span>
+                                <span class="text-[10px] text-slate-400">Tampil setelah susunan kartu</span>
+                            </label>
+                            <textarea id="edit-halaman-penutup-input" rows="2" 
+                                oninput="compileItemsToHtml()"
+                                placeholder="Tuliskan kalimat penutup atau ringkasan kebijakan sekolah setelah kartu..."
+                                class="w-full text-xs border border-slate-300 rounded-xl p-2.5 bg-white text-slate-800 focus:outline-blue-600 shadow-2xs resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 2: EDITOR VISUAL BEBAS & WYSIWYG -->
+                    <div id="mode-content-wysiwyg" class="hidden space-y-2">
+                        <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-800 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-amber-600 text-xs shrink-0"></i>
+                            <span>Konten HTML di bawah ini sinkron otomatis dengan susunan kartu pada tab <strong>Builder Kartu</strong>. Anda dapat mengedit teks narasi atau paragraf secara visual di sini.</span>
+                        </div>
+
+                        <!-- Visual Toolbar -->
+                        <div class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            <!-- Block Formats -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="formatBlockTag('p')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold text-[11px] transition shadow-xs cursor-pointer" title="Paragraf Biasa">
+                                    Paragraf
+                                </button>
+                                <button type="button" onclick="formatBlockTag('h4')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-blue-950 font-bold text-[11px] transition shadow-xs cursor-pointer" title="Judul Sub-Bab">
+                                    Judul H4
+                                </button>
+                                <button type="button" onclick="formatBlockTag('h5')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-blue-950 font-bold text-[11px] transition shadow-xs cursor-pointer" title="Subjudul">
+                                    Subjudul H5
+                                </button>
+                            </div>
+
+                            <!-- Inline Styling: Bold, Italic, Underline -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('bold')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Tebal (Ctrl+B)">
+                                    <i class="fa-solid fa-bold"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('italic')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 italic text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Miring (Ctrl+I)">
+                                    <i class="fa-solid fa-italic"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('underline')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 underline text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Garis Bawah (Ctrl+U)">
+                                    <i class="fa-solid fa-underline"></i>
+                                </button>
+                            </div>
+
+                            <!-- Lists -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('insertUnorderedList')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Daftar Poin (Bullet List)">
+                                    <i class="fa-solid fa-list-ul"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('insertOrderedList')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Daftar Angka (Numbered List)">
+                                    <i class="fa-solid fa-list-ol"></i>
+                                </button>
+                            </div>
+
+                            <!-- Alignment -->
+                            <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                                <button type="button" onclick="execVisualCmd('justifyLeft')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Kiri">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('justifyCenter')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Tengah">
+                                    <i class="fa-solid fa-align-center"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('justifyFull')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs flex items-center justify-center transition shadow-xs cursor-pointer" title="Rata Kanan-Kiri (Justify)">
+                                    <i class="fa-solid fa-align-justify"></i>
+                                </button>
+                            </div>
+
+                            <!-- Undo / Redo / Clear -->
+                            <div class="flex items-center gap-1 ml-auto">
+                                <button type="button" onclick="execVisualCmd('undo')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 text-xs flex items-center justify-center transition cursor-pointer" title="Urungkan (Undo - Ctrl+Z)">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('redo')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 text-xs flex items-center justify-center transition cursor-pointer" title="Ulangi (Redo - Ctrl+Y)">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+                                <button type="button" onclick="execVisualCmd('removeFormat')" class="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-rose-600 text-xs flex items-center justify-center transition cursor-pointer" title="Hapus Format">
+                                    <i class="fa-solid fa-eraser"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Editable Visual Canvas -->
+                        <div id="edit-halaman-visual" 
+                             contenteditable="true" 
+                             spellcheck="false"
+                             class="w-full min-h-[360px] max-h-[500px] overflow-y-auto border border-slate-300 rounded-2xl p-5 sm:p-6 bg-white text-slate-800 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-inner">
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                            <span class="flex items-center gap-1.5 font-medium text-slate-700">
+                                <i class="fa-solid fa-pen text-blue-600"></i>
+                                <span>Klik langsung pada teks untuk mengedit, atau gunakan tab Builder Kartu untuk menyusun kartu secara terstruktur.</span>
+                            </span>
+                            <span class="text-[10px] text-slate-400 hidden sm:inline">Ctrl+B (Tebal) • Ctrl+I (Miring) • Ctrl+Z (Urungkan)</span>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Form Payloads -->
+                    <input type="hidden" id="edit-halaman-items-json" name="items_json">
+                    <input type="hidden" id="edit-halaman-pembuka" name="paragraf_pembuka">
+                    <input type="hidden" id="edit-halaman-penutup" name="paragraf_penutup">
+                    <textarea id="edit-halaman-konten" name="konten" class="hidden"></textarea>
+                </div>
