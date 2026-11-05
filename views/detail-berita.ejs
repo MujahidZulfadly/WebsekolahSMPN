@@ -54,7 +54,7 @@
 
                 <!-- Author & Editor Info -->
                 <div class="flex items-center gap-3.5 pb-6 mb-8 border-b border-slate-100">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-950 to-blue-800 text-amber-400 font-black flex items-center justify-center text-sm shadow overflow-hidden border border-blue-900 p-1 shrink-0">
+                    <div class="w-11 h-11 flex items-center justify-center shrink-0">
                         <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
                             <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
                             <span class="hidden">S1</span>

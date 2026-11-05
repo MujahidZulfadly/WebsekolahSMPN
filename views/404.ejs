@@ -19,8 +19,7 @@
         <div class="max-w-xl w-full text-center relative z-10 space-y-6" data-aos="fade-up">
             
             <!-- School Emblem / Badge -->
-            <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-slate-900 border-2 border-amber-400/50 shadow-2xl p-2.5 mx-auto relative group">
-                <div class="absolute inset-0 bg-gradient-to-tr from-blue-950 to-slate-900 rounded-3xl -z-0"></div>
+            <div class="inline-flex items-center justify-center w-24 h-24 mx-auto relative group">
                 <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
                     <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo Sekolah" class="w-full h-full object-contain relative z-10">
                 <% } else { %>

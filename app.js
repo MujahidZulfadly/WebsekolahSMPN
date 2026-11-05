@@ -2546,7 +2546,8 @@ app.post('/admin/profil/update', isAuthenticated, upload.fields([
         const {
             nama_sekolah, npsn, akreditasi, nama_kepsek, nip_kepsek,
             sambutan_kepsek, sejarah, visi, misi, alamat, telepon,
-            email_sekolah, maps_embed, jumlah_siswa, jumlah_rombel
+            email_sekolah, maps_embed, jumlah_siswa, jumlah_rombel,
+            label_lokasi, keterangan_lokasi, wilayah_lokasi
         } = req.body;
 
         const fotoKepsekFile = (req.files && req.files['foto_kepsek'] && req.files['foto_kepsek'][0]) ? req.files['foto_kepsek'][0] : null;
@@ -2593,14 +2594,16 @@ app.post('/admin/profil/update', isAuthenticated, upload.fields([
                 nama_sekolah = ?, npsn = ?, akreditasi = ?, nama_kepsek = ?, nip_kepsek = ?,
                 sambutan_kepsek = ?, sejarah = ?, visi = ?, misi = ?, alamat = ?, telepon = ?,
                 email_sekolah = ?, maps_embed = ?, jumlah_siswa = ?, jumlah_rombel = ?,
-                foto_kepsek = ?, logo_sekolah = ?
+                foto_kepsek = ?, logo_sekolah = ?,
+                label_lokasi = ?, keterangan_lokasi = ?, wilayah_lokasi = ?
             WHERE id_profil = 1
         `, [
             nama_sekolah, npsn, akreditasi, nama_kepsek, nip_kepsek,
             sambutan_kepsek, sejarah, visi, misi, alamat, telepon,
             email_sekolah, maps_embed,
             parseInt(jumlah_siswa) || 886, parseInt(jumlah_rombel) || 24,
-            newFotoKepsek, newLogoSekolah
+            newFotoKepsek, newLogoSekolah,
+            label_lokasi || 'Lokasi Sekolah', keterangan_lokasi || 'Gedung Utama', wilayah_lokasi || 'Kec. Rantepao, Toraja Utara'
         ]);
 
         // SINKRONISASI OTOMATIS KE TABEL GURU_STAF (DATA KEPALA SEKOLAH)
@@ -3384,7 +3387,7 @@ app.get('/api/halaman/:slug', async (req, res) => {
                     (SELECT COUNT(*) FROM guru_staf WHERE status_aktif = 'Aktif') AS totalGuru,
                     (SELECT COUNT(*) FROM ekstrakurikuler) AS totalEskul,
                     (SELECT COUNT(*) FROM komite_sekolah) AS totalKomite,
-                    (SELECT COUNT(*) FROM ppdb_pendaftar) AS totalPpdb
+                    (SELECT COUNT(*) FROM pendaftar_ppdb) AS totalPpdb
             `);
             const liveStats = statsCount[0] || { totalGuru: 54, totalEskul: 12, totalKomite: 8, totalPpdb: 0 };
             

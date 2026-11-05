@@ -19,16 +19,14 @@
             <div class="absolute -inset-6 rounded-full bg-amber-400/20 blur-2xl animate-pulse"></div>
 
             <!-- School Logo Monogram with Rotating/Pulsing Animation -->
-            <div
-                class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-blue-950 flex items-center justify-center font-black text-3xl sm:text-4xl shadow-2xl shadow-amber-500/40 border-4 border-white/20 transform hover:scale-105 transition-transform overflow-hidden p-2">
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center transform hover:scale-105 transition-transform p-2">
                 <% if (profil && profil.logo_sekolah) { %>
                     <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>" class="w-full h-full object-contain relative z-10 drop-shadow-md" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
                     <span class="hidden animate-pulse tracking-tight">S1</span>
                 <% } else { %>
                     <span class="animate-pulse tracking-tight">S1</span>
                 <% } %>
-                <!-- Ping outer ring -->
-                <div class="absolute inset-0 rounded-3xl border-2 border-amber-300/50 animate-ping opacity-40 pointer-events-none"></div>
+                
             </div>
 
             <!-- School Title & Subtitle -->
@@ -64,7 +62,7 @@
         <!-- ========================================== -->
         <!-- HERO IMAGE SLIDER (DINAMIS DARI ADMIN)     -->
         <!-- ========================================== -->
-        <section id="beranda" class="relative w-full h-[580px] md:h-[650px] overflow-hidden select-none">
+        <section id="beranda" class="relative w-full h-[520px] sm:h-[580px] md:h-[650px] overflow-hidden select-none touch-pan-y">
 
             <!-- Wadah Gambar Background Slider -->
             <div id="hero-slides" class="relative w-full h-full">
@@ -90,16 +88,16 @@
             <!-- Kotak Glassmorphism di Sebelah Kiri -->
             <div class="absolute inset-0 z-20 max-w-7xl mx-auto px-6 md:px-12 flex items-center">
                 <div
-                    class="bg-slate-900/55 backdrop-blur-md border border-white/20 p-8 md:p-11 rounded-3xl max-w-xl text-white shadow-2xl transition-all duration-500">
-                    <h2 id="slide-title" class="text-3xl md:text-4xl font-extrabold text-amber-400 tracking-wide">
+                    class="bg-slate-900/65 backdrop-blur-md border border-white/20 p-5 sm:p-8 md:p-11 rounded-2xl sm:rounded-3xl max-w-xl text-white shadow-2xl transition-all duration-500">
+                    <h2 id="slide-title" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-400 tracking-wide">
                         <%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0) ? heroSliders[0].judul : 'Pendidikan Berkualitas' %>
                     </h2>
-                    <p id="slide-desc" class="mt-4 text-sm md:text-base text-slate-100 leading-relaxed font-normal">
+                    <p id="slide-desc" class="mt-2.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-100 leading-relaxed font-normal line-clamp-3 sm:line-clamp-none">
                         <%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0) ? (heroSliders[0].deskripsi || '') : ('Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. ' + (typeof profil !== 'undefined' && profil.nama_sekolah ? profil.nama_sekolah : 'UPT SMPN 1 Rantepao') + ' berkomitmen mewujudkan sekolah yang Edukatif, Dinamis, dan Unggul di Toraja Utara.') %>
                     </p>
-                    <div class="mt-7">
+                    <div class="mt-5 sm:mt-7">
                         <a id="slide-btn" href="<%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0 && heroSliders[0].link_tombol) ? heroSliders[0].link_tombol : '#profil' %>"
-                            class="inline-flex items-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm px-7 py-3.5 rounded-full shadow-lg transition transform hover:-translate-y-0.5">
+                            class="inline-flex items-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm px-5 py-3 sm:px-7 sm:py-3.5 rounded-full shadow-lg transition transform hover:-translate-y-0.5">
                             <span id="slide-btn-text"><%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0 && heroSliders[0].teks_tombol) ? heroSliders[0].teks_tombol : 'Lihat Selengkapnya' %></span> <span class="ml-2 text-lg leading-none">→</span>
                         </a>
                     </div>
@@ -187,6 +185,33 @@
             if (slides && slides.length > 1) {
                 setInterval(nextSlide, 5000);
             }
+
+            // Touch Swipe Support for Android & Mobile Touchscreens
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const heroEl = document.getElementById('beranda');
+            if (heroEl) {
+                heroEl.addEventListener('touchstart', function(e) {
+                    if (e.changedTouches && e.changedTouches[0]) {
+                        touchStartX = e.changedTouches[0].screenX;
+                    }
+                }, { passive: true });
+
+                heroEl.addEventListener('touchend', function(e) {
+                    if (e.changedTouches && e.changedTouches[0]) {
+                        touchEndX = e.changedTouches[0].screenX;
+                        const diff = touchEndX - touchStartX;
+                        if (Math.abs(diff) > 40) {
+                            if (diff < 0) {
+                                nextSlide(); // Geser ke kiri -> slide berikutnya
+                            } else {
+                                prevSlide(); // Geser ke kanan -> slide sebelumnya
+                            }
+                        }
+                    }
+                }, { passive: true });
+            }
+
         </script>
 
         <!-- PPDB 2026 CALLOUT RIBBON -->
@@ -396,7 +421,7 @@
                         </div>
                         <span class="text-xs font-black text-blue-900 uppercase tracking-wider">Cita-Cita Utama</span>
                         <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Visi Sekolah</h3>
-                        <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium italic text-justify">
+                        <p class="text-slate-700 text-sm sm:text-base leading-relaxed font-normal font-sans text-left sm:text-justify">
                             "<%= profil.visi
                                 || 'Terwujudnya Peserta Didik yang Beriman, Berakhlak Mulia, Cerdas, Terampil, Mandiri, dan Berbudaya Toraja.'
                                 %>"
@@ -423,7 +448,7 @@
                             Strategis & Program Kerja</span>
                         <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Misi & Program Kerja Sekolah</h3>
                         <div
-                            class="text-slate-600 text-xs sm:text-sm whitespace-pre-line leading-relaxed font-normal text-justify">
+                            class="text-slate-700 text-sm sm:text-base whitespace-pre-line leading-relaxed font-normal font-sans text-left sm:text-justify">
                             <%= profil.misi
                                 || '1. Menyelenggarakan proses pembelajaran yang efektif, bermutu, dan inovatif.\n2. Menumbuhkan nilai budi pekerti luhur dan ketaatan beragama.\n3. Mengembangkan potensi bakat akademik dan non-akademik siswa.\n4. Melestarikan budaya daerah Toraja serta peduli lingkungan hidup.'
                                 %>
@@ -1464,14 +1489,14 @@
                                             </div>
                                         </div>
 
-                                        <!-- Card Lokasi Kampus Sekolah -->
+                                        <!-- Card <%= profil.label_lokasi || 'Lokasi Sekolah' %> -->
                                         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-md flex flex-col justify-between"
                                             data-aos="fade-left" data-aos-delay="200">
                                             <div>
                                                 <div class="flex items-center justify-between mb-2">
                                                     <h4 class="font-extrabold text-[10px] text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                                                         <i class="fa-solid fa-map-location-dot text-blue-900 text-xs"></i>
-                                                        Lokasi Kampus Sekolah
+                                                        <%= profil.label_lokasi || 'Lokasi Sekolah' %>
                                                     </h4>
                                                     <a href="https://maps.google.com/?q=<%= encodeURIComponent((profil.nama_sekolah || 'SMP Negeri 1 Rantepao') + ' ' + (profil.alamat || 'Rantepao Toraja Utara')) %>"
                                                        target="_blank" rel="noopener noreferrer"
@@ -1501,9 +1526,9 @@
                                                 </div>
                                             </div>
                                             <div class="pt-2.5 mt-1 border-t border-slate-100 text-[10px] text-slate-500 flex items-center justify-between">
-                                                <span>Kec. Rantepao, Toraja Utara</span>
+                                                <span><%= profil.wilayah_lokasi || 'Kec. Rantepao, Toraja Utara' %></span>
                                                 <span class="text-emerald-700 font-semibold flex items-center gap-1">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Kampus Utama
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> <%= profil.keterangan_lokasi || 'Gedung Utama' %>
                                                 </span>
                                             </div>
                                         </div>

@@ -15,45 +15,50 @@
 
 <body class="h-full font-sans antialiased text-slate-800 flex flex-col selection:bg-amber-400 selection:text-blue-950">
 
-    <!-- TOP BAR NAVIGATION -->
+    <!-- TOP BAR NAVIGATION (Mobile Optimized) -->
     <header class="sticky top-0 z-40 bg-slate-900 border-b border-white/10 text-white shadow-md">
-        <div class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="px-3.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             
             <!-- Left Branding -->
-            <div class="flex items-center gap-3">
-                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+            <div class="flex items-center gap-2.5 sm:gap-3 overflow-hidden">
+                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition active:scale-95" aria-label="Buka Menu OSIS">
                     <i class="fa-solid fa-bars text-lg"></i>
                 </button>
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-blue-950 font-black flex items-center justify-center text-lg shadow-md shrink-0 border border-white/20">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                <div class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0">
+                    <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
+                        <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo" class="w-full h-full object-contain drop-shadow" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                        <span class="hidden text-amber-400 font-bold text-xs">OSIS</span>
+                    <% } else { %>
+                        <span class="text-amber-400 font-bold text-xs">OSIS</span>
+                    <% } %>
                 </div>
-                <div>
-                    <h1 class="font-black text-sm sm:text-base leading-tight tracking-tight flex items-center gap-2">
-                        <span>Portal Pengurus OSIS</span>
-                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-extrabold uppercase border border-amber-400/30">
+                <div class="truncate max-w-[150px] xs:max-w-[210px] sm:max-w-none">
+                    <h1 class="font-black text-xs sm:text-base leading-tight tracking-tight flex items-center gap-2 truncate">
+                        <span class="truncate">Portal OSIS</span>
+                        <span class="hidden md:inline-block px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-extrabold uppercase border border-amber-400/30 shrink-0">
                             Masa Bakti 2025/2026
                         </span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium">UPT SMP Negeri 1 Rantepao</p>
+                    <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate"><%= (typeof profil !== 'undefined' && profil && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMP Negeri 1 Rantepao' %></p>
                 </div>
             </div>
 
             <!-- Right Actions -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                 <!-- Link to Public OSIS Page -->
-                <a href="/osis" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 transition">
+                <a href="/osis" target="_blank" class="hidden xs:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 transition">
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    <span>Lihat Web OSIS</span>
+                    <span class="hidden sm:inline">Lihat Web</span> OSIS
                 </a>
 
                 <!-- User Profile Pill -->
-                <div class="flex items-center gap-2.5 pl-3 border-l border-white/10">
+                <div class="flex items-center gap-2 pl-2 sm:pl-3 border-l border-white/10">
                     <div class="w-8 h-8 rounded-full bg-blue-800 text-amber-300 border border-white/20 flex items-center justify-center text-xs font-bold">
                         <i class="fa-solid fa-user-gear"></i>
                     </div>
                     <div class="hidden md:block text-left text-xs">
-                        <div class="font-bold text-white leading-tight"><%= (typeof osisUser !== 'undefined' && osisUser.nama) ? osisUser.nama : 'Pengurus OSIS' %></div>
-                        <div class="text-[10px] text-amber-400 font-semibold"><%= (typeof osisUser !== 'undefined' && osisUser.jabatan) ? osisUser.jabatan : 'Administrator OSIS' %></div>
+                        <div class="font-bold text-white leading-tight truncate max-w-[120px]"><%= (typeof osisUser !== 'undefined' && osisUser.nama) ? osisUser.nama : 'Pengurus OSIS' %></div>
+                        <div class="text-[10px] text-amber-400 font-semibold truncate max-w-[120px]"><%= (typeof osisUser !== 'undefined' && osisUser.jabatan) ? osisUser.jabatan : 'Administrator OSIS' %></div>
                     </div>
                 </div>
 
@@ -69,9 +74,36 @@
     <!-- WRAPPER BODY -->
     <div class="flex-1 flex overflow-hidden">
 
-        <!-- SIDEBAR NAVIGATION -->
-        <aside id="sidebar-pane" class="w-64 bg-slate-900 border-r border-slate-800 text-slate-300 flex-shrink-0 flex flex-col justify-between hidden lg:flex z-30 transition-all duration-300">
-            <div class="py-5 px-3 space-y-1 text-xs font-semibold overflow-y-auto">
+        <!-- Dimming Backdrop Overlay for Mobile OSIS Drawer -->
+        <div id="osis-sidebar-backdrop" 
+             class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"
+             onclick="closeSidebar()"></div>
+
+        <!-- SIDEBAR NAVIGATION (Off-Canvas Drawer on Mobile, Static on Desktop) -->
+        <aside id="sidebar-pane" class="fixed lg:static inset-y-0 left-0 z-50 w-72 sm:w-64 bg-slate-900 border-r border-slate-800 text-slate-300 flex-shrink-0 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none select-none">
+            
+            <!-- Mobile Sidebar Header with Close Button -->
+            <div class="lg:hidden h-16 px-4 flex items-center justify-between border-b border-slate-800 bg-slate-950/40">
+                <div class="flex items-center gap-2.5 overflow-hidden">
+                    <div class="w-8 h-8 flex items-center justify-center shrink-0">
+                        <% if (typeof profil !== 'undefined' && profil && profil.logo_sekolah) { %>
+                            <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo" class="w-full h-full object-contain drop-shadow" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                            <span class="hidden text-amber-400 font-bold text-xs">OSIS</span>
+                        <% } else { %>
+                            <span class="text-amber-400 font-bold text-xs">OSIS</span>
+                        <% } %>
+                    </div>
+                    <div class="truncate">
+                        <div class="font-black text-xs text-white leading-tight truncate">Menu Pengurus OSIS</div>
+                        <div class="text-[10px] text-amber-400 font-semibold">Masa Bakti 2025/2026</div>
+                    </div>
+                </div>
+                <button type="button" onclick="closeSidebar()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition active:scale-95" aria-label="Tutup Menu">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <div class="py-4 px-3 space-y-1 text-xs font-semibold overflow-y-auto">
 
                 <button type="button" onclick="switchTab('overview')" class="nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition group" data-tab="overview">
                     <div class="flex items-center gap-3">
@@ -147,7 +179,7 @@
         </aside>
 
         <!-- MAIN CONTENT AREA -->
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <main class="flex-1 overflow-y-auto p-3.5 sm:p-6 lg:p-8 space-y-5 sm:space-y-6 w-full">
 
             <!-- Alert Notification -->
             <% if (typeof alert !== 'undefined' && alert) { %>
@@ -1258,14 +1290,42 @@
 
     <!-- CLIENT SCRIPT LOGIC -->
     <script>
+        // OSIS Sidebar Mobile Drawer Controller
+        function openSidebar() {
+            const pane = document.getElementById('sidebar-pane');
+            const backdrop = document.getElementById('osis-sidebar-backdrop');
+            if (pane) pane.classList.remove('-translate-x-full');
+            if (backdrop) {
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                backdrop.classList.add('opacity-100');
+            }
+            document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+        }
+
+        function closeSidebar() {
+            const pane = document.getElementById('sidebar-pane');
+            const backdrop = document.getElementById('osis-sidebar-backdrop');
+            if (pane) pane.classList.add('-translate-x-full');
+            if (backdrop) {
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+            }
+            document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+        }
+
         function toggleSidebar() {
             const pane = document.getElementById('sidebar-pane');
-            if (pane) {
-                pane.classList.toggle('hidden');
+            if (pane && pane.classList.contains('-translate-x-full')) {
+                openSidebar();
+            } else {
+                closeSidebar();
             }
         }
 
         function switchTab(tabId) {
+            if (window.innerWidth < 1024) {
+                closeSidebar();
+            }
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             const targetEl = document.getElementById('tab-' + tabId);
             if (targetEl) {
