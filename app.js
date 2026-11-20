@@ -231,6 +231,22 @@ async function initPpdbPengaturan() {
 }
 initPpdbPengaturan();
 
+// Memastikan kompatibilitas tabel pendaftar_ppdb dengan MySQL Strict Mode di Server/Hosting
+async function fixPpdbStrictSchema() {
+    try {
+        await db.query(`
+            ALTER TABLE pendaftar_ppdb 
+                MODIFY COLUMN asal_sekolah VARCHAR(150) NULL DEFAULT '-',
+                MODIFY COLUMN nama_ortu VARCHAR(150) NULL DEFAULT '-',
+                MODIFY COLUMN no_hp VARCHAR(25) NULL DEFAULT '-',
+                MODIFY COLUMN alamat_domisili TEXT NULL;
+        `);
+    } catch (err) {
+        // Abaikan jika tabel belum ada atau izin terbatas
+    }
+}
+fixPpdbStrictSchema();
+
 // ==========================================
 // INISIALISASI & FITUR STATISTIK PENGUNJUNG REAL-TIME
 // ==========================================
@@ -1342,14 +1358,17 @@ app.post('/ppdb/register', async (req, res) => {
 
         const [insertRes] = await db.query(`
             INSERT INTO pendaftar_ppdb 
-            (no_pendaftaran, nama_siswa, email, no_wa, no_hp, password, status_seleksi, is_submitted, tanggal_daftar) 
-            VALUES (?, ?, ?, ?, ?, ?, 'Menunggu Verifikasi', 0, NOW())
+            (no_pendaftaran, nama_siswa, email, no_wa, no_hp, asal_sekolah, nama_ortu, alamat_domisili, jalur_pendaftaran, jenis_kelamin, password, status_seleksi, is_submitted, tanggal_daftar) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Zonasi', 'Laki-laki', ?, 'Menunggu Verifikasi', 0, NOW())
         `, [
             noPendaftaran,
             nama_siswa.trim(),
             email.trim().toLowerCase(),
-            no_wa ? no_wa.trim() : null,
-            no_wa ? no_wa.trim() : null,
+            no_wa ? no_wa.trim() : '-',
+            no_wa ? no_wa.trim() : '-',
+            '-',
+            '-',
+            '-',
             hashedPassword
         ]);
 
