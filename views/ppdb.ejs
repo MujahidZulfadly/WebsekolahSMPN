@@ -2,7 +2,7 @@
 <html lang="id" class="scroll-smooth">
 
 <head>
-    <%- include('partials/head', { title: 'PPDB Online 2026/2027 - ' + (profil.nama_sekolah || 'SMPN 1 RANTEPAO' ) }) %>
+    <%- include('partials/head', { title: 'PPDB Online 2026/2027 - ' + (profil.nama_sekolah || 'SMAN 1 MAKASSAR' ) }) %>
 </head>
 
 <body
@@ -13,7 +13,7 @@
 
         <!-- Sub-Hero Banner -->
         <%- include('partials/subhero', { title: 'Penerimaan Peserta Didik Baru (PPDB)' ,
-            subtitle: 'Pendaftaran dan seleksi online calon siswa UPT SMPN 1 Rantepao — Membentuk insan berkarakter, berprestasi, dan berakar kuat pada nilai budaya Toraja'
+            subtitle: 'Pendaftaran dan seleksi online calon siswa UPT SMAN 1 Makassar — Membentuk insan berkarakter, berprestasi, dan berakar kuat pada nilai budaya Bugis-Makassar'
             , breadcrumbs: [ { label: 'Beranda' , url: '/' }, { label: 'PPDB 2026' } ], waveFill: 'text-slate-50' }) %>
 
             <!-- Action & Highlight Info Bar: Sekretariat Pelayanan PPDB -->
@@ -53,7 +53,7 @@
                                         </span>
                                     <% } %>
                                 </div>
-                                <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">Pusat Layanan PPDB UPT SMPN 1 Rantepao</h3>
+                                <h3 class="text-lg sm:text-xl font-black text-white mt-0.5">Pusat Layanan PPDB UPT SMAN 1 Makassar</h3>
                             </div>
                         </div>
 
@@ -172,7 +172,7 @@
                             </div>
                             <div>
                                 <strong class="text-white text-xs block">Lokasi Loket:</strong>
-                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed"><%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao, Kab. Toraja Utara' %></p>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed"><%= profil.alamat || 'Jl. Sam Ratulangi No. 1, Rantepao, Kota Makassar' %></p>
                             </div>
                         </div>
 
@@ -303,7 +303,7 @@
                                                                 class="text-base sm:text-lg font-black text-blue-950 leading-tight">
                                                                 <%= profil.nama_sekolah || 'SMP NEGERI 1 RANTEPAO' %>
                                                             </h3>
-                                                            <p class="text-[11px] text-slate-400">Toraja Utara, Sulawesi
+                                                            <p class="text-[11px] text-slate-400">Kota Makassar, Sulawesi
                                                                 Selatan</p>
                                                         </div>
                                                     </div>
@@ -463,7 +463,7 @@
                                                                         </p>
                                                                         <p class="leading-relaxed">
                                                                             <%= p.catatan ? p.catatan
-                                                                                : 'Berkas pendaftaran sedang dalam peninjauan oleh tim panitia PPDB UPT SMPN 1 Rantepao.'
+                                                                                : 'Berkas pendaftaran sedang dalam peninjauan oleh tim panitia PPDB UPT SMAN 1 Makassar.'
                                                                                 %>
                                                                         </p>
                                                                     </div>
@@ -519,7 +519,7 @@
                             Penerimaan</span>
                         <h2 class="text-3xl font-extrabold text-blue-950 mt-1">4 Jalur Pendaftaran Resmi</h2>
                         <p class="text-sm text-slate-500 mt-2">
-                            Total Daya Tampung: <strong><%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_total) ? ppdbSetting.kuota_total : 320 %> Siswa Baru</strong> Sesuai Juknis PPDB Dinas Pendidikan Kabupaten Toraja Utara.
+                            Total Daya Tampung: <strong><%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_total) ? ppdbSetting.kuota_total : 320 %> Siswa Baru</strong> Sesuai Juknis PPDB Dinas Pendidikan Kota Makassar.
                         </p>
                     </div>
 
@@ -539,7 +539,7 @@
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Jalur Zonasi</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
                                     Diperuntukkan bagi calon peserta didik yang berdomisili di dalam wilayah zonasi
-                                    terdekat dengan SMPN 1 Rantepao berdasarkan Kartu Keluarga (KK).
+                                    terdekat dengan SMAN 1 Makassar berdasarkan Kartu Keluarga (KK).
                                 </p>
                             </div>
                             <div class="pt-4 mt-4 border-t border-slate-100 text-[11px] text-slate-400 font-medium">
@@ -585,7 +585,7 @@
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Jalur Prestasi</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
                                     Berdasarkan nilai akumulasi rapor SD kelas 4–6 atau sertifikat kejuaraan akademik
-                                    (OSN), seni budaya Toraja (FLS2N), maupun olahraga (O2SN).
+                                    (OSN), seni budaya Bugis-Makassar (FLS2N), maupun olahraga (O2SN).
                                 </p>
                             </div>
                             <div class="pt-4 mt-4 border-t border-slate-100 text-[11px] text-slate-400 font-medium">
@@ -608,7 +608,7 @@
                                 <h3 class="font-bold text-lg text-slate-900 mt-3">Perpindahan Tugas</h3>
                                 <p class="text-xs text-slate-600 mt-2 leading-relaxed">
                                     Bagi calon peserta didik yang orang tua/walinya mengalami perpindahan tugas instansi
-                                    dinas/kantor resmi ke wilayah Toraja Utara.
+                                    dinas/kantor resmi ke wilayah Kota Makassar.
                                 </p>
                             </div>
                             <div class="pt-4 mt-4 border-t border-slate-100 text-[11px] text-slate-400 font-medium">
@@ -918,7 +918,7 @@
                                 <h4 class="font-bold text-purple-900 mb-1">Khusus Jalur Perpindahan Tugas Orang Tua:
                                 </h4>
                                 <p class="text-slate-600">Surat penugasan resmi dari pimpinan instansi/lembaga/kantor
-                                    atau TNI/Polri tempat orang tua/wali bertugas di Toraja Utara.</p>
+                                    atau TNI/Polri tempat orang tua/wali bertugas di Kota Makassar.</p>
                             </div>
                         </div>
                     </div>
@@ -934,7 +934,7 @@
                             <span>Portal Pendaftaran Mandiri Resmi</span>
                         </div>
                         <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
-                            Siap Menjadi Siswa Baru di <%= profil.nama_sekolah || 'UPT SMPN 1 Rantepao' %>?
+                            Siap Menjadi Siswa Baru di <%= profil.nama_sekolah || 'UPT SMAN 1 Makassar' %>?
                         </h2>
                         <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
                             Seluruh proses pendaftaran dilakukan secara mandiri melalui Akun Calon Siswa. Silakan buat akun baru untuk mengisi formulir lengkap data diri, asal sekolah, data orang tua/wali, serta mengunggah berkas persyaratan (Pas Foto, KK, Akta Kelahiran, dan Ijazah/SKL).
@@ -989,7 +989,7 @@
                                     class="fa-solid fa-chevron-down text-blue-600 transition-transform duration-300 group-open:rotate-180 text-xs"></i>
                             </summary>
                             <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-                                Tidak ada biaya apa pun. Seluruh tahapan proses PPDB di UPT SMPN 1 Rantepao
+                                Tidak ada biaya apa pun. Seluruh tahapan proses PPDB di UPT SMAN 1 Makassar
                                 diselenggarakan secara <strong>100% GRATIS</strong> tanpa pungutan biaya.
                             </p>
                         </details>
@@ -1019,7 +1019,7 @@
                                     class="fa-solid fa-chevron-down text-blue-600 transition-transform duration-300 group-open:rotate-180 text-xs"></i>
                             </summary>
                             <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-                                Ya! SMPN 1 Rantepao sangat mengapresiasi bakat seni budaya lokal seperti tari Pa'gellu,
+                                Ya! SMAN 1 Makassar sangat mengapresiasi bakat seni budaya lokal seperti tari Pa'gellu,
                                 musik bambu, pidato bahasa Toraja, dan seni lainnya yang memiliki piagam resmi dari
                                 instansi pemerintah atau festival terakreditasi.
                             </p>
@@ -1208,7 +1208,7 @@
                                     <div>
                                         <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Lembar Bukti Status PPDB 2026/2027</p>
                                         <h3 class="text-base sm:text-lg font-black text-blue-950 leading-tight"><%= profil.nama_sekolah || 'SMP NEGERI 1 RANTEPAO' %></h3>
-                                        <p class="text-[11px] text-slate-400">Toraja Utara, Sulawesi Selatan</p>
+                                        <p class="text-[11px] text-slate-400">Kota Makassar, Sulawesi Selatan</p>
                                     </div>
                                 </div>
                                 <div class="text-left sm:text-right">
@@ -1255,7 +1255,7 @@
                                     <span>Catatan Resmi Panitia PPDB:</span>
                                 </p>
                                 <p class="leading-relaxed">
-                                    ${p.catatan ? p.catatan : 'Berkas pendaftaran sedang dalam peninjauan oleh tim panitia PPDB UPT SMPN 1 Rantepao.'}
+                                    ${p.catatan ? p.catatan : 'Berkas pendaftaran sedang dalam peninjauan oleh tim panitia PPDB UPT SMAN 1 Makassar.'}
                                 </p>
                             </div>
 

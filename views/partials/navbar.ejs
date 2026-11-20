@@ -40,8 +40,8 @@
                             <% }) %>
                                 <% } else { %>
                                     <span class="text-slate-300">Selamat datang di Portal Resmi <%=
-                                            profilData.nama_sekolah || 'UPT SMPN 1 Rantepao' %> &mdash; Melayani dengan
-                                            integritas, prestasi, dan keluhuran budaya Toraja.</span>
+                                            profilData.nama_sekolah || 'UPT SMAN 1 Makassar' %> &mdash; Melayani dengan
+                                            integritas, prestasi, dan keluhuran budaya Bugis-Makassar.</span>
                                     <% } %>
                 </marquee>
             </div>
@@ -59,7 +59,7 @@
                 <a href="/" class="flex items-center space-x-2.5 sm:space-x-3.5 group flex-shrink-0">
                     <div class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                         <% if (profilData && profilData.logo_sekolah) { %>
-                            <img src="/uploads/profil/<%= profilData.logo_sekolah %>" alt="Logo <%= profilData.nama_sekolah || 'SMPN 1 Rantepao' %>" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                            <img src="/uploads/profil/<%= profilData.logo_sekolah %>" alt="Logo <%= profilData.nama_sekolah || 'SMAN 1 Makassar' %>" class="w-full h-full object-contain" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
                             <span class="hidden">S1</span>
                         <% } else { %>
                             <span>S1</span>
@@ -68,10 +68,10 @@
                     <div class="min-w-0">
                         <h1
                             class="font-black text-xs xs:text-sm sm:text-base md:text-lg leading-tight tracking-tight text-white group-hover:text-amber-400 transition-colors truncate max-w-[170px] xs:max-w-[220px] sm:max-w-none">
-                            <%= profilData.nama_sekolah || 'SMPN 1 RANTEPAO' %>
+                            <%= profilData.nama_sekolah || 'SMAN 1 MAKASSAR' %>
                         </h1>
                         <p class="text-[9.5px] xs:text-[10.5px] sm:text-xs text-amber-400 font-medium truncate max-w-[170px] xs:max-w-[220px] sm:max-w-none">
-                            Kab. Toraja Utara • Akreditasi <%= profilData.akreditasi || 'A' %>
+                            <%= (typeof profilData !== 'undefined' && profilData.wilayah_lokasi) ? profilData.wilayah_lokasi : 'Kota Makassar' %> • Akreditasi <%= profilData.akreditasi || 'A' %>
                         </p>
                     </div>
                 </a>

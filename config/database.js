@@ -19,7 +19,7 @@ db.getConnection((err, connection) => {
     if (err) {
         console.error('❌ Gagal terhubung ke MySQL:', err.message);
     } else {
-        console.log('✅ Terhubung ke database: db_smpn1_rantepao');
+        console.log('✅ Terhubung ke database: db_sman1_makassar');
         connection.release();
     }
 });

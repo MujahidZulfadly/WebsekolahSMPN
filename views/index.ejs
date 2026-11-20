@@ -2,7 +2,7 @@
 <html lang="id" class="scroll-smooth">
 
 <head>
-    <%- include('partials/head', { title: (profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' ) + ' - Kabupaten Toraja Utara'
+    <%- include('partials/head', { title: (profil.nama_sekolah || 'UPT SMAN 1 MAKASSAR' ) + ' - Kota Makassar'
         }) %>
 </head>
 
@@ -21,7 +21,7 @@
             <!-- School Logo Monogram with Rotating/Pulsing Animation -->
             <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center transform hover:scale-105 transition-transform p-2">
                 <% if (profil && profil.logo_sekolah) { %>
-                    <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>" class="w-full h-full object-contain relative z-10 drop-shadow-md" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                    <img src="/uploads/profil/<%= profil.logo_sekolah %>" alt="Logo <%= profil.nama_sekolah || 'SMAN 1 Makassar' %>" class="w-full h-full object-contain relative z-10 drop-shadow-md" onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
                     <span class="hidden animate-pulse tracking-tight">S1</span>
                 <% } else { %>
                     <span class="animate-pulse tracking-tight">S1</span>
@@ -31,10 +31,10 @@
 
             <!-- School Title & Subtitle -->
             <h2 class="text-xl sm:text-2xl font-black text-white mt-6 tracking-wide text-center">
-                <%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %>
+                <%= profil.nama_sekolah || 'UPT SMAN 1 MAKASSAR' %>
             </h2>
             <p class="text-xs sm:text-sm text-amber-400 font-medium mt-1 tracking-wider text-center">
-                Kabupaten Toraja Utara • Akreditasi <%= profil.akreditasi || 'A' %>
+                Kota Makassar • Akreditasi <%= profil.akreditasi || 'A' %>
             </p>
 
             <!-- Loading Bar with Amber-400 -->
@@ -93,7 +93,7 @@
                         <%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0) ? heroSliders[0].judul : 'Pendidikan Berkualitas' %>
                     </h2>
                     <p id="slide-desc" class="mt-2.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-100 leading-relaxed font-normal line-clamp-3 sm:line-clamp-none">
-                        <%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0) ? (heroSliders[0].deskripsi || '') : ('Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. ' + (typeof profil !== 'undefined' && profil.nama_sekolah ? profil.nama_sekolah : 'UPT SMPN 1 Rantepao') + ' berkomitmen mewujudkan sekolah yang Edukatif, Dinamis, dan Unggul di Toraja Utara.') %>
+                        <%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0) ? (heroSliders[0].deskripsi || '') : ('Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. ' + (typeof profil !== 'undefined' && profil.nama_sekolah ? profil.nama_sekolah : 'UPT SMAN 1 Makassar') + ' berkomitmen mewujudkan sekolah yang Edukatif, Dinamis, dan Unggul di Kota Makassar.') %>
                     </p>
                     <div class="mt-5 sm:mt-7">
                         <a id="slide-btn" href="<%= (typeof heroSliders !== 'undefined' && heroSliders && heroSliders.length > 0 && heroSliders[0].link_tombol) ? heroSliders[0].link_tombol : '#profil' %>"
@@ -145,7 +145,7 @@
             })) : [
                 {
                     title: "Pendidikan Berkualitas",
-                    desc: "Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. UPT SMPN 1 Rantepao berkomitmen mewujudkan generasi yang Edukatif, Dinamis, dan Optimis.",
+                    desc: "Pendidikan Berkualitas bermula pada Pendidikan Berkarakter, Visioner, dan Berbudaya. UPT SMAN 1 Makassar berkomitmen mewujudkan generasi yang Edukatif, Dinamis, dan Optimis.",
                     btnText: "Lihat Selengkapnya",
                     btnLink: "#profil"
                 }
@@ -214,7 +214,16 @@
 
         </script>
 
-        <!-- PPDB 2026 CALLOUT RIBBON -->
+        <!-- PPDB CALLOUT RIBBON (SISTEM ON/OFF: OTOMATIS TAMPIL JIKA JALUR DIBUKA DI ADMIN PPDB, SEMBUNYI JIKA DITUTUP) -->
+        <% 
+            // Cek status loket secara ketat (case-insensitive & anti whitespace)
+            const rawStatusLoket = (typeof ppdbSetting !== 'undefined' && ppdbSetting && ppdbSetting.status_loket) 
+                ? String(ppdbSetting.status_loket).trim().toLowerCase() 
+                : '';
+            // Loket dianggap terbuka HANYA jika status bernilai aktif dan BUKAN 'tutup'
+            const isPpdbOpen = rawStatusLoket !== '' && rawStatusLoket !== 'tutup';
+        %>
+        <% if (isPpdbOpen) { %>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20" data-aos="fade-up">
             <div
                 class="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-blue-950 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-amber-300">
@@ -226,10 +235,10 @@
                     <div>
                         <span
                             class="inline-block px-3 py-0.5 rounded-full bg-blue-950 text-white font-black text-[10px] tracking-wider uppercase mb-1">
-                            PPDB ONLINE T.A 2026/2027
+                            PPDB ONLINE T.A <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.tahun_ajaran) ? ppdbSetting.tahun_ajaran : '2026/2027' %>
                         </span>
                         <h3 class="text-lg sm:text-xl font-black leading-snug">
-                            Penerimaan Peserta Didik Baru Resmi Dibuka!
+                            <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.status_loket === 'Pengumuman') ? 'Pengumuman Kelulusan PPDB Telah Dirilis!' : ((typeof ppdbSetting !== 'undefined' && ppdbSetting.status_loket === 'Daftar Ulang') ? 'Masa Daftar Ulang Siswa Baru Sedang Berlangsung!' : ((typeof ppdbSetting !== 'undefined' && ppdbSetting.status_loket === 'Verifikasi') ? 'Tahap Verifikasi Berkas PPDB Sedang Berlangsung' : 'Penerimaan Peserta Didik Baru Resmi Dibuka!')) %>
                         </h3>
                         <p class="text-xs sm:text-sm text-blue-950/80 font-medium mt-0.5">
                             Tersedia 4 Jalur Seleksi: Zonasi, Afirmasi, Prestasi, dan Perpindahan Tugas Orang Tua. Cek
@@ -247,6 +256,7 @@
                 </div>
             </div>
         </div>
+        <% } %>
 
         <!-- ============================================================== -->
         <!-- SAMBUTAN KEPALA SEKOLAH (BERADA TEPAT DI ATAS VISI & MISI) -->
@@ -327,7 +337,7 @@
                                     </h3>
 
                                     <p class="text-xs font-bold text-slate-500 mt-0.5">
-                                        Kepala UPT SMPN 1 Rantepao
+                                        Kepala UPT SMAN 1 Makassar
                                     </p>
 
                                     <!-- NIP & Location Footer -->
@@ -340,7 +350,7 @@
                                         <span
                                             class="inline-flex items-center gap-1.5 text-[11px] text-amber-600 font-bold uppercase tracking-wider">
                                             <i class="fa-solid fa-location-dot text-amber-500"></i>
-                                            <span>Toraja Utara</span>
+                                            <span>Kota Makassar</span>
                                         </span>
                                     </div>
                                 </div>
@@ -369,13 +379,13 @@
                                 <p
                                     class="text-slate-700 text-sm sm:text-base leading-relaxed relative z-10 italic font-medium pl-6 border-l-4 border-amber-400 text-justify">
                                     "<%= profil.sambutan_kepsek
-                                        || 'Selamat datang di situs resmi UPT SMPN 1 Rantepao. Kami berkomitmen untuk terus berinovasi dalam mewujudkan pendidikan yang bermutu, inklusif, dan berwawasan masa depan bagi seluruh putra-putri bangsa. Mari bersama-sama kita wujudkan generasi cerdas, berprestasi, dan berakhlak mulia.'
+                                        || 'Selamat datang di situs resmi UPT SMAN 1 Makassar. Kami berkomitmen untuk terus berinovasi dalam mewujudkan pendidikan yang bermutu, inklusif, dan berwawasan masa depan bagi seluruh putra-putri bangsa. Mari bersama-sama kita wujudkan generasi cerdas, berprestasi, dan berakhlak mulia.'
                                         %>"
                                 </p>
                             </div>
 
                             <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-2 text-justify">
-                                Sebagai sekolah rujukan di Kabupaten Toraja Utara, kami terus mengintegrasikan
+                                Sebagai sekolah rujukan di Kota Makassar, kami terus mengintegrasikan
                                 implementasi
                                 <strong>Kurikulum Merdeka</strong> dengan pembinaan karakter kebangsaan dan pelestarian
                                 nilai-nilai kearifan budaya lokal Toraja. Sinergi antara para pendidik, peserta didik,
@@ -423,7 +433,7 @@
                         <h3 class="text-2xl font-black text-blue-950 mt-1 mb-4">Visi Sekolah</h3>
                         <p class="text-slate-700 text-sm sm:text-base leading-relaxed font-normal font-sans text-left sm:text-justify">
                             "<%= profil.visi
-                                || 'Terwujudnya Peserta Didik yang Beriman, Berakhlak Mulia, Cerdas, Terampil, Mandiri, dan Berbudaya Toraja.'
+                                || 'Terwujudnya Peserta Didik yang Beriman, Berakhlak Mulia, Cerdas, Terampil, Mandiri, dan Berbudaya Bugis-Makassar.'
                                 %>"
                         </p>
                     </div>
@@ -740,7 +750,7 @@
                         </h2>
                         <p class="text-xs sm:text-sm text-slate-500 mt-2">
                             Pendidik dan staf profesional pembimbing tunas bangsa di <%= profil.nama_sekolah
-                                || 'SMPN 1 Rantepao' %>.
+                                || 'SMAN 1 Makassar' %>.
                         </p>
                     </div>
                 </div>
@@ -944,7 +954,7 @@
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-300 mt-2">
                         Wadah kemitraan sinergis antara masyarakat, orang tua peserta didik, dan sekolah dalam
-                        mewujudkan keunggulan mutu pendidikan di <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>.
+                        mewujudkan keunggulan mutu pendidikan di <%= profil.nama_sekolah || 'SMAN 1 Makassar' %>.
                     </p>
                 </div>
 
@@ -1168,7 +1178,7 @@
                             </h2>
                             <p class="text-xs sm:text-sm text-slate-500 mt-2">
                                 Fasilitas unggulan, sarana prasarana penunjang pembelajaran, dan ragam dokumentasi di
-                                lingkungan <%= profil.nama_sekolah || 'SMPN 1 Rantepao' %>.
+                                lingkungan <%= profil.nama_sekolah || 'SMAN 1 Makassar' %>.
                             </p>
                         </div>
 
@@ -1377,7 +1387,7 @@
                                     Informasi & Layanan
                                 </span>
                                 <h2 class="text-3xl sm:text-4xl font-black text-blue-950 mt-3 tracking-tight">
-                                    Hubungi SMPN 1 Rantepao
+                                    Hubungi SMAN 1 Makassar
                                 </h2>
                                 <p class="text-xs sm:text-sm text-slate-600 mt-2">
                                     Punya pertanyaan seputar penerimaan siswa baru, kurikulum, atau informasi lainnya?
@@ -1464,13 +1474,13 @@
                                                     <i class="fa-solid fa-address-book text-[9px]"></i> Info Kontak
                                                 </div>
                                                 <h3 class="text-base sm:text-lg font-black text-amber-400 leading-snug">
-                                                    <%= profil.nama_sekolah || 'UPT SMPN 1 RANTEPAO' %>
+                                                    <%= profil.nama_sekolah || 'UPT SMAN 1 MAKASSAR' %>
                                                 </h3>
                                                 <div class="space-y-2.5 text-xs text-slate-300 mt-3">
                                                     <p class="flex items-start gap-2.5">
                                                         <i class="fa-solid fa-location-dot text-amber-400 text-xs mt-1 shrink-0"></i>
                                                         <span class="leading-relaxed">
-                                                            <%= profil.alamat || 'Jl. Budi Utomo No. 10, Rantepao, Kec. Rantepao, Toraja Utara, Sulawesi Selatan' %>
+                                                            <%= profil.alamat || 'Jl. Budi Utomo No. 10, Rantepao, Kec. Rantepao, Kota Makassar, Sulawesi Selatan' %>
                                                         </span>
                                                     </p>
                                                     <p class="flex items-center gap-2.5">
@@ -1498,7 +1508,7 @@
                                                         <i class="fa-solid fa-map-location-dot text-blue-900 text-xs"></i>
                                                         <%= profil.label_lokasi || 'Lokasi Sekolah' %>
                                                     </h4>
-                                                    <a href="https://maps.google.com/?q=<%= encodeURIComponent((profil.nama_sekolah || 'SMP Negeri 1 Rantepao') + ' ' + (profil.alamat || 'Rantepao Toraja Utara')) %>"
+                                                    <a href="https://maps.google.com/?q=<%= encodeURIComponent((profil.nama_sekolah || 'SMA Negeri 1 Makassar') + ' ' + (profil.alamat || 'Rantepao Kota Makassar')) %>"
                                                        target="_blank" rel="noopener noreferrer"
                                                        class="text-[10px] font-bold text-blue-900 hover:text-amber-600 hover:underline flex items-center gap-1 transition">
                                                         <span>Peta Penuh</span>
@@ -1516,17 +1526,17 @@
                                                                 <i class="fa-solid fa-map-pin text-sm text-blue-900"></i>
                                                             </div>
                                                             <p class="text-xs font-black text-slate-800 line-clamp-1">
-                                                                <%= profil.nama_sekolah || 'UPT SMP Negeri 1 Rantepao' %>
+                                                                <%= profil.nama_sekolah || 'UPT SMA Negeri 1 Makassar' %>
                                                             </p>
                                                             <p class="text-[10px] text-slate-500 mt-0.5 line-clamp-2 px-1">
-                                                                <%= profil.alamat || 'Jl. Budi Utomo No. 10, Rantepao, Kabupaten Toraja Utara' %>
+                                                                <%= profil.alamat || 'Jl. Budi Utomo No. 10, Rantepao, Kota Makassar' %>
                                                             </p>
                                                         </div>
                                                     <% } %>
                                                 </div>
                                             </div>
                                             <div class="pt-2.5 mt-1 border-t border-slate-100 text-[10px] text-slate-500 flex items-center justify-between">
-                                                <span><%= profil.wilayah_lokasi || 'Kec. Rantepao, Toraja Utara' %></span>
+                                                <span><%= profil.wilayah_lokasi || 'Kec. Rantepao, Kota Makassar' %></span>
                                                 <span class="text-emerald-700 font-semibold flex items-center gap-1">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> <%= profil.keterangan_lokasi || 'Gedung Utama' %>
                                                 </span>
@@ -1814,7 +1824,7 @@
 
                                     lbImg.src = src;
                                     lbJudul.textContent = judul;
-                                    lbDeskripsi.textContent = deskripsi || 'Dokumentasi kegiatan dan sarana UPT SMP Negeri 1 Rantepao.';
+                                    lbDeskripsi.textContent = deskripsi || 'Dokumentasi kegiatan dan sarana UPT SMA Negeri 1 Makassar.';
                                     lbTgl.textContent = tgl;
                                     lbBadge.textContent = kategori;
 
@@ -1937,7 +1947,7 @@
                                         </div>
                                         <div>
                                             <h3 class="font-black text-lg text-blue-950">Kalender Akademik Sekolah</h3>
-                                            <p class="text-xs text-slate-500">Jadwal kegiatan, ujian, rapat, dan hari libur SMPN 1 Rantepao</p>
+                                            <p class="text-xs text-slate-500">Jadwal kegiatan, ujian, rapat, dan hari libur SMAN 1 Makassar</p>
                                         </div>
                                     </div>
                                     <button type="button" onclick="closeAllKalenderModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 flex items-center justify-center transition">

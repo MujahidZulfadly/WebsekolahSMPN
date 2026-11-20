@@ -36,13 +36,26 @@ app.use(session({
     }
 }));
 
-// Global Middleware: Sediakan Data Profil Sekolah Universal untuk Seluruh View & Partial EJS
+// Global Middleware: Sediakan Data Profil Sekolah & Pengaturan PPDB Universal untuk Seluruh View & Partial EJS
 app.use(async (req, res, next) => {
     try {
-        const [profilRows] = await db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1');
+        const [[profilRows], [ppdbRows]] = await Promise.all([
+            db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1'),
+            db.query('SELECT * FROM ppdb_pengaturan ORDER BY id ASC LIMIT 1')
+        ]);
         res.locals.profil = profilRows[0] || {};
+        res.locals.ppdbSetting = ppdbRows[0] || {
+            status_loket: 'Tutup',
+            tahun_ajaran: '2026/2027',
+            nama_gelombang: 'Gelombang 1 (Reguler & Zonasi)'
+        };
     } catch (e) {
         res.locals.profil = {};
+        res.locals.ppdbSetting = {
+            status_loket: 'Tutup',
+            tahun_ajaran: '2026/2027',
+            nama_gelombang: 'Gelombang 1 (Reguler & Zonasi)'
+        };
     }
     next();
 });
@@ -257,7 +270,7 @@ async function initKalenderAkademik() {
                 tanggal_selesai DATE NULL,
                 kategori ENUM('Akademik', 'Ujian', 'Libur', 'Kegiatan', 'Rapat') NOT NULL DEFAULT 'Akademik',
                 warna_badge VARCHAR(30) NOT NULL DEFAULT 'blue',
-                lokasi VARCHAR(150) NULL DEFAULT 'Kampus SMPN 1 Rantepao',
+                lokasi VARCHAR(150) NULL DEFAULT 'Kampus SMAN 1 Makassar',
                 urutan INT NOT NULL DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -276,7 +289,7 @@ async function initStrukturOrganisasi() {
         await db.query(`
             CREATE TABLE IF NOT EXISTS struktur_organisasi_info (
                 id INT PRIMARY KEY DEFAULT 1,
-                judul VARCHAR(255) NOT NULL DEFAULT 'Struktur Organisasi UPT SMP Negeri 1 Rantepao',
+                judul VARCHAR(255) NOT NULL DEFAULT 'Struktur Organisasi UPT SMA Negeri 1 Makassar',
                 periode VARCHAR(100) NOT NULL DEFAULT 'Tahun Ajaran 2025/2026',
                 foto_bagan VARCHAR(255) NULL,
                 keterangan TEXT NULL,
@@ -301,7 +314,7 @@ async function initStrukturOrganisasi() {
         if (infoRows.length === 0) {
             await db.query(`
                 INSERT INTO struktur_organisasi_info (id, judul, periode, foto_bagan, keterangan)
-                VALUES (1, 'Struktur Organisasi UPT SMP Negeri 1 Rantepao', 'Tahun Ajaran 2025/2026', NULL, 'Bagan hierarki kepemimpinan, koordinasi kelembagaan, pembagian wewenang manajerial, serta tata kelola administrasi akademik dan kesiswaan di lingkungan UPT SMP Negeri 1 Rantepao.')
+                VALUES (1, 'Struktur Organisasi UPT SMA Negeri 1 Makassar', 'Tahun Ajaran 2025/2026', NULL, 'Bagan hierarki kepemimpinan, koordinasi kelembagaan, pembagian wewenang manajerial, serta tata kelola administrasi akademik dan kesiswaan di lingkungan UPT SMA Negeri 1 Makassar.')
             `);
         }
 
@@ -345,7 +358,7 @@ async function initOsisAkun() {
             const defaultHash = await bcrypt.hash('osis123', 10);
             await db.query(`
                 INSERT INTO osis_akun (username, password, nama_pengurus, jabatan)
-                VALUES ('osis', ?, 'Pengurus Inti OSIS', 'Pengurus OSIS UPT SMPN 1 Rantepao')
+                VALUES ('osis', ?, 'Pengurus Inti OSIS', 'Pengurus OSIS UPT SMAN 1 Makassar')
             `, [defaultHash]);
         }
     } catch (err) {
@@ -372,7 +385,7 @@ async function initOsisGaleri() {
         const [rows] = await db.query('SELECT COUNT(*) as count FROM osis_galeri');
         if (rows[0].count === 0) {
             const initialGaleri = [
-                ['Upacara Pelantikan Pengurus OSIS 2025/2026', 'Pelantikan', 'September 2025', 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop', 'Pelantikan resmi jajaran pengurus OSIS UPT SMP Negeri 1 Rantepao Masa Bakti 2025/2026.'],
+                ['Upacara Pelantikan Pengurus OSIS 2025/2026', 'Pelantikan', 'September 2025', 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop', 'Pelantikan resmi jajaran pengurus OSIS UPT SMA Negeri 1 Makassar Masa Bakti 2025/2026.'],
                 ['Latihan Dasar Kepemimpinan Siswa (LDKS) Terbuka', 'LDKS', 'Oktober 2025', 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop', 'Pembekalan kepemimpinan, kedisiplinan, dan kekompakan bagi calon pengurus muda OSIS.'],
                 ['Laga Final Pekan Olahraga & Seni (PORSENI)', 'PORSENI', 'Desember 2025', 'https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800&auto=format&fit=crop', 'Kemeriahan kompetisi antarkelas cabang olahraga dan pentas seni akhir semester.'],
                 ['Aksi Bersih Lingkungan & Peduli Sa\'dan', 'Adiwiyata', 'Januari 2026', 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=800&auto=format&fit=crop', 'Kegiatan bakti sosial dan aksi nyata peduli lingkungan sungai Sa\'dan bersama komunitas hijau.'],
@@ -614,7 +627,8 @@ app.get('/', async (req, res) => {
             statistikPengunjung,
             [strukturInfoRows],
             [strukturAnggota],
-            [heroSliders]
+            [heroSliders],
+            [ppdbPengaturanRows]
         ] = await Promise.all([
             db.query('SELECT * FROM profil_sekolah WHERE id_profil = 1'),
             db.query(`
@@ -641,11 +655,13 @@ app.get('/', async (req, res) => {
             getStatistikPengunjung(),
             db.query('SELECT * FROM struktur_organisasi_info WHERE id = 1'),
             db.query('SELECT * FROM struktur_organisasi_anggota ORDER BY urutan ASC, id ASC'),
-            db.query("SELECT * FROM hero_slider WHERE status_aktif = 'Aktif' ORDER BY urutan ASC, id ASC")
+            db.query("SELECT * FROM hero_slider WHERE status_aktif = 'Aktif' ORDER BY urutan ASC, id ASC"),
+            db.query('SELECT * FROM ppdb_pengaturan ORDER BY id ASC LIMIT 1')
         ]);
 
         const profil = profilRows[0] || {};
         const strukturInfo = strukturInfoRows[0] || {};
+        const ppdbSetting = (ppdbPengaturanRows && ppdbPengaturanRows[0]) ? ppdbPengaturanRows[0] : (res.locals.ppdbSetting || { status_loket: 'Tutup' });
         const statistik = {
             siswaAktif: profil.jumlah_siswa || 886,
             totalGuru: statsData[0]?.totalGuru || guru.length,
@@ -669,7 +685,8 @@ app.get('/', async (req, res) => {
             kalenderAkademik,
             strukturInfo,
             strukturAnggota,
-            heroSliders: heroSliders || []
+            heroSliders: heroSliders || [],
+            ppdbSetting
         });
     } catch (error) {
         res.status(500).send('Terjadi kesalahan server: ' + error.message);
@@ -839,7 +856,7 @@ app.get('/civitas', async (req, res) => {
             pengumuman,
             guru,
             activePage: 'guru',
-            title: 'Direktori Civitas Akademik - ' + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao')
+            title: 'Direktori Civitas Akademik - ' + (profil.nama_sekolah || 'UPT SMAN 1 Makassar')
         });
     } catch (error) {
         res.status(500).send('Kesalahan server civitas: ' + error.message);
@@ -877,7 +894,7 @@ app.get('/struktur-organisasi', async (req, res) => {
             strukturInfo,
             strukturAnggota,
             activePage: 'profil',
-            title: 'Struktur Organisasi - ' + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao')
+            title: 'Struktur Organisasi - ' + (profil.nama_sekolah || 'UPT SMAN 1 Makassar')
         });
     } catch (error) {
         res.status(500).send('Kesalahan server Struktur Organisasi: ' + error.message);
@@ -900,7 +917,7 @@ app.get('/komite', async (req, res) => {
             pengumuman,
             komite,
             activePage: 'komite',
-            title: 'Struktur Komite Sekolah - ' + (profil.nama_sekolah || 'UPT SMPN 1 Rantepao')
+            title: 'Struktur Komite Sekolah - ' + (profil.nama_sekolah || 'UPT SMAN 1 Makassar')
         });
     } catch (error) {
         res.status(500).send('Kesalahan server komite: ' + error.message);
@@ -917,7 +934,7 @@ const DAFTAR_LAYANAN = [
         namaLengkap: 'Buku Tamu Digital Sekolah',
         kategori: 'Pelayanan Publik & Tamu Kedinasan',
         icon: 'fa-book-open-reader',
-        deskripsi: 'Sistem pencatatan dan buku tamu digital untuk tamu kedinasan, wali murid, dan pengunjung UPT SMP Negeri 1 Rantepao.',
+        deskripsi: 'Sistem pencatatan dan buku tamu digital untuk tamu kedinasan, wali murid, dan pengunjung UPT SMA Negeri 1 Makassar.',
         catatan: 'Portal sistem buku tamu mandiri (eksternal).'
     },
     {
@@ -1050,8 +1067,8 @@ app.get('/osis', async (req, res) => {
             nama: 'Gabriel Ranteallo',
             kelas: 'Kelas IX-A',
             periode: '2025/2026',
-            visi: 'Terwujudnya OSIS SMPN 1 Rantepao yang Berkarakter, Inovatif, Kolaboratif, serta Menjunjung Tinggi Keluhuran Budaya Toraja.',
-            teks: `Salam hangat dan salam sejahtera untuk seluruh rekan-rekan siswa, bapak/ibu guru pembina, dan civitas akademika UPT SMP Negeri 1 Rantepao tercinta.\n\nPuji dan syukur kita panjatkan kepada Tuhan Yang Maha Esa atas kepercayaan yang diberikan kepada kami untuk mengemban amanah sebagai Pengurus OSIS Masa Bakti 2025/2026. Organisasi Siswa Intra Sekolah (OSIS) bukan sekadar wadah seremonial, melainkan rumah bersama untuk menempa jiwa kepemimpinan, menyalurkan bakat kreatif, dan memupuk solidaritas antar-angkatan.\n\nMengusung semangat falsafah Toraja "Misa' Kada Dipotuo, Pantan Kada Dipomate" (Bersatu kita teguh, bercerai kita runtuh), kami berkomitmen menjadikan OSIS sebagai jembatan aspirasi siswa yang inklusif, transparan, dan berdaya saing. Mari bersama-sama kita jadikan masa putih-biru ini penuh dengan torehan karya berharga, prestasi akademik maupun non-akademik, serta kebanggaan bagi almamater kita tercinta!`,
+            visi: 'Terwujudnya OSIS SMAN 1 Makassar yang Berkarakter, Inovatif, Kolaboratif, serta Menjunjung Tinggi Keluhuran Budaya Toraja.',
+            teks: `Salam hangat dan salam sejahtera untuk seluruh rekan-rekan siswa, bapak/ibu guru pembina, dan civitas akademika UPT SMA Negeri 1 Makassar tercinta.\n\nPuji dan syukur kita panjatkan kepada Tuhan Yang Maha Esa atas kepercayaan yang diberikan kepada kami untuk mengemban amanah sebagai Pengurus OSIS Masa Bakti 2025/2026. Organisasi Siswa Intra Sekolah (OSIS) bukan sekadar wadah seremonial, melainkan rumah bersama untuk menempa jiwa kepemimpinan, menyalurkan bakat kreatif, dan memupuk solidaritas antar-angkatan.\n\nMengusung semangat falsafah Toraja "Misa' Kada Dipotuo, Pantan Kada Dipomate" (Bersatu kita teguh, bercerai kita runtuh), kami berkomitmen menjadikan OSIS sebagai jembatan aspirasi siswa yang inklusif, transparan, dan berdaya saing. Mari bersama-sama kita jadikan masa putih-biru ini penuh dengan torehan karya berharga, prestasi akademik maupun non-akademik, serta kebanggaan bagi almamater kita tercinta!`,
             foto: 'ketua-osis.jpg'
         };
         try {
@@ -1136,7 +1153,7 @@ app.get('/osis', async (req, res) => {
             stats,
             activePage: 'osis',
             alert,
-            title: 'OSIS UPT SMP Negeri 1 Rantepao - Organisasi Siswa Intra Sekolah'
+            title: 'OSIS UPT SMA Negeri 1 Makassar - Organisasi Siswa Intra Sekolah'
         });
     } catch (error) {
         res.status(500).send('Kesalahan server OSIS: ' + error.message);
@@ -1154,7 +1171,7 @@ app.post('/osis/aspirasi', async (req, res) => {
         const subjek = `[Aspirasi OSIS - ${kategori_aspirasi || 'Umum'}] dari ${nama_siswa} (${kelas_kontak || 'Siswa'})`;
         await db.query(
             'INSERT INTO pesan_kontak (nama_pengirim, email_atau_wa, subjek, isi_pesan, status_baca) VALUES (?, ?, ?, ?, "Belum Dibaca")',
-            [nama_siswa.trim(), kelas_kontak || 'Siswa SMPN 1 Rantepao', subjek, isi_aspirasi.trim()]
+            [nama_siswa.trim(), kelas_kontak || 'Siswa SMAN 1 Makassar', subjek, isi_aspirasi.trim()]
         );
 
         res.redirect('/osis?status=success&msg=' + encodeURIComponent('Terima kasih! Aspirasi dan ide kreatifmu berhasil dikirimkan kepada pengurus OSIS dan pihak sekolah.'));
@@ -1795,7 +1812,7 @@ app.post('/admin/kalender/tambah', isAuthenticated, async (req, res) => {
             tanggal_selesai || null,
             kategori || 'Akademik',
             warna_badge || 'blue',
-            lokasi || 'Kampus SMPN 1 Rantepao',
+            lokasi || 'Kampus SMAN 1 Makassar',
             parseInt(urutan) || 0
         ]);
 
@@ -1821,7 +1838,7 @@ app.post('/admin/kalender/edit/:id', isAuthenticated, async (req, res) => {
             tanggal_selesai || null,
             kategori || 'Akademik',
             warna_badge || 'blue',
-            lokasi || 'Kampus SMPN 1 Rantepao',
+            lokasi || 'Kampus SMAN 1 Makassar',
             parseInt(urutan) || 0,
             req.params.id
         ]);
@@ -2029,13 +2046,13 @@ app.post('/admin/struktur-organisasi/info', isAuthenticated, upload.single('foto
                 INSERT INTO struktur_organisasi_info (id, judul, periode, keterangan, foto_bagan)
                 VALUES (1, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE judul = VALUES(judul), periode = VALUES(periode), keterangan = VALUES(keterangan), foto_bagan = VALUES(foto_bagan)
-            `, [judul || 'Struktur Organisasi UPT SMP Negeri 1 Rantepao', periode || 'Tahun Ajaran 2025/2026', keterangan || null, req.file.filename]);
+            `, [judul || 'Struktur Organisasi UPT SMA Negeri 1 Makassar', periode || 'Tahun Ajaran 2025/2026', keterangan || null, req.file.filename]);
         } else {
             await db.query(`
                 INSERT INTO struktur_organisasi_info (id, judul, periode, keterangan)
                 VALUES (1, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE judul = VALUES(judul), periode = VALUES(periode), keterangan = VALUES(keterangan)
-            `, [judul || 'Struktur Organisasi UPT SMP Negeri 1 Rantepao', periode || 'Tahun Ajaran 2025/2026', keterangan || null]);
+            `, [judul || 'Struktur Organisasi UPT SMA Negeri 1 Makassar', periode || 'Tahun Ajaran 2025/2026', keterangan || null]);
         }
         res.redirect('/admin?tab=struktur&status=success&msg=' + encodeURIComponent('Pengaturan bagan struktur organisasi berhasil diperbarui!'));
     } catch (error) {
@@ -2181,8 +2198,8 @@ app.get('/osis/dashboard', isOsisAuthenticated, async (req, res) => {
             nama: 'Gabriel Ranteallo',
             kelas: 'Kelas IX-A',
             periode: '2025/2026',
-            visi: 'Terwujudnya OSIS SMPN 1 Rantepao yang Berkarakter, Inovatif, Kolaboratif, serta Menjunjung Tinggi Keluhuran Budaya Toraja.',
-            teks: 'Salam hangat dan salam sejahtera untuk seluruh rekan-rekan siswa, bapak/ibu guru pembina, dan civitas akademika UPT SMP Negeri 1 Rantepao tercinta.\n\nPuji dan syukur kita panjatkan kepada Tuhan Yang Maha Esa atas kepercayaan yang diberikan kepada kami untuk mengemban amanah sebagai Pengurus OSIS Masa Bakti 2025/2026.',
+            visi: 'Terwujudnya OSIS SMAN 1 Makassar yang Berkarakter, Inovatif, Kolaboratif, serta Menjunjung Tinggi Keluhuran Budaya Toraja.',
+            teks: 'Salam hangat dan salam sejahtera untuk seluruh rekan-rekan siswa, bapak/ibu guru pembina, dan civitas akademika UPT SMA Negeri 1 Makassar tercinta.\n\nPuji dan syukur kita panjatkan kepada Tuhan Yang Maha Esa atas kepercayaan yang diberikan kepada kami untuk mengemban amanah sebagai Pengurus OSIS Masa Bakti 2025/2026.',
             foto: 'ketua-osis.jpg'
         };
 
@@ -2573,12 +2590,12 @@ app.post('/admin/profil/update', isAuthenticated, upload.fields([
             }
         }
 
-        let newLogoSekolah = oldProfil.logo_sekolah || 'logo-smpn1-rantepao.svg';
+        let newLogoSekolah = oldProfil.logo_sekolah || 'logo-sman1-makassar.png';
         if (logoSekolahFile) {
             newLogoSekolah = logoSekolahFile.filename;
             // Hapus file logo lama jika ada dan bukan default
             try {
-                if (oldProfil.logo_sekolah && oldProfil.logo_sekolah !== 'logo-smpn1-rantepao.svg' && oldProfil.logo_sekolah !== 'logo-smpn1-rantepao.png' && oldProfil.logo_sekolah !== newLogoSekolah) {
+                if (oldProfil.logo_sekolah && oldProfil.logo_sekolah !== 'logo-sman1-makassar.png' && oldProfil.logo_sekolah !== 'logo-sman1-makassar.png' && oldProfil.logo_sekolah !== newLogoSekolah) {
                     const oldLogoPath = path.join(__dirname, 'public/uploads/profil', oldProfil.logo_sekolah);
                     if (fs.existsSync(oldLogoPath)) {
                         fs.unlinkSync(oldLogoPath);
@@ -2603,7 +2620,7 @@ app.post('/admin/profil/update', isAuthenticated, upload.fields([
             email_sekolah, maps_embed,
             parseInt(jumlah_siswa) || 886, parseInt(jumlah_rombel) || 24,
             newFotoKepsek, newLogoSekolah,
-            label_lokasi || 'Lokasi Sekolah', keterangan_lokasi || 'Gedung Utama', wilayah_lokasi || 'Kec. Rantepao, Toraja Utara'
+            label_lokasi || 'Lokasi Sekolah', keterangan_lokasi || 'Gedung Utama', wilayah_lokasi || 'Kec. Rantepao, Kota Makassar'
         ]);
 
         // SINKRONISASI OTOMATIS KE TABEL GURU_STAF (DATA KEPALA SEKOLAH)
@@ -3148,6 +3165,22 @@ app.post('/admin/ppdb/pengaturan', isAuthenticated, async (req, res) => {
     }
 });
 
+// 5b. Toggle Cepat Buka/Tutup Jalur PPDB (Sistem ON/OFF Beranda & Pendaftaran)
+app.post('/admin/ppdb/toggle-loket', isAuthenticated, async (req, res) => {
+    try {
+        const { status_loket } = req.body;
+        const newStatus = status_loket === 'Tutup' ? 'Tutup' : 'Buka';
+        await db.query('UPDATE ppdb_pengaturan SET status_loket = ?', [newStatus]);
+        const msg = newStatus === 'Buka'
+            ? 'Jalur PPDB berhasil DIBUKA (Status: ON). Banner informasi PPDB kini TAMPIL di halaman Beranda.'
+            : 'Jalur PPDB berhasil DITUTUP (Status: OFF). Banner informasi PPDB kini TIDAK TAMPIL di halaman Beranda.';
+        res.redirect('/admin?tab=ppdb&status=success&msg=' + encodeURIComponent(msg));
+    } catch (error) {
+        console.error('Error toggle PPDB status:', error);
+        res.redirect('/admin?tab=ppdb&status=error&msg=' + encodeURIComponent('Gagal mengubah status jalur PPDB: ' + error.message));
+    }
+});
+
 // 6. Ekspor Data Pendaftar PPDB ke File Excel (.xlsx)
 app.get('/admin/ppdb/export', isAuthenticated, async (req, res) => {
     try {
@@ -3179,7 +3212,7 @@ app.get('/admin/ppdb/export', isAuthenticated, async (req, res) => {
         const setting = ppdbPengaturan[0] || {};
 
         const workbook = new ExcelJS.Workbook();
-        workbook.creator = 'UPT SMP Negeri 1 Rantepao';
+        workbook.creator = 'UPT SMA Negeri 1 Makassar';
         workbook.created = new Date();
 
         const worksheet = workbook.addWorksheet('Data Pendaftar PPDB', {
@@ -3497,7 +3530,7 @@ app.get('/api/halaman/:slug', async (req, res) => {
                         <i class="fa-solid fa-rotate text-emerald-500"></i>
                         Data tersinkronisasi otomatis dengan panel admin & database
                     </span>
-                    <span class="font-semibold text-slate-500">${profil.nama_sekolah || 'UPT SMPN 1 Rantepao'}</span>
+                    <span class="font-semibold text-slate-500">${profil.nama_sekolah || 'UPT SMAN 1 Makassar'}</span>
                 </div>
             `;
 
@@ -3574,7 +3607,7 @@ app.use((req, res, next) => {
         return res.status(404).json({ success: false, message: 'Endpoint atau resource tidak ditemukan (404).' });
     }
     res.status(404).render('404', {
-        title: 'Halaman Tidak Ditemukan (404) - ' + (res.locals.profil?.nama_sekolah || 'SMPN 1 Rantepao'),
+        title: 'Halaman Tidak Ditemukan (404) - ' + (res.locals.profil?.nama_sekolah || 'SMAN 1 Makassar'),
         activePage: ''
     });
 });
@@ -3628,5 +3661,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Website SMPN 1 Rantepao aktif di: http://localhost:${PORT}`);
+    console.log(`🚀 Website SMAN 1 Makassar aktif di: http://localhost:${PORT}`);
 });

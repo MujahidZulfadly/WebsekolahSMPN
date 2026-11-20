@@ -2,7 +2,7 @@
 <html lang="id" class="scroll-smooth">
 
 <head>
-    <%- include('../partials/head', { title: 'Dashboard Calon Siswa - PPDB SMPN 1 RANTEPAO' }) %>
+    <%- include('../partials/head', { title: 'Dashboard Calon Siswa - PPDB SMAN 1 MAKASSAR' }) %>
     <style>
         @media print {
             body {
@@ -48,7 +48,7 @@
                         Portal Mandiri Calon Siswa
                     </h1>
                     <p class="text-[11px] text-amber-400 font-medium">
-                        <%= (typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMPN 1 Rantepao' %> • PPDB 2026/2027
+                        <%= (typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMAN 1 Makassar' %> • PPDB 2026/2027
                     </p>
                 </div>
             </div>
@@ -180,11 +180,11 @@
                         </h2>
                         <p class="text-xs sm:text-sm mt-1 opacity-90 leading-relaxed max-w-2xl">
                             <% if (pendaftar.status_seleksi === 'Diterima') { %>
-                                Calon siswa diharapkan segera melakukan registrasi ulang di loket sekretariat UPT SMPN 1 Rantepao dengan membawa bukti cetak formulir dan dokumen asli.
+                                Calon siswa diharapkan segera melakukan registrasi ulang di loket sekretariat UPT SMAN 1 Makassar dengan membawa bukti cetak formulir dan dokumen asli.
                             <% } else if (pendaftar.status_seleksi === 'Berkas Terverifikasi') { %>
                                 Berkas formulir dan dokumen persyaratan Anda sudah diperiksa panitia sekolah dan memenuhi syarat administrasi. Pengumuman seleksi akhir akan diumumkan sesuai jadwal.
                             <% } else if (pendaftar.status_seleksi === 'Tidak Diterima') { %>
-                                Terima kasih atas partisipasi Anda mendaftar di SMPN 1 Rantepao. Tetap semangat menggapai cita-cita di jenjang pendidikan selanjutnya.
+                                Terima kasih atas partisipasi Anda mendaftar di SMAN 1 Makassar. Tetap semangat menggapai cita-cita di jenjang pendidikan selanjutnya.
                             <% } else { %>
                                 Pastikan seluruh formulir di bawah ini terisi lengkap beserta unggahan dokumen pas foto, kartu keluarga, dan akta kelahiran agar dapat segera diverifikasi.
                             <% } %>
@@ -349,7 +349,7 @@
                         <label class="block font-bold text-slate-700 uppercase tracking-wider mb-2">
                             Nama Sekolah Dasar Asal <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="asal_sekolah" required value="<%= pendaftar.asal_sekolah || '' %>" placeholder="Contoh: SDN 1 Rantepao / SD Katolik Renya Rosari"
+                        <input type="text" name="asal_sekolah" required value="<%= pendaftar.asal_sekolah || '' %>" placeholder="Contoh: SMP Negeri 6 Makassar / SD Katolik Renya Rosari"
                             class="w-full text-xs sm:text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition font-medium">
                     </div>
 
@@ -723,7 +723,7 @@
                     <label class="block font-bold text-slate-700 uppercase tracking-wider mb-2">
                         Catatan Tambahan untuk Panitia
                     </label>
-                    <textarea name="catatan" rows="3" placeholder="Contoh: Juara 1 OSN Matematika Tingkat Kabupaten Toraja Utara 2025, atau keterangan sertifikat lomba lainnya..."
+                    <textarea name="catatan" rows="3" placeholder="Contoh: Juara 1 OSN Matematika Tingkat Kota Makassar 2025, atau keterangan sertifikat lomba lainnya..."
                         class="w-full text-xs sm:text-sm px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition leading-relaxed"><%= pendaftar.catatan || '' %></textarea>
                 </div>
             </div>
@@ -753,10 +753,10 @@
         <!-- ============================================================== -->
         <div class="print-only print-card p-8 bg-white border border-slate-900 text-slate-900 text-xs">
             <div class="text-center pb-4 border-b-2 border-slate-900 mb-6">
-                <h2 class="text-lg font-black uppercase tracking-wider">PEMERINTAH KABUPATEN TORAJA UTARA</h2>
+                <h2 class="text-lg font-black uppercase tracking-wider">PEMERINTAH PROVINSI SULAWESI SELATAN</h2>
                 <h3 class="text-base font-black uppercase">DINAS PENDIDIKAN</h3>
-                <h1 class="text-xl font-extrabold uppercase mt-1">UPT SMP NEGERI 1 RANTEPAO</h1>
-                <p class="text-[11px] text-slate-600 mt-0.5"><%= (typeof profil !== 'undefined' && profil.alamat) ? profil.alamat : 'Jl. Sam Ratulangi No. 1, Rantepao' %> • Telp: <%= (typeof profil !== 'undefined' && profil.telepon) ? profil.telepon : '(0423) 21123' %></p>
+                <h1 class="text-xl font-extrabold uppercase mt-1"><%= (typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMAN 1 MAKASSAR' %></h1>
+                <p class="text-[11px] text-slate-600 mt-0.5"><%= (typeof profil !== 'undefined' && profil.alamat) ? profil.alamat : 'Jl. Gunung Bawakaraeng No. 53, Makassar' %> • Telp: <%= (typeof profil !== 'undefined' && profil.telepon) ? profil.telepon : '(0411) 3624440' %></p>
             </div>
 
             <div class="text-center mb-6">
@@ -823,8 +823,8 @@
                     <p class="font-bold underline uppercase">( <%= pendaftar.nama_siswa %> )</p>
                 </div>
                 <div>
-                    <p>Rantepao, <%= new Date().toLocaleDateString('id-ID') %></p>
-                    <p>Panitia PPDB UPT SMPN 1 Rantepao,</p>
+                    <p>Makassar, <%= new Date().toLocaleDateString('id-ID') %></p>
+                    <p>Panitia PPDB UPT SMAN 1 Makassar,</p>
                     <div class="h-16"></div>
                     <p class="font-bold underline">( TIM VERIFIKASI PPDB )</p>
                 </div>
@@ -844,7 +844,7 @@
 
     <!-- Dedicated Minimal Student Footer (No Public Website Footer) -->
     <footer class="no-print border-t border-slate-200 py-6 text-center text-xs text-slate-400 bg-white">
-        <p>&copy; <%= new Date().getFullYear() %> <%= (typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMPN 1 Rantepao' %> • Panitia PPDB Online</p>
+        <p>&copy; <%= new Date().getFullYear() %> <%= (typeof profil !== 'undefined' && profil.nama_sekolah) ? profil.nama_sekolah : 'UPT SMAN 1 Makassar' %> • Panitia PPDB Online</p>
     </footer>
 
 

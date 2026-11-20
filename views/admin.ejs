@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - SMPN 1 Rantepao</title>
+    <title>Panel Admin - <%= (typeof profil !== "undefined" && profil && profil.nama_sekolah) ? profil.nama_sekolah : "SMAN 1 Makassar" %></title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,7 +60,7 @@
                         <% } %>
                     </div>
                     <div class="truncate">
-                        <h1 class="font-bold text-xs sm:text-sm text-white tracking-wide leading-tight truncate"><%= (typeof profil !== 'undefined' && profil && profil.nama_sekolah) ? profil.nama_sekolah : 'SMPN 1 RANTEPAO' %></h1>
+                        <h1 class="font-bold text-xs sm:text-sm text-white tracking-wide leading-tight truncate"><%= (typeof profil !== 'undefined' && profil && profil.nama_sekolah) ? profil.nama_sekolah : 'SMAN 1 MAKASSAR' %></h1>
                         <span class="text-[10px] sm:text-[11px] font-medium text-amber-400">Control Panel Admin</span>
                     </div>
                 </div>
@@ -204,7 +204,7 @@
                 <span>Keluar (Logout)</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
             </a>
-            <p class="text-[11px] text-slate-500 text-center mt-2">&copy; SMPN 1 Rantepao</p>
+            <p class="text-[11px] text-slate-500 text-center mt-2">&copy; <%= (typeof profil !== "undefined" && profil && profil.nama_sekolah) ? profil.nama_sekolah : "SMAN 1 Makassar" %></p>
         </div>
     </aside>
 
@@ -219,7 +219,7 @@
                 </button>
                 <div class="truncate max-w-[170px] xs:max-w-[220px] sm:max-w-none">
                     <h2 id="topbar-title" class="font-black text-sm sm:text-lg text-slate-800 leading-tight truncate">Dashboard Overview</h2>
-                    <p class="text-[10px] sm:text-xs text-slate-400 truncate">Toraja Utara, Sulawesi Selatan</p>
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate">Kota Makassar, Sulawesi Selatan</p>
                 </div>
             </div>
 
@@ -434,7 +434,7 @@
                             </div>
                             <div>
                                 <h3 class="font-extrabold text-slate-800 text-base">Statistik Pengunjung Website (Real-Time)</h3>
-                                <p class="text-xs text-slate-500">Pantau lalu lintas dan aktivitas pengunjung website UPT SMPN 1 Rantepao</p>
+                                <p class="text-xs text-slate-500">Pantau lalu lintas dan aktivitas pengunjung website <%= (typeof profil !== "undefined" && profil && profil.nama_sekolah) ? profil.nama_sekolah : "SMAN 1 Makassar" %></p>
                             </div>
                         </div>
                         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold self-start sm:self-center">
@@ -508,7 +508,7 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
                             <span class="text-xs bg-amber-500 text-slate-950 font-bold px-2.5 py-1 rounded-full uppercase">Pintasan Cepat</span>
-                            <h3 class="text-xl font-bold mt-2">Selamat Datang di Panel Pengelolaan SMPN 1 Rantepao</h3>
+                            <h3 class="text-xl font-bold mt-2">Selamat Datang di Panel Pengelolaan <%= (typeof profil !== "undefined" && profil && profil.nama_sekolah) ? profil.nama_sekolah : "SMAN 1 Makassar" %></h3>
                             <p class="text-xs text-slate-300 mt-1">Gunakan tombol di samping untuk segera menerbitkan berita baru, mengelola PPDB, atau memperbarui data sekolah.</p>
                         </div>
                         <div class="flex flex-wrap gap-2.5">
@@ -1081,7 +1081,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Judul Bagian Struktur</label>
-                                <input type="text" name="judul" value="<%= (typeof strukturInfo !== 'undefined' && strukturInfo.judul) ? strukturInfo.judul : 'Struktur Organisasi UPT SMP Negeri 1 Rantepao' %>" required class="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
+                                <input type="text" name="judul" value="<%= (typeof strukturInfo !== 'undefined' && strukturInfo.judul) ? strukturInfo.judul : 'Struktur Organisasi UPT SMAN 1 Makassar' %>" required class="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-blue-600">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Periode / Tahun Ajaran</label>
@@ -1263,10 +1263,10 @@
                             <div class="md:col-span-4 flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
                                 <span class="text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-wider">Pratinjau Logo</span>
                                 <div class="w-28 h-28 rounded-2xl bg-slate-50 border border-slate-200 p-2.5 flex items-center justify-center shadow-inner relative group">
-                                    <img id="logo-preview-img" src="<%= (profil && profil.logo_sekolah) ? ('/uploads/profil/' + profil.logo_sekolah) : '/uploads/profil/logo-smpn1-rantepao.svg' %>" alt="Logo Sekolah" class="w-full h-full object-contain relative z-10 transition-transform group-hover:scale-105" onerror="this.src='/uploads/profil/logo-smpn1-rantepao.svg'">
+                                    <img id="logo-preview-img" src="<%= (profil && profil.logo_sekolah) ? ('/uploads/profil/' + profil.logo_sekolah) : '/uploads/profil/logo-sman1-makassar.png' %>" alt="Logo Sekolah" class="w-full h-full object-contain relative z-10 transition-transform group-hover:scale-105" onerror="this.src='/uploads/profil/logo-sman1-makassar.png'">
                                 </div>
                                 <p id="logo-preview-filename" class="text-[10px] text-slate-500 mt-2 text-center font-mono truncate max-w-full">
-                                    <%= (profil && profil.logo_sekolah) ? profil.logo_sekolah : 'logo-smpn1-rantepao.svg' %>
+                                    <%= (profil && profil.logo_sekolah) ? profil.logo_sekolah : 'logo-sman1-makassar.png' %>
                                 </p>
                             </div>
 
@@ -1422,7 +1422,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Wilayah / Kota</label>
-                                <input type="text" name="wilayah_lokasi" value="<%= profil.wilayah_lokasi || 'Kec. Rantepao, Toraja Utara' %>" placeholder="Contoh: Kec. Rantepao, Toraja Utara" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-blue-600">
+                                <input type="text" name="wilayah_lokasi" value="<%= profil.wilayah_lokasi || 'Kec. Bontoala, Kota Makassar' %>" placeholder="Contoh: Kec. Bontoala, Kota Makassar" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-blue-600">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan Gedung / Status</label>
@@ -1702,7 +1702,7 @@
                     <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <h3 class="font-bold text-base text-slate-800">Daftar Ekstrakurikuler Siswa</h3>
-                            <p class="text-xs text-slate-400">Kelola kegiatan pengembangan bakat, minat, kepanduan, dan seni budaya Toraja</p>
+                            <p class="text-xs text-slate-400">Kelola kegiatan pengembangan bakat, minat, kepanduan, dan seni budaya Bugis-Makassar</p>
                         </div>
                         <button type="button" onclick="openModal('modal-tambah-eskul')" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition">
                             <i class="fa-solid fa-plus text-xs"></i>
@@ -1796,7 +1796,7 @@
                     <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <h3 class="font-bold text-base text-slate-800">Galeri Dokumentasi Foto Sekolah</h3>
-                            <p class="text-xs text-slate-400">Dokumentasi kegiatan akademik, perayaan seni budaya Toraja, fasilitas, dan prestasi</p>
+                            <p class="text-xs text-slate-400">Dokumentasi kegiatan akademik, perayaan seni budaya Bugis-Makassar, fasilitas, dan prestasi</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <a href="/galeri" target="_blank" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">
@@ -1884,12 +1884,39 @@
                                 <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider <%= statusLoketBadge === 'Buka' ? 'bg-emerald-100 text-emerald-800' : (statusLoketBadge === 'Tutup' ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800') %>">
                                     Loket: <%= statusLoketBadge %>
                                 </span>
+                                <% if (statusLoketBadge !== 'Tutup') { %>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-300 inline-flex items-center gap-1.5 shadow-2xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        Jalur: DIBUKA (ON - Tampil di Beranda)
+                                    </span>
+                                <% } else { %>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-300 inline-flex items-center gap-1.5 shadow-2xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        Jalur: DITUTUP (OFF - Sembunyi dari Beranda)
+                                    </span>
+                                <% } %>
                                 <span class="text-xs text-slate-400">Total: <%= (typeof stats !== 'undefined' && stats.totalPPDB) ? stats.totalPPDB : 0 %> Calon Siswa (Kuota: <%= (typeof ppdbSetting !== 'undefined' && ppdbSetting.kuota_total) ? ppdbSetting.kuota_total : 320 %>)</span>
                             </div>
                             <h3 class="font-bold text-lg text-slate-800 mt-1">Penerimaan Peserta Didik Baru (PPDB)</h3>
                             <p class="text-xs text-slate-400">Verifikasi berkas, pantau 4 jalur seleksi, atur kuota gelombang, dan tetapkan kelulusan calon siswa baru</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
+                            <!-- Quick Toggle On/Off Buka/Tutup Jalur PPDB -->
+                            <form action="/admin/ppdb/toggle-loket" method="POST" class="inline m-0">
+                                <% if (statusLoketBadge !== 'Tutup') { %>
+                                    <input type="hidden" name="status_loket" value="Tutup">
+                                    <button type="submit" onclick="return confirm('Tutup jalur PPDB? Banner pengumuman PPDB di halaman Beranda akan otomatis disembunyikan dan formulir pendaftaran dinonaktifkan.')" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm" title="Klik untuk mematikan jalur PPDB & sembunyikan banner dari beranda">
+                                        <i class="fa-solid fa-power-off text-xs"></i>
+                                        <span>Tutup Jalur PPDB (OFF)</span>
+                                    </button>
+                                <% } else { %>
+                                    <input type="hidden" name="status_loket" value="Buka">
+                                    <button type="submit" onclick="return confirm('Buka kembali jalur PPDB? Banner pengumuman PPDB akan kembali ditampilkan di halaman Beranda.')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm" title="Klik untuk membuka jalur PPDB & tampilkan banner di beranda">
+                                        <i class="fa-solid fa-power-off text-xs"></i>
+                                        <span>Buka Jalur PPDB (ON)</span>
+                                    </button>
+                                <% } %>
+                            </form>
                             <button type="button" onclick="openModal('modal-pengaturan-ppdb')" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm">
                                 <i class="fa-solid fa-sliders text-xs"></i>
                                 <span>Pengaturan PPDB & Kuota</span>
@@ -2060,7 +2087,7 @@
                                                 <p class="font-semibold text-slate-800"><%= item.nama_ortu %></p>
                                                 <% const cleanHp = item.no_hp ? item.no_hp.replace(/[^0-9]/g, '') : ''; %>
                                                 <% const waLink = cleanHp.startsWith('0') ? '62' + cleanHp.substring(1) : cleanHp; %>
-                                                <a href="https://wa.me/<%= waLink %>?text=Halo%20Bpk/Ibu%20<%= encodeURIComponent(item.nama_ortu) %>,%20kami%20dari%20Panitia%20PPDB%20SMPN%201%20Rantepao%20terkait%20pendaftaran%20ananda%20<%= encodeURIComponent(item.nama_siswa) %>" 
+                                                <a href="https://wa.me/<%= waLink %>?text=Halo%20Bpk/Ibu%20<%= encodeURIComponent(item.nama_ortu) %>,%20kami%20dari%20Panitia%20PPDB%20SMAN%201%20Makassar%20terkait%20pendaftaran%20ananda%20<%= encodeURIComponent(item.nama_siswa) %>" 
                                                    target="_blank" 
                                                    class="inline-flex items-center gap-1 text-[11px] text-emerald-600 hover:text-emerald-700 font-bold mt-0.5">
                                                     <i class="fa-brands fa-whatsapp text-emerald-600"></i>
@@ -2183,7 +2210,7 @@
                     <!-- Footer Count Info -->
                     <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                         <span id="ppdb-counter-text">Menampilkan semua calon siswa pendaftar PPDB</span>
-                        <span>Panitia PPDB UPT SMPN 1 Rantepao</span>
+                        <span>Panitia PPDB UPT SMAN 1 Makassar</span>
                     </div>
                 </div>
             </div>
@@ -2528,7 +2555,7 @@
             <form action="/admin/berita/tambah" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Berita</label>
-                    <input type="text" name="judul" required placeholder="Contoh: Siswa SMPN 1 Rantepao Raih Medali Emas OSN" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    <input type="text" name="judul" required placeholder="Contoh: Siswa SMAN 1 Makassar Raih Medali Emas OSN" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
                 </div>
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
@@ -2733,7 +2760,7 @@
                 <div class="grid grid-cols-3 gap-3">
                     <div class="col-span-2">
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Pelaksanaan</label>
-                        <input type="text" name="lokasi" value="SMPN 1 Rantepao" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                        <input type="text" name="lokasi" value="Kampus SMAN 1 Makassar" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Urutan Prioritas</label>
@@ -3238,7 +3265,7 @@
                         <i class="fa-solid fa-user-plus text-blue-600"></i>
                         <span>Tambah Calon Siswa (PPDB Manual)</span>
                     </h3>
-                    <p class="text-xs text-slate-400">Pendaftaran langsung oleh Panitia di Sekretariat PPDB SMPN 1 Rantepao</p>
+                    <p class="text-xs text-slate-400">Pendaftaran langsung oleh Panitia di Sekretariat PPDB SMAN 1 Makassar</p>
                 </div>
                 <button type="button" onclick="closeModal('modal-tambah-ppdb')" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -3267,7 +3294,7 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-600 mb-1">Asal Sekolah SD / MI *</label>
-                        <input type="text" name="asal_sekolah" required placeholder="Contoh: SDN 1 Rantepao" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                        <input type="text" name="asal_sekolah" required placeholder="Contoh: SMP Negeri 6 Makassar" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
                     </div>
                 </div>
 
@@ -3304,7 +3331,7 @@
 
                 <div>
                     <label class="block font-semibold text-slate-600 mb-1">Alamat Domisili Siswa *</label>
-                    <input type="text" name="alamat_domisili" required placeholder="Contoh: Kel. Malango', Kec. Rantepao" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
+                    <input type="text" name="alamat_domisili" required placeholder="Contoh: Kel. Gaddong, Kec. Bontoala" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600">
                 </div>
 
                 <div>
@@ -3686,14 +3713,17 @@
                 %>
                 <div class="grid sm:grid-cols-3 gap-4">
                     <div>
-                        <label class="block font-semibold text-slate-600 mb-1">Status Loket Pendaftaran *</label>
+                        <label class="block font-semibold text-slate-600 mb-1">Status Jalur / Loket PPDB (Sistem On/Off) *</label>
                         <select name="status_loket" required class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-blue-600 bg-white font-bold text-slate-800">
-                            <option value="Buka" <%= (pSetting.status_loket === 'Buka') ? 'selected' : '' %>>🟢 Buka (Pendaftaran Aktif)</option>
-                            <option value="Verifikasi" <%= (pSetting.status_loket === 'Verifikasi') ? 'selected' : '' %>>🟡 Verifikasi Berkas</option>
-                            <option value="Pengumuman" <%= (pSetting.status_loket === 'Pengumuman') ? 'selected' : '' %>>🔵 Pengumuman Hasil</option>
-                            <option value="Daftar Ulang" <%= (pSetting.status_loket === 'Daftar Ulang') ? 'selected' : '' %>>🟣 Daftar Ulang</option>
-                            <option value="Tutup" <%= (pSetting.status_loket === 'Tutup') ? 'selected' : '' %>>🔴 Tutup</option>
+                            <option value="Buka" <%= (pSetting.status_loket === 'Buka') ? 'selected' : '' %>>🟢 BUKA / ON (Jalur Dibuka - Banner Tampil di Beranda)</option>
+                            <option value="Verifikasi" <%= (pSetting.status_loket === 'Verifikasi') ? 'selected' : '' %>>🟡 Verifikasi Berkas (Banner Tampil di Beranda)</option>
+                            <option value="Pengumuman" <%= (pSetting.status_loket === 'Pengumuman') ? 'selected' : '' %>>🔵 Pengumuman Hasil (Banner Tampil di Beranda)</option>
+                            <option value="Daftar Ulang" <%= (pSetting.status_loket === 'Daftar Ulang') ? 'selected' : '' %>>🟣 Masa Daftar Ulang (Banner Tampil di Beranda)</option>
+                            <option value="Tutup" <%= (pSetting.status_loket === 'Tutup') ? 'selected' : '' %>>🔴 TUTUP / OFF (Jalur Ditutup - Sembunyikan dari Beranda)</option>
                         </select>
+                        <p class="text-[11px] text-slate-500 mt-1">
+                            <i class="fa-solid fa-circle-info text-blue-500"></i> Jika status <b>"Buka"</b>, banner PPDB otomatis <b>tampil</b> di Beranda. Jika <b>"Tutup"</b>, banner PPDB otomatis <b>disembunyikan</b>.
+                        </p>
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-600 mb-1">Tahun Ajaran *</label>
@@ -4579,7 +4609,7 @@
 
                 const cleanHp = (detailPPDBBtn.dataset.hp || '').replace(/[^0-9]/g, '');
                 const waLink = cleanHp.startsWith('0') ? '62' + cleanHp.substring(1) : cleanHp;
-                const waHref = `https://wa.me/${waLink}?text=Halo%20Bpk/Ibu%20${encodeURIComponent(detailPPDBBtn.dataset.ortu)},%20terkait%20pendaftaran%20PPDB%20SMPN%201%20Rantepao%20ananda%20${encodeURIComponent(detailPPDBBtn.dataset.nama)}`;
+                const waHref = `https://wa.me/${waLink}?text=Halo%20Bpk/Ibu%20${encodeURIComponent(detailPPDBBtn.dataset.ortu)},%20terkait%20pendaftaran%20PPDB%20SMAN%201%20Makassar%20ananda%20${encodeURIComponent(detailPPDBBtn.dataset.nama)}`;
                 document.getElementById('detail-ppdb-wa-link').href = waHref;
 
                 const statusBadge = document.getElementById('detail-ppdb-status-badge');
